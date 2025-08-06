@@ -1,0 +1,770 @@
+2025-08-02T06:12:27.569Z [info]: server is runnig at 8000
+2025-08-02T06:13:48.906Z [info]: server is runnig at 8000
+2025-08-02T06:13:58.149Z [info]: server is runnig at 8000
+2025-08-02T06:14:31.069Z [info]: server is runnig at 8000
+2025-08-02T06:15:21.618Z [error]: server is runnig at 8000
+2025-08-02T06:26:16.790Z [error]: hii
+2025-08-02T06:26:16.796Z [info]: server is runnig at 8000
+2025-08-02T06:26:40.692Z [error]: hii
+2025-08-02T06:26:40.699Z [info]: server is runnig at 8000
+2025-08-02T06:26:47.659Z [error]: hii
+2025-08-02T06:26:47.664Z [info]: server is runnig at 8000
+2025-08-02T06:26:52.551Z [error]: hii
+2025-08-02T06:26:52.560Z [info]: server is runnig at 8000
+2025-08-02T06:26:57.980Z [error]: hii
+2025-08-02T06:26:57.988Z [info]: server is runnig at 8000
+2025-08-02T06:27:19.947Z [error]: hii
+2025-08-02T06:27:19.952Z [info]: server is runnig at 8000
+2025-08-02T06:27:24.660Z [error]: hii
+2025-08-02T06:27:24.665Z [info]: server is runnig at 8000
+2025-08-02T10:02:20.139Z [error]: hii
+2025-08-02T10:02:20.149Z [info]: server is runnig at 8000
+2025-08-02T10:02:36.759Z [error]: hii
+2025-08-02T10:02:36.764Z [info]: server is runnig at 8000
+2025-08-02T10:02:59.519Z [error]: hii
+2025-08-02T10:02:59.524Z [info]: server is runnig at 8000
+2025-08-02T10:04:40.109Z [error]: hii
+2025-08-02T10:04:40.118Z [info]: server is runnig at 8000
+2025-08-02T10:11:07.944Z [error]: hii
+2025-08-02T10:11:07.984Z [info]: server is runnig at 8000
+2025-08-02T10:12:14.712Z [error]: hii
+2025-08-02T10:12:15.064Z [info]: server is runnig at 8000
+2025-08-02T10:12:25.010Z [error]: hii
+2025-08-02T10:12:25.016Z [info]: server is runnig at 8000
+2025-08-02T10:22:10.762Z [error]: hii
+2025-08-02T10:22:10.771Z [info]: server is runnig at 8000
+2025-08-02T10:22:47.507Z [error]: hii
+2025-08-02T10:22:47.519Z [info]: server is runnig at 8000
+2025-08-02T10:23:20.225Z [error]: hii
+2025-08-02T10:23:20.245Z [info]: server is runnig at 8000
+2025-08-02T10:23:43.928Z [error]: hii
+2025-08-02T10:23:43.940Z [info]: server is runnig at 8000
+2025-08-02T10:24:02.852Z [error]: hii
+2025-08-02T10:24:02.862Z [info]: server is runnig at 8000
+2025-08-02T10:24:52.420Z [error]: hii
+2025-08-02T10:24:52.430Z [info]: server is runnig at 8000
+2025-08-02T10:25:17.655Z [error]: hii
+2025-08-02T10:25:17.666Z [info]: server is runnig at 8000
+2025-08-02T10:26:13.761Z [error]: hii
+2025-08-02T10:26:13.790Z [info]: server is runnig at 8000
+2025-08-02T10:26:28.686Z [error]: hii
+2025-08-02T10:26:28.708Z [info]: server is runnig at 8000
+2025-08-02T10:30:24.650Z [error]: hii
+2025-08-02T10:30:24.675Z [info]: server is runnig at 8000
+2025-08-02T10:30:44.661Z [error]: hii
+2025-08-02T10:30:44.688Z [info]: server is runnig at 8000
+2025-08-02T10:31:33.050Z [error]: hii
+2025-08-02T10:31:33.115Z [info]: server is runnig at 8000
+2025-08-02T10:32:11.234Z [error]: hii
+2025-08-02T10:32:11.288Z [info]: server is runnig at 8000
+2025-08-02T10:34:01.962Z [error]: hii
+2025-08-02T10:34:02.001Z [info]: server is runnig at 8000
+2025-08-02T10:35:36.151Z [error]: PrismaClientKnownRequestError: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:49:42
+
+  46 
+  47 const { email, password } = parseResult.data;
+  48 
+→ 49 const emailExist = await prisma.user.findUnique(
+The column `User.isVerified` does not exist in the current database.
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:228:13)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-02T10:42:43.560Z [error]: hii
+2025-08-02T10:42:43.598Z [info]: server is runnig at 8000
+2025-08-02T10:42:46.577Z [error]: PrismaClientKnownRequestError: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:49:42
+
+  46 
+  47 const { email, password } = parseResult.data;
+  48 
+→ 49 const emailExist = await prisma.user.findUnique(
+The column `User.isVerified` does not exist in the current database.
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:228:13)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-02T10:42:48.774Z [error]: PrismaClientKnownRequestError: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:49:42
+
+  46 
+  47 const { email, password } = parseResult.data;
+  48 
+→ 49 const emailExist = await prisma.user.findUnique(
+The column `User.isVerified` does not exist in the current database.
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:228:13)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-02T10:45:19.375Z [error]: hii
+2025-08-02T10:45:19.405Z [info]: server is runnig at 8000
+2025-08-02T11:40:13.258Z [error]: hii
+2025-08-02T11:40:13.298Z [info]: server is runnig at 8000
+2025-08-02T11:41:08.447Z [error]: hii
+2025-08-02T11:41:08.482Z [info]: server is runnig at 8000
+2025-08-02T11:43:00.938Z [error]: hii
+2025-08-02T11:43:00.964Z [info]: server is runnig at 8000
+2025-08-02T11:43:17.011Z [error]: PrismaClientValidationError: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:98:38
+
+  95 const { address, businessType, companyName, employeeRange, email } =
+  96   parseResult.data ?? {};
+  97 
+→ 98 const user = await prisma.user.findUnique({
+       where: {
+         email: undefined,
+     ?   id?: String,
+     ?   AND?: UserWhereInput | UserWhereInput[],
+     ?   OR?: UserWhereInput[],
+     ?   NOT?: UserWhereInput | UserWhereInput[],
+     ?   fullname?: StringFilter | String,
+     ?   password?: StringFilter | String,
+     ?   isVerified?: BoolFilter | Boolean,
+     ?   role?: EnumRolesFilter | Roles,
+     ?   companyName?: StringNullableFilter | String | Null,
+     ?   employeeRange?: EnumEmployeeRangeNullableFilter | EmployeeRange | Null,
+     ?   businessType?: StringNullableFilter | String | Null,
+     ?   address?: StringNullableFilter | String | Null
+       }
+     })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-02T11:43:41.962Z [error]: hii
+2025-08-02T11:43:41.982Z [info]: server is runnig at 8000
+2025-08-02T11:43:46.358Z [error]: PrismaClientValidationError: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:98:38
+
+  95 const { address, businessType, companyName, employeeRange, email } =
+  96   parseResult.data ?? {};
+  97 
+→ 98 const user = await prisma.user.findUnique({
+       where: {
+         email: undefined,
+     ?   id?: String,
+     ?   AND?: UserWhereInput | UserWhereInput[],
+     ?   OR?: UserWhereInput[],
+     ?   NOT?: UserWhereInput | UserWhereInput[],
+     ?   fullname?: StringFilter | String,
+     ?   password?: StringFilter | String,
+     ?   isVerified?: BoolFilter | Boolean,
+     ?   role?: EnumRolesFilter | Roles,
+     ?   companyName?: StringNullableFilter | String | Null,
+     ?   employeeRange?: EnumEmployeeRangeNullableFilter | EmployeeRange | Null,
+     ?   businessType?: StringNullableFilter | String | Null,
+     ?   address?: StringNullableFilter | String | Null
+       }
+     })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-02T11:44:20.999Z [error]: hii
+2025-08-02T11:44:21.032Z [info]: server is runnig at 8000
+2025-08-02T11:44:24.687Z [error]: PrismaClientValidationError: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:99:38
+
+  96   parseResult.data ?? {};
+  97 
+  98   console.log(" address, businessType, companyName, employeeRange, email : ", address, businessType, companyName, employeeRange, email)
+→ 99 const user = await prisma.user.findUnique({
+       where: {
+         email: undefined,
+     ?   id?: String,
+     ?   AND?: UserWhereInput | UserWhereInput[],
+     ?   OR?: UserWhereInput[],
+     ?   NOT?: UserWhereInput | UserWhereInput[],
+     ?   fullname?: StringFilter | String,
+     ?   password?: StringFilter | String,
+     ?   isVerified?: BoolFilter | Boolean,
+     ?   role?: EnumRolesFilter | Roles,
+     ?   companyName?: StringNullableFilter | String | Null,
+     ?   employeeRange?: EnumEmployeeRangeNullableFilter | EmployeeRange | Null,
+     ?   businessType?: StringNullableFilter | String | Null,
+     ?   address?: StringNullableFilter | String | Null
+       }
+     })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-02T11:44:27.961Z [error]: PrismaClientValidationError: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:99:38
+
+  96   parseResult.data ?? {};
+  97 
+  98   console.log(" address, businessType, companyName, employeeRange, email : ", address, businessType, companyName, employeeRange, email)
+→ 99 const user = await prisma.user.findUnique({
+       where: {
+         email: undefined,
+     ?   id?: String,
+     ?   AND?: UserWhereInput | UserWhereInput[],
+     ?   OR?: UserWhereInput[],
+     ?   NOT?: UserWhereInput | UserWhereInput[],
+     ?   fullname?: StringFilter | String,
+     ?   password?: StringFilter | String,
+     ?   isVerified?: BoolFilter | Boolean,
+     ?   role?: EnumRolesFilter | Roles,
+     ?   companyName?: StringNullableFilter | String | Null,
+     ?   employeeRange?: EnumEmployeeRangeNullableFilter | EmployeeRange | Null,
+     ?   businessType?: StringNullableFilter | String | Null,
+     ?   address?: StringNullableFilter | String | Null
+       }
+     })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-02T11:44:39.144Z [error]: hii
+2025-08-02T11:44:39.165Z [info]: server is runnig at 8000
+2025-08-02T11:44:44.708Z [error]: PrismaClientValidationError: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:99:38
+
+  96   parseResult.data ?? {};
+  97 
+  98   console.log(" address, businessType, companyName, employeeRange, email : ", address, businessType, companyName, employeeRange, email)
+→ 99 const user = await prisma.user.findUnique({
+       where: {
+         email: undefined,
+     ?   id?: String,
+     ?   AND?: UserWhereInput | UserWhereInput[],
+     ?   OR?: UserWhereInput[],
+     ?   NOT?: UserWhereInput | UserWhereInput[],
+     ?   fullname?: StringFilter | String,
+     ?   password?: StringFilter | String,
+     ?   isVerified?: BoolFilter | Boolean,
+     ?   role?: EnumRolesFilter | Roles,
+     ?   companyName?: StringNullableFilter | String | Null,
+     ?   employeeRange?: EnumEmployeeRangeNullableFilter | EmployeeRange | Null,
+     ?   businessType?: StringNullableFilter | String | Null,
+     ?   address?: StringNullableFilter | String | Null
+       }
+     })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-02T11:45:15.552Z [error]: hii
+2025-08-02T11:45:15.577Z [info]: server is runnig at 8000
+2025-08-02T11:45:27.408Z [error]: PrismaClientValidationError: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:99:38
+
+  96   parseResult.data ?? {};
+  97 
+  98   console.log(" address, businessType, companyName, employeeRange, email : ", address, businessType, companyName, employeeRange, email)
+→ 99 const user = await prisma.user.findUnique({
+       where: {
+         email: undefined,
+     ?   id?: String,
+     ?   AND?: UserWhereInput | UserWhereInput[],
+     ?   OR?: UserWhereInput[],
+     ?   NOT?: UserWhereInput | UserWhereInput[],
+     ?   fullname?: StringFilter | String,
+     ?   password?: StringFilter | String,
+     ?   isVerified?: BoolFilter | Boolean,
+     ?   role?: EnumRolesFilter | Roles,
+     ?   companyName?: StringNullableFilter | String | Null,
+     ?   employeeRange?: EnumEmployeeRangeNullableFilter | EmployeeRange | Null,
+     ?   businessType?: StringNullableFilter | String | Null,
+     ?   address?: StringNullableFilter | String | Null
+       }
+     })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-02T11:47:03.413Z [error]: hii
+2025-08-02T11:47:03.445Z [info]: server is runnig at 8000
+2025-08-02T11:47:09.471Z [error]: PrismaClientValidationError: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:99:38
+
+  96 //   parseResult.data ?? {};
+  97 
+  98   // console.log(" address, businessType, companyName, employeeRange, email : ", address, businessType, companyName, employeeRange, email)
+→ 99 const user = await prisma.user.findUnique({
+       where: {
+         email: undefined,
+     ?   id?: String,
+     ?   AND?: UserWhereInput | UserWhereInput[],
+     ?   OR?: UserWhereInput[],
+     ?   NOT?: UserWhereInput | UserWhereInput[],
+     ?   fullname?: StringFilter | String,
+     ?   password?: StringFilter | String,
+     ?   isVerified?: BoolFilter | Boolean,
+     ?   role?: EnumRolesFilter | Roles,
+     ?   companyName?: StringNullableFilter | String | Null,
+     ?   employeeRange?: EnumEmployeeRangeNullableFilter | EmployeeRange | Null,
+     ?   businessType?: StringNullableFilter | String | Null,
+     ?   address?: StringNullableFilter | String | Null
+       }
+     })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-02T11:48:40.898Z [error]: hii
+2025-08-02T11:48:40.926Z [info]: server is runnig at 8000
+2025-08-02T11:48:45.046Z [error]: PrismaClientValidationError: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:101:38
+
+   98 //   parseResult.data ?? {};
+   99 
+  100   // console.log(" address, businessType, companyName, employeeRange, email : ", address, businessType, companyName, employeeRange, email)
+→ 101 const user = await prisma.user.findUnique({
+        where: {
+          email: undefined,
+      ?   id?: String,
+      ?   AND?: UserWhereInput | UserWhereInput[],
+      ?   OR?: UserWhereInput[],
+      ?   NOT?: UserWhereInput | UserWhereInput[],
+      ?   fullname?: StringFilter | String,
+      ?   password?: StringFilter | String,
+      ?   isVerified?: BoolFilter | Boolean,
+      ?   role?: EnumRolesFilter | Roles,
+      ?   companyName?: StringNullableFilter | String | Null,
+      ?   employeeRange?: EnumEmployeeRangeNullableFilter | EmployeeRange | Null,
+      ?   businessType?: StringNullableFilter | String | Null,
+      ?   address?: StringNullableFilter | String | Null
+        }
+      })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-02T11:49:00.165Z [error]: hii
+2025-08-02T11:49:00.192Z [info]: server is runnig at 8000
+2025-08-02T11:49:05.024Z [error]: PrismaClientValidationError: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:101:38
+
+   98 //   parseResult.data ?? {};
+   99 
+  100   // console.log(" address, businessType, companyName, employeeRange, email : ", address, businessType, companyName, employeeRange, email)
+→ 101 const user = await prisma.user.findUnique({
+        where: {
+          email: undefined,
+      ?   id?: String,
+      ?   AND?: UserWhereInput | UserWhereInput[],
+      ?   OR?: UserWhereInput[],
+      ?   NOT?: UserWhereInput | UserWhereInput[],
+      ?   fullname?: StringFilter | String,
+      ?   password?: StringFilter | String,
+      ?   isVerified?: BoolFilter | Boolean,
+      ?   role?: EnumRolesFilter | Roles,
+      ?   companyName?: StringNullableFilter | String | Null,
+      ?   employeeRange?: EnumEmployeeRangeNullableFilter | EmployeeRange | Null,
+      ?   businessType?: StringNullableFilter | String | Null,
+      ?   address?: StringNullableFilter | String | Null
+        }
+      })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-02T11:50:28.772Z [error]: hii
+2025-08-02T11:50:28.793Z [info]: server is runnig at 8000
+2025-08-02T11:51:59.063Z [error]: hii
+2025-08-02T11:51:59.110Z [info]: server is runnig at 8000
+2025-08-02T11:53:16.194Z [error]: hii
+2025-08-02T11:53:16.260Z [info]: server is runnig at 8000
+2025-08-02T11:54:52.472Z [error]: hii
+2025-08-02T11:54:52.493Z [info]: server is runnig at 8000
+2025-08-02T11:56:44.555Z [error]: hii
+2025-08-02T11:56:44.584Z [info]: server is runnig at 8000
+2025-08-02T11:57:48.854Z [error]: hii
+2025-08-02T11:57:48.889Z [info]: server is runnig at 8000
+2025-08-02T12:00:09.776Z [error]: hii
+2025-08-02T12:00:09.826Z [info]: server is runnig at 8000
+2025-08-02T12:03:14.851Z [error]: hii
+2025-08-02T12:03:14.882Z [info]: server is runnig at 8000
+2025-08-02T12:04:06.697Z [error]: hii
+2025-08-02T12:04:06.720Z [info]: server is runnig at 8000
+2025-08-02T15:36:32.567Z [error]: hii
+2025-08-02T15:36:32.600Z [info]: server is runnig at 8000
+2025-08-02T15:38:16.133Z [error]: hii
+2025-08-02T15:38:16.151Z [info]: server is runnig at 8000
+2025-08-02T15:40:28.913Z [error]: hii
+2025-08-02T15:40:28.963Z [info]: server is runnig at 8000
+2025-08-02T15:41:04.340Z [error]: hii
+2025-08-02T15:41:04.372Z [info]: server is runnig at 8000
+2025-08-02T15:41:06.626Z [error]: [object Object]
+2025-08-02T15:41:22.675Z [error]: hii
+2025-08-02T15:41:22.699Z [info]: server is runnig at 8000
+2025-08-02T15:41:25.509Z [error]: false
+2025-08-02T15:44:00.874Z [error]: hii
+2025-08-02T15:44:00.907Z [info]: server is runnig at 8000
+2025-08-02T15:45:44.802Z [error]: false
+2025-08-02T15:46:28.146Z [error]: false
+2025-08-02T15:49:02.763Z [error]: false
+2025-08-02T15:49:16.336Z [error]: false
+2025-08-02T15:49:17.832Z [error]: false
+2025-08-02T15:52:13.613Z [error]: false
+2025-08-02T15:52:15.244Z [error]: false
+2025-08-02T15:53:55.039Z [error]: hii
+2025-08-02T15:53:55.077Z [info]: server is runnig at 8000
+2025-08-02T15:53:57.774Z [error]: false
+2025-08-02T15:54:24.962Z [error]: false
+2025-08-02T15:55:26.942Z [error]: hii
+2025-08-02T15:55:26.985Z [info]: server is runnig at 8000
+2025-08-02T15:55:34.789Z [error]: hii
+2025-08-02T15:55:34.849Z [info]: server is runnig at 8000
+2025-08-02T15:55:52.939Z [error]: PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:51:42
+
+  48 
+  49 const { email, password } = parseResult.data;
+  50 
+→ 51 const emailExist = await prisma.user.findUnique(
+Can't reach database server at `ep-little-butterfly-adrh17j6-pooler.c-2.us-east-1.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-little-butterfly-adrh17j6-pooler.c-2.us-east-1.aws.neon.tech:5432`.
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:242:13)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-02T15:56:25.543Z [error]: hii
+2025-08-02T15:56:25.568Z [info]: server is runnig at 8000
+2025-08-02T15:57:07.994Z [error]: hii
+2025-08-02T15:57:08.023Z [info]: server is runnig at 8000
+2025-08-02T16:29:22.104Z [error]: hii
+2025-08-02T16:29:22.140Z [info]: server is runnig at 8000
+2025-08-02T16:30:29.461Z [error]: hii
+2025-08-02T16:30:29.481Z [info]: server is runnig at 8000
+2025-08-02T16:30:38.540Z [error]: hii
+2025-08-02T16:30:38.565Z [info]: server is runnig at 8000
+2025-08-02T16:32:17.234Z [error]: hii
+2025-08-02T16:32:17.258Z [info]: server is runnig at 8000
+2025-08-02T16:35:06.494Z [error]: hii
+2025-08-02T16:35:06.526Z [info]: server is runnig at 8000
+2025-08-02T16:35:41.171Z [error]: hii
+2025-08-02T16:35:41.193Z [info]: server is runnig at 8000
+2025-08-02T16:35:54.238Z [error]: hii
+2025-08-02T16:35:54.260Z [info]: server is runnig at 8000
+2025-08-02T16:36:00.396Z [error]: hii
+2025-08-02T16:36:00.423Z [info]: server is runnig at 8000
+2025-08-02T16:36:19.239Z [error]: hii
+2025-08-02T16:36:19.262Z [info]: server is runnig at 8000
+2025-08-02T18:09:39.809Z [error]: hii
+2025-08-02T18:09:39.839Z [info]: server is runnig at 8000
+2025-08-02T18:10:20.073Z [error]: hii
+2025-08-02T18:10:20.120Z [info]: server is runnig at 8000
+2025-08-02T18:10:25.299Z [error]: Error: User details are not available.
+    at userDetails (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:307:13)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mdalk\crm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\mdalk\crm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\mdalk\crm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\mdalk\crm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\mdalk\crm\node_modules\router\index.js:582:12)
+    at next (C:\Users\mdalk\crm\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\mdalk\crm\node_modules\router\index.js:186:3)
+2025-08-02T18:11:34.189Z [error]: hii
+2025-08-02T18:11:34.208Z [info]: server is runnig at 8000
+2025-08-02T18:11:41.629Z [error]: hii
+2025-08-02T18:11:41.651Z [info]: server is runnig at 8000
+2025-08-02T18:12:09.334Z [error]: hii
+2025-08-02T18:12:09.353Z [info]: server is runnig at 8000
+2025-08-02T18:15:05.052Z [error]: hii
+2025-08-02T18:15:05.073Z [info]: server is runnig at 8000
+2025-08-02T18:16:09.923Z [error]: Error:  Error aaya bhai
+    at userDetails (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:307:13)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mdalk\crm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\mdalk\crm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\mdalk\crm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\mdalk\crm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\mdalk\crm\node_modules\router\index.js:582:12)
+    at next (C:\Users\mdalk\crm\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\mdalk\crm\node_modules\router\index.js:186:3)
+2025-08-02T18:16:09.937Z [error]: Error:  Error aaya bhai
+    at userDetails (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:307:13)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mdalk\crm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\mdalk\crm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\mdalk\crm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\mdalk\crm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\mdalk\crm\node_modules\router\index.js:582:12)
+    at next (C:\Users\mdalk\crm\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\mdalk\crm\node_modules\router\index.js:186:3)
+2025-08-02T18:16:42.144Z [error]: hii
+2025-08-02T18:16:42.168Z [info]: server is runnig at 8000
+2025-08-02T18:16:47.850Z [error]: hii
+2025-08-02T18:16:47.870Z [info]: server is runnig at 8000
+2025-08-02T18:17:07.325Z [error]: hii
+2025-08-02T18:17:07.431Z [info]: server is runnig at 8000
+2025-08-02T18:17:36.998Z [error]: hii
+2025-08-02T18:17:37.018Z [info]: server is runnig at 8000
+2025-08-02T18:17:41.501Z [error]: Error:  Error aaya bhai
+    at userDetails (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:307:13)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mdalk\crm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\mdalk\crm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\mdalk\crm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\mdalk\crm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\mdalk\crm\node_modules\router\index.js:582:12)
+    at next (C:\Users\mdalk\crm\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\mdalk\crm\node_modules\router\index.js:186:3)
+2025-08-02T18:17:41.510Z [error]: Error:  Error aaya bhai
+    at userDetails (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:307:13)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mdalk\crm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\mdalk\crm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\mdalk\crm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\mdalk\crm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\mdalk\crm\node_modules\router\index.js:582:12)
+    at next (C:\Users\mdalk\crm\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\mdalk\crm\node_modules\router\index.js:186:3)
+2025-08-02T18:17:41.513Z [error]: Error:  Error aaya bhai
+    at userDetails (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:307:13)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mdalk\crm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\mdalk\crm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\mdalk\crm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\mdalk\crm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\mdalk\crm\node_modules\router\index.js:582:12)
+    at next (C:\Users\mdalk\crm\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\mdalk\crm\node_modules\router\index.js:186:3)
+2025-08-02T18:17:51.439Z [error]: Error:  Error aaya bhai
+    at userDetails (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:307:13)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mdalk\crm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\mdalk\crm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\mdalk\crm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\mdalk\crm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\mdalk\crm\node_modules\router\index.js:582:12)
+    at next (C:\Users\mdalk\crm\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\mdalk\crm\node_modules\router\index.js:186:3)
+2025-08-02T18:17:51.444Z [error]: Error:  Error aaya bhai
+    at userDetails (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:307:13)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mdalk\crm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\mdalk\crm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\mdalk\crm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\mdalk\crm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\mdalk\crm\node_modules\router\index.js:582:12)
+    at next (C:\Users\mdalk\crm\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\mdalk\crm\node_modules\router\index.js:186:3)
+2025-08-02T18:17:51.466Z [error]: Error:  Error aaya bhai
+    at userDetails (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:307:13)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mdalk\crm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\mdalk\crm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\mdalk\crm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\mdalk\crm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\mdalk\crm\node_modules\router\index.js:582:12)
+    at next (C:\Users\mdalk\crm\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\mdalk\crm\node_modules\router\index.js:186:3)
+2025-08-02T18:21:09.876Z [error]: hii
+2025-08-02T18:21:09.912Z [info]: server is runnig at 8000
+2025-08-02T18:21:10.953Z [error]: Error:  Error aaya bhai
+    at userDetails (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:307:13)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mdalk\crm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\mdalk\crm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\mdalk\crm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\mdalk\crm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\mdalk\crm\node_modules\router\index.js:582:12)
+    at next (C:\Users\mdalk\crm\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\mdalk\crm\node_modules\router\index.js:186:3)
+2025-08-02T18:21:10.970Z [error]: Error:  Error aaya bhai
+    at userDetails (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:307:13)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mdalk\crm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\mdalk\crm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\mdalk\crm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\mdalk\crm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\mdalk\crm\node_modules\router\index.js:582:12)
+    at next (C:\Users\mdalk\crm\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\mdalk\crm\node_modules\router\index.js:186:3)
+2025-08-02T18:21:11.020Z [error]: Error:  Error aaya bhai
+    at userDetails (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:307:13)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mdalk\crm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\mdalk\crm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\mdalk\crm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\mdalk\crm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\mdalk\crm\node_modules\router\index.js:582:12)
+    at next (C:\Users\mdalk\crm\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\mdalk\crm\node_modules\router\index.js:186:3)
+2025-08-02T18:23:42.164Z [error]: hii
+2025-08-02T18:23:42.186Z [info]: server is runnig at 8000
+2025-08-02T18:25:08.609Z [error]: hii
+2025-08-02T18:25:08.634Z [info]: server is runnig at 8000
+2025-08-02T18:25:19.815Z [error]: PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:51:42
+
+  48 
+  49 const { email, password } = parseResult.data;
+  50 
+→ 51 const emailExist = await prisma.user.findUnique(
+Can't reach database server at `ep-little-butterfly-adrh17j6-pooler.c-2.us-east-1.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-little-butterfly-adrh17j6-pooler.c-2.us-east-1.aws.neon.tech:5432`.
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:242:13)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-02T18:25:56.506Z [error]: Error:  Error in signup
+    at C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:74:13
+    at Generator.next (<anonymous>)
+    at fulfilled (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:5:58)
+2025-08-02T18:31:41.472Z [error]: hii
+2025-08-02T18:31:41.500Z [info]: server is runnig at 8000
+2025-08-04T05:03:53.555Z [error]: hii
+2025-08-04T05:03:53.622Z [info]: server is runnig at 8000
+2025-08-04T05:18:32.601Z [error]: hii
+2025-08-04T05:18:32.739Z [info]: server is runnig at 8000
+2025-08-05T07:01:14.424Z [error]: hii
+2025-08-05T07:01:14.479Z [info]: server is runnig at 8000
+2025-08-05T09:28:22.561Z [error]: hii
+2025-08-05T09:28:22.616Z [info]: server is runnig at 8000
+2025-08-05T10:16:32.153Z [error]: hii
+2025-08-05T10:16:32.226Z [info]: server is runnig at 8000
+2025-08-05T10:16:50.727Z [error]: hii
+2025-08-05T10:16:50.751Z [info]: server is runnig at 8000
+2025-08-05T10:17:13.158Z [error]: hii
+2025-08-05T10:17:13.183Z [info]: server is runnig at 8000
+2025-08-05T10:17:39.736Z [error]: hii
+2025-08-05T10:17:39.760Z [info]: server is runnig at 8000
+2025-08-05T10:19:03.062Z [error]: hii
+2025-08-05T10:19:03.093Z [info]: server is runnig at 8000
+2025-08-05T10:19:11.162Z [error]: hii
+2025-08-05T10:19:11.185Z [info]: server is runnig at 8000
+2025-08-05T10:19:36.415Z [error]: hii
+2025-08-05T10:19:36.439Z [info]: server is runnig at 8000
+2025-08-05T10:20:02.411Z [error]: hii
+2025-08-05T10:20:02.435Z [info]: server is runnig at 8000
+2025-08-05T10:20:36.508Z [error]: hii
+2025-08-05T10:20:36.537Z [info]: server is runnig at 8000
+2025-08-05T10:21:46.047Z [error]: hii
+2025-08-05T10:21:46.069Z [info]: server is runnig at 8000
+2025-08-05T10:22:18.826Z [error]: hii
+2025-08-05T10:22:18.852Z [info]: server is runnig at 8000
+2025-08-05T10:23:13.820Z [error]: hii
+2025-08-05T10:23:13.861Z [info]: server is runnig at 8000
+2025-08-05T10:23:36.275Z [error]: hii
+2025-08-05T10:23:36.308Z [info]: server is runnig at 8000
+2025-08-05T10:23:52.897Z [error]: hii
+2025-08-05T10:23:52.939Z [info]: server is runnig at 8000
+2025-08-05T10:23:56.907Z [error]: hii
+2025-08-05T10:23:56.938Z [info]: server is runnig at 8000
+2025-08-05T10:42:16.140Z [error]: hii
+2025-08-05T10:42:16.190Z [info]: server is runnig at 8000
+2025-08-05T10:42:33.917Z [error]: hii
+2025-08-05T10:42:33.986Z [info]: server is runnig at 8000
+2025-08-05T10:43:12.749Z [error]: hii
+2025-08-05T10:43:12.773Z [info]: server is runnig at 8000
+2025-08-05T10:43:31.917Z [error]: hii
+2025-08-05T10:43:31.939Z [info]: server is runnig at 8000
+2025-08-05T10:43:56.284Z [error]: hii
+2025-08-05T10:43:56.317Z [info]: server is runnig at 8000
+2025-08-05T11:39:54.668Z [error]: hii
+2025-08-05T11:39:54.736Z [info]: server is runnig at 8000
+2025-08-05T11:40:13.307Z [error]: hii
+2025-08-05T11:40:13.340Z [info]: server is runnig at 8000
+2025-08-05T11:43:18.268Z [error]: hii
+2025-08-05T11:43:18.300Z [info]: server is runnig at 8000
+2025-08-05T11:46:39.853Z [error]: hii
+2025-08-05T11:46:40.032Z [info]: server is runnig at 8000
+2025-08-05T11:47:09.684Z [error]: hii
+2025-08-05T11:47:10.010Z [info]: server is runnig at 8000
+2025-08-05T11:49:26.311Z [error]: hii
+2025-08-05T11:49:26.470Z [info]: server is runnig at 8000
+2025-08-05T11:49:42.313Z [error]: hii
+2025-08-05T11:49:42.435Z [info]: server is runnig at 8000
+2025-08-05T11:50:07.878Z [error]: hii
+2025-08-05T11:50:07.983Z [info]: server is runnig at 8000
+2025-08-05T11:50:25.217Z [error]: hii
+2025-08-05T11:50:25.313Z [info]: server is runnig at 8000
+2025-08-05T11:50:44.522Z [error]: hii
+2025-08-05T11:50:44.631Z [info]: server is runnig at 8000
+2025-08-05T11:51:13.983Z [error]: hii
+2025-08-05T11:51:14.085Z [info]: server is runnig at 8000
+2025-08-05T11:52:22.700Z [error]: hii
+2025-08-05T11:52:22.804Z [info]: server is runnig at 8000
+2025-08-05T11:52:49.760Z [error]: hii
+2025-08-05T11:52:49.900Z [info]: server is runnig at 8000
+2025-08-05T11:53:48.173Z [error]: hii
+2025-08-05T11:53:48.264Z [info]: server is runnig at 8000
+2025-08-05T11:54:46.694Z [error]: hii
+2025-08-05T11:54:46.855Z [info]: server is runnig at 8000
+2025-08-05T11:55:37.535Z [error]: hii
+2025-08-05T11:55:37.634Z [info]: server is runnig at 8000
+2025-08-05T11:56:41.312Z [error]: hii
+2025-08-05T11:56:41.418Z [info]: server is runnig at 8000
+2025-08-05T11:57:16.993Z [error]: hii
+2025-08-05T11:57:17.094Z [info]: server is runnig at 8000
+2025-08-05T11:59:16.197Z [error]: hii
+2025-08-05T11:59:16.295Z [info]: server is runnig at 8000
+2025-08-05T12:00:33.738Z [error]: hii
+2025-08-05T12:00:33.890Z [info]: server is runnig at 8000
+2025-08-05T12:01:31.715Z [error]: hii
+2025-08-05T12:01:31.821Z [info]: server is runnig at 8000
+2025-08-05T12:01:59.642Z [error]: hii
+2025-08-05T12:01:59.776Z [info]: server is runnig at 8000
+2025-08-05T12:04:02.025Z [error]: hii
+2025-08-05T12:04:02.147Z [info]: server is runnig at 8000
+2025-08-05T12:04:37.391Z [error]: hii
+2025-08-05T12:04:37.506Z [info]: server is runnig at 8000
+2025-08-05T12:04:47.429Z [error]: hii
+2025-08-05T12:04:47.565Z [info]: server is runnig at 8000
+2025-08-05T12:04:55.068Z [error]: hii
+2025-08-05T12:04:55.261Z [info]: server is runnig at 8000
+2025-08-05T12:05:11.403Z [error]: hii
+2025-08-05T12:05:11.507Z [info]: server is runnig at 8000
+2025-08-05T12:05:56.957Z [error]: hii
+2025-08-05T12:05:57.047Z [info]: server is runnig at 8000

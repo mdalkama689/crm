@@ -1,0 +1,24 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "lint": "eslint src --ext .js,.ts --fix",
+    "format": "prettier --write .",
+    "check": "npm run lint && npm run format"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@sentry/node": "^10.0.0",
+    "@sentry/tracing": "^7.120.4",
+    "winston": "^3.17.0",
+    "winston-loggly-bulk": "^3.3.2",
+    "zod": "^4.0.14"
+  }
+}

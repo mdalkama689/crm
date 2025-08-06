@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/logger/format.ts","./src/logger/index.ts","./src/logger/transports.ts","./src/schema/sign-in-schema.ts","./src/schema/sign-up-schema.ts"],"version":"5.6.3"}
