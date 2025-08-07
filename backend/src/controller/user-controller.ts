@@ -9,6 +9,10 @@ import {
   SignInInputUser,
   signInSchema,
 } from 'shared/src/schema/sign-in-schema';
+import {
+  ResetPasswordInput,
+  resetPasswordSchema,
+} from 'shared/src/schema/reset-password-schema';
 import prisma from '../../db';
 import argon2 from 'argon2';
 import jwt, { JwtPayload } from 'jsonwebtoken';
@@ -17,6 +21,8 @@ import { log } from 'shared/src/logger';
 import { checkEmailFormatValid } from '../utils/checkEmailFormatValid';
 import { generateOtp } from '../utils/generateOtp';
 import { sendEmail } from '../utils/sendEmail';
+import { v4 } from 'uuid';
+import { normalizeEmail, escape } from 'validator';
 
 const accessTokencookieOptions = {
   httpOnly: true,
@@ -64,11 +70,12 @@ export const signUp = async (req: Request, res: Response) => {
       });
     }
 
-    const hasedPassword = await argon2.hash(password);
+    const hashedPassword = await argon2.hash(password);
+
     await prisma.user.create({
       data: {
         ...body,
-        password: hasedPassword,
+        password: hashedPassword,
       },
     });
 
@@ -113,14 +120,19 @@ export const companyDetails = async (req: Request, res: Response) => {
       if (!user) {
         return res.status(400).json({
           success: false,
-          message: 'Email not found!',
+          message: 'User not found!',
         });
       }
 
-      user.address = parseResult.data?.address ?? '';
-      user.businessType = parseResult.data?.businessType ?? '';
-      user.companyName = parseResult.data?.companyName ?? '';
-      user.employeeRange = parseResult.data?.employeeRange ?? null;
+      await prisma.user.update({
+        where: { email: parseResult.data?.email },
+        data: {
+          address: parseResult.data?.address ?? '',
+          businessType: parseResult.data?.businessType ?? '',
+          companyName: parseResult.data?.companyName ?? '',
+          employeeRange: parseResult.data?.employeeRange ?? null,
+        },
+      });
 
       return res.status(200).json({
         success: true,
@@ -341,7 +353,12 @@ export const subscribeNewLetter = async (req: Request, res: Response) => {
       });
     }
 
-    user.isNewsLetterSubscribe = true;
+    await prisma.user.update({
+      where: { email },
+      data: {
+        isNewsLetterSubscribe: true,
+      },
+    });
 
     return res.status(200).json({
       success: true,
@@ -407,8 +424,14 @@ export const forgotPassword = async (req: Request, res: Response) => {
     date.setMinutes(date.getMinutes() + 10);
 
     const otp = generateOtp();
-    user.forgotPasswordOtp = Number(otp);
-    user.forgotPasswordExpiry = date;
+    const hashedOtp = await argon2.hash(otp);
+    await prisma.user.update({
+      where: { email },
+      data: {
+        forgotPasswordOtp: hashedOtp,
+        forgotPasswordExpiry: date,
+      },
+    });
 
     const responseSendEmail = await sendEmail(email, otp);
 
@@ -437,101 +460,202 @@ export const forgotPassword = async (req: Request, res: Response) => {
   }
 };
 
-
 interface ICheckOtp {
-  email: string,
-  otp: string
+  email: string;
+  otp: string;
 }
-
-
 
 export const verifyOtp = async (req: Request, res: Response) => {
   try {
-    
-    const body:ICheckOtp = req.body
+    const body: ICheckOtp = req.body;
 
-    if(!body){
+    if (!body) {
       return res.status(400).json({
         success: false,
-        message: "Please provide inputs!"
-      })
+        message: 'Please provide inputs!',
+      });
     }
 
-const {email, otp} = body
-    
-const isValidEmail = checkEmailFormatValid(email)
+    const { email, otp } = body;
 
-if(!isValidEmail){
-  return res.status(400).json({
-    success: false,
-    message: "Invalid email format!"
-  })
-}
+    const isValidEmail = checkEmailFormatValid(email);
 
+    if (!isValidEmail) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid email format!',
+      });
+    }
 
-const user = await prisma.user.findUnique({
-  where: {
-    email
-  }
-})
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
 
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        messsage: 'User not found!',
+      });
+    }
 
-if(!user){
-  return res.status(400).json({
-    success: false,
-    messsage: "User not found!"
-  })
-}
+    if (!user.forgotPasswordOtp) {
+      return res.status(200).json({
+        success: false,
+        message: 'OTP not found. Please request a password reset again.',
+      });
+    }
 
+    const isOtpValid = await argon2.verify(user.forgotPasswordOtp, otp);
 
-const isOtpValid  = user.forgotPasswordOtp === Number(otp)
-const isOtpExpire =  user.forgotPasswordExpiry &&   user.forgotPasswordExpiry > new Date()
+    const isOtpExpire =
+      user.forgotPasswordExpiry && user.forgotPasswordExpiry > new Date();
 
-if(!isOtpValid || !isOtpExpire){
-  return res.status(400).json({
-    success: false,
-    message: "Invalid or expired otp"
-  })
-}
-user.forgotPasswordOtp = null
-user.forgotPasswordExpiry = null 
+    if (!isOtpValid || !isOtpExpire) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid or expired otp',
+      });
+    }
 
+    const token = v4();
+    const FRONTEND_URL = process.env.FRONTEND_URL;
 
-return res.status(200).json({
-  success:true,
-  message: "Otp verification successfully!"
-})
+    const url = `${FRONTEND_URL}/email=${email}/token=${token}`;
 
+    const date = new Date();
+    date.setMinutes(date.getMinutes() + 10);
+    const hashedUrl = await argon2.hash(token);
+
+    await prisma.user.update({
+      where: { email },
+      data: {
+        forgotPasswordOtp: null,
+        forgotPasswordExpiry: null,
+        isVerifiedOtp: true,
+        forgotPasswordUrlExpiry: date,
+        forgotPasswordUrl: hashedUrl,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Otp verification successfully!',
+      url,
+    });
   } catch (error) {
-     log.error("Error during verifying OTP:", error);
+    log.error('Error during verifying OTP:', error);
 
-  const errorMessage =
-    error instanceof Error
-      ? error.message
-      : "An unexpected error occurred while verifying OTP.";
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : 'An unexpected error occurred while verifying OTP.';
 
-  return res.status(400).json({
-    success: false,
-    message: errorMessage || "Error during verifying OTP.",
-  });
-  
-} 
-}
+    return res.status(400).json({
+      success: false,
+      message: errorMessage || 'Error during verifying OTP.',
+    });
+  }
+};
 
-
-
-export const resetPassword = () => {
+export const resetPassword = async (req: Request, res: Response) => {
   try {
-    // check resetPassword boolean value is complete or not:
-    // if not also check the /email/randomGeneratedEmail is valid/NotExpired or not 
-    // then the password and new Password will work 
+    const body: ResetPasswordInput = req.body;
 
-    
+    if (!body) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide inputs.',
+      });
+    }
+
+    const parseResult = resetPasswordSchema.safeParse(body);
+    if (!parseResult.success) {
+      const errorMessage = parseResult.error.issues.map((issue) => ({
+        field: issue.path.join('.'),
+        message: issue.message,
+      }));
+
+      return res.status(400).json({
+        success: false,
+        message: errorMessage,
+      });
+    }
+
+    const { email, confirmNewPassword, newPassword, token } = parseResult.data;
+
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    if (!user.isVerifiedOtp) {
+      return res.status(200).json({
+        success: false,
+        message: 'OTP verification is required before resetting your password.',
+      });
+    }
+
+    if (!user.forgotPasswordUrl) {
+      return res.status(200).json({
+        success: false,
+        message: 'Reset link is invalid or already used.',
+      });
+    }
+
+    const isValidUrl = await argon2.verify(user.forgotPasswordUrl, token);
+
+    const isValidUrlTime =
+      user.forgotPasswordUrlExpiry && user.forgotPasswordUrlExpiry > new Date();
+
+    if (!isValidUrl || !isValidUrlTime) {
+      return res.status(400).json({
+        success: false,
+        message:
+          'Reset link is invalid or has expired. Please request a new one.',
+      });
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      return res.status(200).json({
+        success: false,
+        message: 'New password and confirm password must match.',
+      });
+    }
+
+    const hasedPassword = await argon2.hash(newPassword);
+
+    await prisma.user.update({
+      where: {
+        email,
+      },
+      data: {
+        password: hasedPassword,
+        isVerifiedOtp: false,
+      },
+    });
+    return res.status(200).json({
+      success: true,
+      message:
+        'Your password has been reset successfully. You can now log in with the new password.',
+    });
   } catch (error) {
-    
+    const errorMessage =
+      error instanceof Error ? error.message : 'Error during reseting password';
+    log.error(' errorMessage : ', errorMessage);
+    return res.status(400).json({
+      success: false,
+      message: errorMessage,
+    });
   }
-}
-
+};
 
 export const userDetails = (_: Request, res: Response) => {
   try {

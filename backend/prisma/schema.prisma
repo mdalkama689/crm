@@ -33,9 +33,15 @@ model User {
   businessType  String?
   address       String?
   isNewsLetterSubscribe Boolean? @default(false)
-  forgotPasswordOtp Int?
-  forgotPasswordExpiry DateTime?
+  forgotPasswordOtp String?
+  forgotPasswordExpiry DateTime? 
+  isVerifiedOtp Boolean? @default(false) 
+  forgotPasswordUrl String?
+  forgotPasswordUrlExpiry DateTime?
 }
+
+
+
 
 
 
