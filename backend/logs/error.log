@@ -633,3 +633,179 @@ Please make sure your database server is running at `ep-little-butterfly-adrh17j
 2025-08-06T10:04:11.305Z [error]: hii
 2025-08-06T10:14:45.002Z [error]: hii
 2025-08-06T10:19:59.176Z [error]: hii
+2025-08-07T12:31:35.515Z [error]: hii
+2025-08-07T12:44:03.532Z [error]: hii
+2025-08-07T12:44:15.358Z [error]: hii
+2025-08-08T05:14:51.045Z [error]: hii
+2025-08-08T05:52:57.788Z [error]: hii
+2025-08-08T05:53:20.168Z [error]: hii
+2025-08-08T06:02:52.770Z [error]: hii
+2025-08-08T06:20:59.266Z [error]: hii
+2025-08-08T08:50:14.016Z [error]: hii
+2025-08-08T08:50:31.678Z [error]: hii
+2025-08-08T08:51:28.052Z [error]: hii
+2025-08-08T09:52:24.552Z [error]: hii
+2025-08-08T09:54:01.444Z [error]: hii
+2025-08-08T09:55:58.180Z [error]: hii
+2025-08-08T09:57:22.742Z [error]: hii
+2025-08-08T09:57:22.934Z [error]: hii
+2025-08-08T10:00:06.593Z [error]: hii
+2025-08-08T10:00:06.835Z [error]: hii
+2025-08-08T10:00:35.420Z [error]: hii
+2025-08-08T10:00:35.554Z [error]: hii
+2025-08-08T10:06:10.215Z [error]: hii
+2025-08-08T10:06:10.251Z [error]: hii
+2025-08-08T10:14:42.632Z [error]: hii
+2025-08-08T10:15:06.626Z [error]: hii
+2025-08-08T10:15:09.634Z [error]: hii
+2025-08-08T10:16:31.875Z [error]: hii
+2025-08-08T10:16:31.926Z [error]: hii
+2025-08-08T10:16:51.275Z [error]: hii
+2025-08-08T10:20:05.352Z [error]: hii
+2025-08-08T10:20:39.260Z [error]: hii
+2025-08-08T10:20:39.331Z [error]: hii
+2025-08-08T10:21:06.155Z [error]: hii
+2025-08-08T10:21:06.394Z [error]: hii
+2025-08-08T10:21:40.556Z [error]: hii
+2025-08-08T10:23:14.450Z [error]: hii
+2025-08-08T10:23:19.649Z [error]: hii
+2025-08-08T10:23:44.670Z [error]: hii
+2025-08-08T10:24:00.770Z [error]: hii
+2025-08-08T10:24:34.673Z [error]: hii
+2025-08-08T10:24:34.861Z [error]: hii
+2025-08-08T10:25:46.590Z [error]: hii
+2025-08-08T10:25:46.647Z [error]: hii
+2025-08-08T10:26:38.472Z [error]: hii
+2025-08-08T10:26:38.441Z [error]: hii
+2025-08-08T10:28:38.993Z [error]: hii
+2025-08-08T10:28:38.993Z [error]: hii
+2025-08-08T10:29:08.221Z [error]: hii
+2025-08-08T10:29:08.259Z [error]: hii
+2025-08-08T10:30:24.767Z [error]: hii
+2025-08-08T10:30:24.860Z [error]: hii
+2025-08-08T10:34:04.276Z [error]: hii
+2025-08-08T10:34:04.743Z [error]: hii
+2025-08-08T10:34:45.136Z [error]: hii
+2025-08-08T10:34:45.256Z [error]: hii
+2025-08-08T10:43:44.850Z [error]: hii
+2025-08-08T10:43:44.944Z [error]: hii
+2025-08-08T10:44:38.368Z [error]: hii
+2025-08-08T10:44:38.727Z [error]: hii
+2025-08-08T10:44:53.481Z [error]: hii
+2025-08-08T11:08:39.012Z [error]: hii
+2025-08-08T11:08:39.022Z [error]: hii
+2025-08-08T11:09:07.716Z [error]: hii
+2025-08-08T11:09:58.199Z [error]: hii
+2025-08-08T11:09:58.286Z [error]: hii
+2025-08-08T11:11:40.650Z [error]: hii
+2025-08-08T11:11:41.749Z [error]: hii
+2025-08-08T11:14:02.444Z [error]: hii
+2025-08-08T11:14:02.723Z [error]: hii
+2025-08-11T11:04:54.362Z [error]: hii
+2025-08-11T11:05:50.738Z [error]: hii
+2025-08-11T11:08:03.193Z [error]: PrismaClientKnownRequestError: 
+Invalid `prisma.employee.create()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:731:27
+
+  728 const date = new Date();
+  729 date.setMinutes(date.getMinutes() + 10);
+  730 
+→ 731 await prisma.employee.create(
+Foreign key constraint violated on the constraint: `Employee_companyId_fkey`
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:228:13)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-11T11:11:06.271Z [error]: hii
+2025-08-11T11:11:22.066Z [error]: hii
+2025-08-11T11:11:50.707Z [error]: hii
+2025-08-11T11:12:25.223Z [error]: hii
+2025-08-11T11:12:52.278Z [error]: hii
+2025-08-11T11:13:09.078Z [error]: TypeError: Converting circular structure to JSON
+    --> starting at object with constructor 'Socket'
+    |     property 'parser' -> object with constructor 'HTTPParser'
+    --- property 'socket' closes the circle
+    at JSON.stringify (<anonymous>)
+    at stringify (C:\Users\mdalk\crm\node_modules\express\lib\response.js:1020:12)
+    at ServerResponse.json (C:\Users\mdalk\crm\node_modules\express\lib\response.js:243:14)
+    at C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:664:28
+    at Generator.next (<anonymous>)
+    at C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:4:12)
+    at userDetails (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:659:66)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+2025-08-11T11:13:24.970Z [error]: TypeError: Converting circular structure to JSON
+    --> starting at object with constructor 'Socket'
+    |     property 'parser' -> object with constructor 'HTTPParser'
+    --- property 'socket' closes the circle
+    at JSON.stringify (<anonymous>)
+    at stringify (C:\Users\mdalk\crm\node_modules\express\lib\response.js:1020:12)
+    at ServerResponse.json (C:\Users\mdalk\crm\node_modules\express\lib\response.js:243:14)
+    at C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:664:28
+    at Generator.next (<anonymous>)
+    at C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:4:12)
+    at userDetails (C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:659:66)
+    at Layer.handleRequest (C:\Users\mdalk\crm\node_modules\router\lib\layer.js:152:17)
+2025-08-11T11:13:58.498Z [error]: hii
+2025-08-11T11:14:22.495Z [error]: hii
+2025-08-11T11:14:35.669Z [error]: hii
+2025-08-11T11:24:18.969Z [error]: hii
+2025-08-11T11:25:42.189Z [error]: hii
+2025-08-11T11:26:09.665Z [error]: PrismaClientKnownRequestError: 
+Invalid `prisma.employee.create()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:737:27
+
+  734 
+  735 
+  736 // const companyId = await prisma.company.  
+→ 737 await prisma.employee.create(
+Foreign key constraint violated on the constraint: `Employee_companyId_fkey`
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:228:13)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-11T11:26:41.251Z [error]: hii
+2025-08-11T11:27:51.428Z [error]: hii
+2025-08-11T11:28:10.805Z [error]: hii
+2025-08-11T11:28:23.222Z [error]: hii
+2025-08-11T11:28:29.515Z [error]: hii
+2025-08-11T11:33:01.171Z [error]: hii
+2025-08-11T11:56:09.751Z [error]: hii
+2025-08-11T12:13:15.810Z [error]: PrismaClientKnownRequestError: 
+Invalid `prisma.employee.create()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:742:27
+
+  739   })
+  740 }
+  741 
+→ 742 await prisma.employee.create(
+Unique constraint failed on the fields: (`email`)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:228:13)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-11T12:15:19.364Z [error]: hii
+2025-08-11T12:15:35.864Z [error]: PrismaClientKnownRequestError: 
+Invalid `prisma.employee.create()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\user-controller.ts:742:27
+
+  739   })
+  740 }
+  741 
+→ 742 await prisma.employee.create(
+Unique constraint failed on the fields: (`email`)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:228:13)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-11T12:18:27.370Z [error]: hii
+2025-08-11T12:19:11.697Z [error]: hii
+2025-08-11T12:19:30.321Z [error]: hii
+2025-08-11T12:21:26.852Z [error]: hii
+2025-08-11T12:22:36.011Z [error]: hii
+2025-08-11T12:24:21.211Z [error]: hii
+2025-08-11T12:26:53.391Z [error]: hii
+2025-08-11T12:28:16.712Z [error]: hii

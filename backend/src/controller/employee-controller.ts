@@ -1,31 +1,30 @@
 import { Request, Response } from 'express';
+import argon2 from 'argon2';
+import prisma from 'backend/db';
 import {
-  CompanyDetailsInput,
-  companyDetailsSchema,
-  SignUpInputUser,
-  signUpSchema,
-} from 'shared/src/schema/sign-up-schema';
+  employeeSignUpInput,
+  employeeSignUpSchema,
+} from 'shared/src/schema/employee-sign-up-schema';
+import { log } from 'shared/src/logger';
 import {
   SignInInputUser,
   signInSchema,
 } from 'shared/src/schema/sign-in-schema';
-import {
-  ResetPasswordInput,
-  resetPasswordSchema,
-} from 'shared/src/schema/reset-password-schema';
+import { generateAccessToken } from '../utils/token';
+import { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+import { checkEmailFormatValid } from '../utils/checkEmailFormatValid';
+import { generateOtp } from '../utils/generateOtp';
+import { sendEmailForOtp } from '../utils/sendEmail';
 import {
   VerifyOtpInput,
   verifyOtpSchema,
 } from 'shared/src/schema/verify-otp-schema';
-import prisma from '../../db';
-import argon2 from 'argon2';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { generateAccessToken } from '../utils/token';
-import { log } from 'shared/src/logger';
-import { checkEmailFormatValid } from '../utils/checkEmailFormatValid';
-import { generateOtp } from '../utils/generateOtp';
-import { sendEmailForInvitation, sendEmailForOtp } from '../utils/sendEmail';
 import { v4 } from 'uuid';
+import {
+  ResetPasswordInput,
+  resetPasswordSchema,
+} from 'shared/src/schema/reset-password-schema';
 
 const accessTokencookieOptions = {
   httpOnly: true,
@@ -34,18 +33,18 @@ const accessTokencookieOptions = {
   maxAge: 24 * 60 * 60 * 1000,
 };
 
-export const signUp = async (req: Request, res: Response) => {
+export const validateTokenAndSignUp = async (req: Request, res: Response) => {
   try {
-    const body: SignUpInputUser = req.body;
+    const body: employeeSignUpInput = req.body;
 
     if (!body) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide inputs.',
+        message: 'Please provide input!',
       });
     }
 
-    const parseResult = signUpSchema.safeParse(body);
+    const parseResult = employeeSignUpSchema.safeParse(body);
     if (!parseResult.success) {
       const errorMessage = parseResult.error.issues.map((issue) => ({
         field: issue.path.join('.'),
@@ -58,97 +57,66 @@ export const signUp = async (req: Request, res: Response) => {
       });
     }
 
-    const { password } = parseResult.data;
+    const { fullname, password, token, email } = parseResult.data;
 
-    const companyCount = await prisma.company.count();
+    const user = await prisma.employee.findUnique({
+      where: {
+        email,
+      },
+    });
 
-    if (companyCount > 0) {
-      return res.status(409).json({
+    if (!user) {
+      return res.status(400).json({
         success: false,
-        message: 'Company already exists. Ask the owner to invite you.',
+        message: 'User not found!',
+      });
+    }
+
+    if (user.isAccountCreated || user.isInvitedTokenUsed) {
+      return res.status(400).json({
+        success: false,
+        message: 'You already have an account!',
+      });
+    }
+
+    const isValidToken = await argon2.verify(user.invitationToken, token);
+    const isTokenNotExpired =
+      !!user.invitationTokenExpiry && user.invitationTokenExpiry > new Date();
+
+      console.log(" both : ", isValidToken, isTokenNotExpired)
+      console.log(" user.invitationToken, token : ", user.invitationToken, token)
+    if (!isValidToken || !isTokenNotExpired) {
+      return res.status(400).json({
+        success: false,
+        message: 'Your invitation link is invalid or has expired.',
       });
     }
 
     const hashedPassword = await argon2.hash(password);
 
-    await prisma.company.create({
+    await prisma.employee.update({
+      where: { email },
       data: {
-        ...body,
+        fullname,
         password: hashedPassword,
-        role: 'owner',
+        isAccountCreated: true,
+        isInvitedTokenUsed: true,
+        invitationToken: "",
+        invitationTokenExpiry: undefined
       },
     });
 
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
       message: 'Account created successfully!',
     });
   } catch (error) {
-    log.error('Signup error : ', error);
+    log.error('Error during validate and Signup an employee acoount: ', error);
 
     const errorMessage =
-      error instanceof Error ? error.message : 'Internal server error.';
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-    });
-  }
-};
-
-export const companyDetails = async (req: Request, res: Response) => {
-  try {
-    const body: CompanyDetailsInput = req.body;
-
-    if (body) {
-      const parseResult = companyDetailsSchema.safeParse(body);
-
-      if (!parseResult.success) {
-        const errorMessage = parseResult.error.issues.map((issue) => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        }));
-        return res.status(400).json({
-          success: false,
-          message: errorMessage,
-        });
-      }
-      const user = await prisma.company.findUnique({
-        where: {
-          email: parseResult.data?.email,
-        },
-      });
-
-      if (!user) {
-        return res.status(400).json({
-          success: false,
-          message: 'User not found!',
-        });
-      }
-
-      await prisma.company.update({
-        where: { email: parseResult.data?.email },
-        data: {
-          address: parseResult.data?.address ?? '',
-          businessType: parseResult.data?.businessType ?? '',
-          companyName: parseResult.data?.companyName ?? '',
-          employeeRange: parseResult.data?.employeeRange ?? null,
-        },
-      });
-
-      return res.status(200).json({
-        success: true,
-        message: 'Company details added successfully.',
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: 'You have not added any details about your company.',
-    });
-  } catch (error) {
-    log.error('Error while adding company details : ', error);
-    const errorMessage =
-      error instanceof Error ? error.message : 'Internal server error';
+      error instanceof Error
+        ? error.message
+        : 'Error during validate and Signup an employee acoount: ';
 
     return res.status(400).json({
       success: false,
@@ -181,7 +149,7 @@ export const signIn = async (req: Request, res: Response) => {
 
     const { email, password } = parseResult.data;
 
-    const user = await prisma.company.findUnique({
+    const user = await prisma.employee.findUnique({
       where: {
         email,
       },
@@ -248,7 +216,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     interface CustomJWTPayload extends JwtPayload {
       id: string;
-      role: 'owner';
+      role: string;
     }
 
     const decoded = (await jwt.verify(
@@ -341,7 +309,7 @@ export const subscribeNewLetter = async (req: Request, res: Response) => {
         message: 'Invalid email format!',
       });
     }
-    const user = await prisma.company.findUnique({
+    const user = await prisma.employee.findUnique({
       where: {
         email,
       },
@@ -354,7 +322,7 @@ export const subscribeNewLetter = async (req: Request, res: Response) => {
       });
     }
 
-    await prisma.company.update({
+    await prisma.employee.update({
       where: { email },
       data: {
         isNewsLetterSubscribe: true,
@@ -408,7 +376,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
       });
     }
 
-    const user = await prisma.company.findUnique({
+    const user = await prisma.employee.findUnique({
       where: {
         email,
       },
@@ -426,7 +394,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
     const otp = generateOtp();
     const hashedOtp = await argon2.hash(otp);
-    await prisma.company.update({
+    await prisma.employee.update({
       where: { email },
       data: {
         forgotPasswordOtp: hashedOtp,
@@ -487,7 +455,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
 
     const { email, otp } = parseResult.data;
 
-    const user = await prisma.company.findUnique({
+    const user = await prisma.employee.findUnique({
       where: {
         email,
       },
@@ -525,7 +493,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
     date.setMinutes(date.getMinutes() + 10);
     const hashedUrl = await argon2.hash(token);
 
-    await prisma.company.update({
+    await prisma.employee.update({
       where: { email },
       data: {
         forgotPasswordOtp: null,
@@ -582,11 +550,10 @@ export const resetPassword = async (req: Request, res: Response) => {
 
     const { email, confirmNewPassword, newPassword, token } = parseResult.data;
 
-    const user = await prisma.company.findUnique({
+    const user = await prisma.employee.findUnique({
       where: { email },
     });
 
-    console.log(' user : ', user);
     if (!user) {
       return res.status(400).json({
         success: false,
@@ -630,7 +597,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 
     const hasedPassword = await argon2.hash(newPassword);
 
-    await prisma.company.update({
+    await prisma.employee.update({
       where: {
         email,
       },
@@ -649,133 +616,6 @@ export const resetPassword = async (req: Request, res: Response) => {
     const errorMessage =
       error instanceof Error ? error.message : 'Error during reseting password';
     log.error(' errorMessage : ', errorMessage);
-    return res.status(400).json({
-      success: false,
-      message: errorMessage,
-    });
-  }
-};
-
-export const userDetails = async (req: Request, res: Response) => {
-  try { 
-    return res.status(200).json({
-      success: true,
-      message: 'User details successfully.',
- 
-    });
-  } catch (error) {
-    log.error('user details  : ', error);
-    const errorMessage =
-      error instanceof Error ? error.message : 'Internal server error';
-
-    return res.status(400).json({
-      success: false,
-      error: errorMessage,
-    });
-  }
-};
-
-export const sendInvitation = async (req: Request, res: Response) => {
-  try {
-    const body = req.body;
-
-    if (!body) {
-      return res.status(400).json({
-        success: false,
-        message: 'Please provide input!',
-      });
-    }
-
-    const email: string = body.email;
-
-    const isValidEmail = checkEmailFormatValid(email);
-
-    if (!isValidEmail) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid email format!',
-      });
-    }
-
-    const employeeExists = await prisma.employee.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    if (employeeExists && employeeExists.isAccountCreated) {
-      return res.status(200).json({
-        success: false,
-        message: 'Employee already exists.',
-      });
-    }
-
-    const token = v4();
-
-    const FRONTEND_URL = process.env.FRONTEND_URL;
-
-    const url = `${FRONTEND_URL}/invite?email=${email}&token=${token}`;
-
-    const responseSendEmail = await sendEmailForInvitation(email, url);
-
-    if (!responseSendEmail) {
-      return res.status(400).json({
-        success: false,
-        message: 'An error occurred while sending the email.',
-      });
-    }
-
-    const hashedToken = await argon2.hash(token);
-    const date = new Date();
-    date.setMinutes(date.getMinutes() + 10);
-
-    
-    const companyId = req.user?.id
-
-    if(!companyId){
-      return res.status(400).json({
-        success: false,
-        message: "Please provide company id!"
-      })
-    }
-    const user = await prisma.employee.findUnique({
-      where: {email}
-    })
-    
-    if(!user){
-    await prisma.employee.create({
-      data: {
-        email: email,
-        isInvited: true,
-        invitationToken: hashedToken,
-        invitationTokenExpiry: date,
-        fullname: '',
-        password: '',
-        companyId 
-      },
-    });
-
-  } 
-  if(user){
-    await prisma.employee.update({
-      where: {email},
-      data: {  isInvited: true,
-        invitationToken: hashedToken,
-        invitationTokenExpiry: date, 
-        companyId  }
-    })
-  }
-
-    return res.status(200).json({
-      success: true,
-      message: `A message send to the email ${email}`,
-      url
-    });
-  } catch (error) {
-    log.error('user details  : ', error);
-    const errorMessage =
-      error instanceof Error ? error.message : 'Internal server error';
-
     return res.status(400).json({
       success: false,
       message: errorMessage,

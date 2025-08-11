@@ -1,17 +1,19 @@
 import {  Mail, MoveLeft } from 'lucide-react';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import Header from '../../layout/Header';
-import { Button } from '../../components/ui/button';
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from "zod"
-import { axiosInstance } from '../../api/axios';
+import * as z from "zod" 
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
-import type { ApiResponse } from '../../types/ApiResponse';
-import type { AxiosError } from 'axios';
+import { toast } from 'sonner'; 
+import type { AxiosError } from 'axios'; 
+import { useNavigateToBack } from '../../../utils/navigateToBack';
+import { axiosInstance } from '../../../api/axios';
+import type { ApiResponse } from '../../../types/ApiResponse';
+import Header from '../../../layout/Header';
+import { Button } from '../../../components/ui/button';
+import { Label } from '../../../components/ui/label';
+import { Input } from '../../../components/ui/input';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -23,7 +25,7 @@ const emailSchema = z.object({
 const NewsLetter = () => {
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
-
+  const navigateToBack = useNavigateToBack()
   const {register, handleSubmit, formState: {errors}}  = useForm({resolver: zodResolver(emailSchema)})
  
 type FormData = z.infer<typeof emailSchema>
@@ -31,11 +33,11 @@ type FormData = z.infer<typeof emailSchema>
     try {
       setIsSubmitting(true)
 
-      const response  = await axiosInstance.post<ApiResponse>('/subscribe-news-letter', data)
+      const response  = await axiosInstance.post<ApiResponse>('/admin/subscribe-news-letter', data)
 
       if(response.data.success){
         toast.success(response.data.message)
-        navigate('/sign-in')
+        navigate('/admin/sign-in')
       }
 
     } catch (error) { 
@@ -70,7 +72,7 @@ navigate('/')
       <div className="flex items-center justify-center pt-[100px] ">
         <div className="max-w-[506px] w-full  bg-[#FFFFFF] rounded-[12px]">
           <div className="flex items-start  flex-col mt-[32px] px-8">
-            <Button className="py-2 px-4 bg-[#1D2939] hover:bg-[#1D2939] cursor-pointer rounded-[360px] w-[85px] h-[36px]">
+            <Button type='button' onClick={navigateToBack} className="py-2 px-4 bg-[#1D2939] hover:bg-[#1D2939] cursor-pointer rounded-[360px] w-[85px] h-[36px]">
               <MoveLeft /> <span>Back</span>
             </Button>
             <p className="font-semibold text-2xl leading-8 tracking-normal mt-4">
@@ -119,7 +121,7 @@ navigate('/')
                 Skip{' '}
               </Button>
               <Button
-type='submit'
+               type='submit'
                             disabled={isSubmitting}
               className="h-[60px] w-[50%] py-[18px] bg-[#A176F7] cursor-pointer hover:bg-[#A176F7] rounded-[360px] font-medium text-[16px] leading-[24px] text-white">
                 {' '}

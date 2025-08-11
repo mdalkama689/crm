@@ -18,12 +18,29 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendEmail = async (to: string, otp: string) => {
+export const sendEmailForOtp = async (to: string, otp: string) => {
   const mailOptions = {
     from: 'noreplycrm@gmail.com',
     to,
     subject: `Your OTP from CRM Company`,
     text: `Your OTP is ${otp}. This OTP has been sent by CRM Company and is valid for the next 10 minutes.`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+export const sendEmailForInvitation = async (to: string, url: string) => {
+  const mailOptions = {
+    from: 'noreplycrm@gmail.com',
+    to,
+    subject: `You have invited to the crm `,
+    text: `To login in the crm click on the link ${url} `,
   };
 
   try {

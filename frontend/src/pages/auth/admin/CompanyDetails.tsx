@@ -1,26 +1,29 @@
 import { MoveLeft } from 'lucide-react';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import Header from '../../layout/Header';
-import { Button } from '../../components/ui/button';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Textarea } from '../../components/ui/textarea';
+
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../../components/ui/select';
+} from '../../../components/ui/select';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { companyDetailsSchema } from 'shared/src/schema/sign-up-schema';
 import * as z from 'zod';
-import { axiosInstance } from '../../api/axios';
-import type { ApiResponse } from '../../types/ApiResponse';
+
 import { toast } from 'sonner';
-import type { AxiosError } from 'axios';
+import type { AxiosError } from 'axios'; 
+import { useNavigateToBack } from '../../../utils/navigateToBack';
+import { axiosInstance } from '../../../api/axios';
+import type { ApiResponse } from '../../../types/ApiResponse';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Header from '../../../layout/Header';
+import { Button } from '../../../components/ui/button';
+import { Label } from '@radix-ui/react-label';
+import { Input } from '../../../components/ui/input';
+import { Textarea } from '../../../components/ui/textarea';
 
 const employeeRangeOptions = [
   {
@@ -46,6 +49,7 @@ const CompanyDetails = () => {
   const search = new URLSearchParams(location.search);
   const email = search.get('email') ?? '';
 
+  const navigateToBack = useNavigateToBack()
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   type FormData = z.infer<typeof companyDetailsSchema>;
@@ -66,13 +70,13 @@ const CompanyDetails = () => {
     try {
       setIsSubmitting(true);
       const response = await axiosInstance.post<ApiResponse>(
-        '/company-details',
+        '/admin/company-details',
         data,
       );
 
       if (response.data.success) {
         toast.success(response.data.message);
-        navigate('/subscribe-news-letter');
+        navigate('/admin/subscribe-news-letter');
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -102,7 +106,7 @@ const CompanyDetails = () => {
       <div className="flex items-center justify-center pt-[100px] ">
         <div className="max-w-[506px] w-full  bg-[#FFFFFF] rounded-[12px]">
           <div className="flex items-start  flex-col mt-[32px] px-8">
-            <Button className="py-2 px-4 bg-[#1D2939] hover:bg-[#1D2939] cursor-pointer rounded-[360px] w-[85px] h-[36px]">
+            <Button type='button' onClick={navigateToBack} className="py-2 px-4 bg-[#1D2939] hover:bg-[#1D2939] cursor-pointer rounded-[360px] w-[85px] h-[36px]">
               <MoveLeft /> <span>Back</span>
             </Button>
             <p className="font-semibold text-2xl leading-8 tracking-normal mt-4">

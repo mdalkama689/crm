@@ -1,48 +1,51 @@
-import { Eye, EyeOff, KeyRound, Mail } from 'lucide-react';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import Header from '../../layout/Header';
-import { Button } from '../../components/ui/button';
-import { Link, useNavigate } from 'react-router-dom';
-import { signUpSchema } from 'shared/src/schema/sign-up-schema';
-import * as z from 'zod';
+import { Eye, EyeOff, KeyRound  } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import  { employeeSignUpSchema, type employeeSignUpInput } from 'shared/src/schema/employee-sign-up-schema';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { axiosInstance } from '../../api/axios';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import type { AxiosError } from 'axios';
-import type { ApiResponse } from '../../types/ApiResponse';
+import type { AxiosError } from 'axios'; 
+import { axiosInstance } from '../../../api/axios';
+import type { ApiResponse } from '../../../types/ApiResponse';
+import Header from '../../../layout/Header';
+import { Label } from '../../../components/ui/label';
+import { Input } from '../../../components/ui/input';
+import { Button } from '../../../components/ui/button';
 
 const SignUp = () => {
- 
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const location = useLocation()
+  const search = new URLSearchParams(location.search)
+const email = search.get("email") ?? ""
+const token = search.get("token") ?? ""
 
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+ 
   const {
     handleSubmit,
-    register,
+    register,  
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(employeeSignUpSchema),
   });
-
-  type FormData = z.infer<typeof signUpSchema>;
 
   const navigate = useNavigate();
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: employeeSignUpInput) => {
     try {
       setIsSubmitting(true);
       const response = await axiosInstance.post<ApiResponse>('/sign-up', data);
 
       if (response.data.success) {
         toast.success('Account created successfully!');
-        navigate(`/company-details?email=${data.email}`);
+        navigate('/sign-in')
       }
     } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>
-      const errorMessage = axiosError.response?.data.message || 'Error during creating an account!'
-      
+      const axiosError = error as AxiosError<ApiResponse>;
+      const errorMessage =
+        axiosError.response?.data.message ||
+        'Error during creating an account!';
+
       toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -50,18 +53,23 @@ const SignUp = () => {
   };
 
   const onError = () => {
-    try {
-      if (errors.fullname) {
-        return toast.error(errors.fullname.message);
-      }
-      if (errors.email) {
-        return toast.error(errors.email.message);
-      }
+   
+   
+      if(errors.token){
+      return toast.error(errors.token.message)
+    }
+      if(errors.password){
+      return toast.error(errors.password.message)
+    }
 
-      if (errors.password) {
-        return toast.error(errors.password.message);
-      }
-    } catch (error) {}
+     if(errors.email){
+      return toast.error(errors.email.message)
+    }
+      if(errors.fullname){
+      return toast.error(errors.fullname.message)
+    }
+
+     
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -69,6 +77,8 @@ const SignUp = () => {
   const togglePassword = () => {
     setShowPassword(!showPassword);
   };
+
+ 
 
   return (
     <div className="bg-gray-200">
@@ -92,7 +102,45 @@ const SignUp = () => {
             className="flex gap-4 flex-col pt-12 px-8"
             onSubmit={handleSubmit(onSubmit, onError)}
           >
-            <div className="flex flex-col gap-[6px]">
+            
+            <div className="hidden flex-col gap-[6px]">
+              <Label
+                htmlFor="email"
+                className="font-normal text-[#101828] text-[14px] leading-[21px]"
+              >
+                Email
+              </Label>
+              
+                <Input
+                  id="email"
+                  type="text"
+                  defaultValue={email}
+                  {...register('email')}
+                  placeholder="sample@email.com"
+                  className="rounded-full py-4  px-5 pl-8 h-[52px] text-black"
+                  disabled={isSubmitting}
+                /> 
+            </div>
+            
+            <div className="hidden flex-col gap-[6px]">
+              <Label
+                htmlFor="token"
+                className="font-normal text-[#101828] text-[14px] leading-[21px]"
+              >
+             Token 
+              </Label>
+              <Input
+                id="token"
+                type="text"
+                {...register('token')}
+                defaultValue={token}
+                placeholder="token"
+                className="rounded-full py-4 px-5 h-[52px] text-black"
+                disabled={isSubmitting}
+              />
+            </div>
+
+ <div className="flex flex-col gap-[6px]">
               <Label
                 htmlFor="fullname"
                 className="font-normal text-[#101828] text-[14px] leading-[21px]"
@@ -108,30 +156,7 @@ const SignUp = () => {
                 disabled={isSubmitting}
               />
             </div>
-
-            <div className="flex flex-col gap-[6px]">
-              <Label
-                htmlFor="email"
-                className="font-normal text-[#101828] text-[14px] leading-[21px]"
-              >
-                Email
-              </Label>
-              <div className="flex items-center justify-center relative">
-                <Mail
-                  size={18}
-                  color="#667085"
-                  className="absolute left-3 top-[18px]"
-                />
-                <Input
-                  id="email"
-                  type="text"
-                  {...register('email')}
-                  placeholder="sample@email.com"
-                  className="rounded-full py-4  px-5 pl-8 h-[52px] text-black"
-                  disabled={isSubmitting}
-                />
-              </div>
-            </div>
+             
 
             <div className="flex flex-col gap-[6px]">
               <Label
@@ -173,7 +198,7 @@ const SignUp = () => {
             </div>
             <Button
               disabled={isSubmitting}
-              type='submit'
+              type="submit"
               className="h-[60px] py-[18px] bg-[#F16334] cursor-pointer hover:bg-[#F16334] rounded-[360px] font-medium text-[16px] leading-[24px] text-[#101828]"
             >
               {' '}
@@ -229,4 +254,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignUp; 
