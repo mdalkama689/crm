@@ -1,85 +1,82 @@
-import { useEffect, useState } from "react"
-import Header from "../../../layout/Header"
-import { Label } from "../../../components/ui/label"
-import { Input } from "../../../components/ui/input"
-import { Button } from "../../../components/ui/button"
-import { Mail } from "lucide-react"
-import * as z from 'zod'
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { toast } from "sonner"
-import { axiosInstance } from "../../../api/axios"
-import type { AxiosError } from "axios"
-import type { ApiResponse } from "../../../types/ApiResponse" 
+import { useEffect, useState } from 'react';
+import Header from '../../../layout/Header';
+import { Label } from '../../../components/ui/label';
+import { Input } from '../../../components/ui/input';
+import { Button } from '../../../components/ui/button';
+import { Mail } from 'lucide-react';
+import * as z from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
+import { axiosInstance } from '../../../api/axios';
+import type { AxiosError } from 'axios';
+import type { ApiResponse } from '../../../types/ApiResponse';
 const SendInvitation = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
-const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
-
- const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-   const emailSchema = z.object({
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailSchema = z.object({
     email: z
       .string({ error: 'Email is required' })
       .regex(new RegExp(emailRegex), 'Invalid email format.'),
   });
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(emailSchema),
+  });
 
-  const {register, handleSubmit,  formState: {errors}} = useForm({
-    resolver: zodResolver(emailSchema)
-  })
+  useEffect(() => {
+    const getLoggedValueFromLocalStorage = localStorage.getItem('login');
 
-    useEffect(() => {
-        const getLoggedValueFromLocalStorage = localStorage.getItem("login")
-
-        if(getLoggedValueFromLocalStorage){
-            setIsLoggedIn(true)
-        } 
-
-
-    }, [])
-
-
-    type FormData = z.infer<typeof emailSchema>
-
-    const onSubmit = async  (data: FormData) => {
-        try {
-            setIsSubmitting(true)
-            const response = await  axiosInstance.post<ApiResponse>('/admin/send-invitation', data)
-    
-            if(response.data.success){
-                return toast.info(response.data.message)
-            }else{
-                 return toast.error(response.data.message)
-            }
-        } catch (error) { 
-              const axiosError = error as AxiosError<ApiResponse>;
-              const errorMessage =
-                axiosError?.response?.data?.message ||
-                'Something went wrong during forgotting password.';
-        
-              toast.error(errorMessage);
-            } finally {
-              setIsSubmitting(false);
-            }
-
+    if (getLoggedValueFromLocalStorage) {
+      setIsLoggedIn(true);
     }
+  }, []);
 
-    const onError  =() => {
-        if(errors.email){
-            return toast.error(errors.email.message)
-        }
+  type FormData = z.infer<typeof emailSchema>;
 
+  const onSubmit = async (data: FormData) => {
+    try {
+      setIsSubmitting(true);
+      const response = await axiosInstance.post<ApiResponse>(
+        '/admin/send-invitation',
+        data,
+      );
 
+      if (response.data.success) {
+        return toast.info(response.data.message);
+      } else {
+        return toast.error(response.data.message);
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse>;
+      const errorMessage =
+        axiosError?.response?.data?.message ||
+        'Something went wrong during forgotting password.';
+
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
+  };
 
-    if(!isLoggedIn){
-        return <p>Please login to continue</p>
+  const onError = () => {
+    if (errors.email) {
+      return toast.error(errors.email.message);
     }
+  };
 
+  if (!isLoggedIn) {
+    return <p>Please login to continue</p>;
+  }
 
   return (
-
-  <div className="bg-gray-200">
+    <div className="bg-gray-200">
       <Header />
 
       <div className="flex items-center justify-center pt-[100px] ">
@@ -100,8 +97,7 @@ const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
             className="flex gap-4 flex-col pt-12 px-8"
             onSubmit={handleSubmit(onSubmit, onError)}
           >
-        
-   <div className="flex flex-col gap-[6px]">
+            <div className="flex flex-col gap-[6px]">
               <Label
                 htmlFor="email"
                 className="font-normal text-[#101828] text-[14px] leading-[21px]"
@@ -131,18 +127,16 @@ const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
               className="h-[60px] py-[18px] bg-[#F16334] cursor-pointer hover:bg-[#F16334] rounded-[360px] font-medium text-[16px] leading-[24px] text-[#101828]"
             >
               {' '}
-              Send Invitation {' '}
+              Send Invitation{' '}
             </Button>
           </form>
- 
 
           <div className="pb-10"></div>
         </div>
       </div>
       <div className="pb-[300px]"></div>
     </div>
+  );
+};
 
-  )
-}
-
-export default SendInvitation
+export default SendInvitation;

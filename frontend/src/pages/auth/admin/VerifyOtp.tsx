@@ -1,9 +1,8 @@
-
 import { useState } from 'react';
 import {
   verifyOtpSchema,
   type VerifyOtpInput,
-} from 'shared/src/schema/verify-otp-schema';  
+} from 'shared/src/schema/verify-otp-schema';
 import type { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
@@ -15,7 +14,7 @@ import { Label } from '../../../components/ui/label';
 import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 
-const VeifyOtp = ({email}: {email: string}) => {
+const VeifyOtp = ({ email }: { email: string }) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const {
@@ -26,11 +25,11 @@ const VeifyOtp = ({email}: {email: string}) => {
     resolver: zodResolver(verifyOtpSchema),
   });
 
-  const navigate  = useNavigate()
+  const navigate = useNavigate();
 
-   interface VerifyOtpResponse extends  ApiResponse{
-   token  : string 
-   }
+  interface VerifyOtpResponse extends ApiResponse {
+    token: string;
+  }
 
   const onSubmit = async (data: VerifyOtpInput) => {
     try {
@@ -39,13 +38,12 @@ const VeifyOtp = ({email}: {email: string}) => {
         '/admin/verify-otp',
         data,
       );
-        
-      if(response.data.success){ 
-        const token = response.data.token        
-        navigate(`/reset-password?email=${email}&token=${token}`)
-        toast.success(response.data.message)
+
+      if (response.data.success) {
+        const token = response.data.token;
+        navigate(`/reset-password?email=${email}&token=${token}`);
+        toast.success(response.data.message);
       }
-      
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       const errorMessage =
@@ -78,7 +76,7 @@ const VeifyOtp = ({email}: {email: string}) => {
           htmlFor="email"
           className="font-normal text-[#101828] text-[14px] leading-[21px]"
         >
-        email 
+          email
         </Label>
 
         <Input

@@ -3,13 +3,13 @@ import { useState } from 'react';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner'; 
-import { AxiosError } from 'axios'; 
+import { toast } from 'sonner';
+import { AxiosError } from 'axios';
 import { useNavigateToBack } from '../../../utils/navigateToBack';
 import { axiosInstance } from '../../../api/axios';
 import type { ApiResponse } from '../../../types/ApiResponse';
 import Header from '../../../layout/Header';
-import { Button } from '../../../components/ui/button'; 
+import { Button } from '../../../components/ui/button';
 import { Label } from '../../../components/ui/label';
 import { Input } from '../../../components/ui/input';
 import VeifyOtp from './VerifyOtp';
@@ -20,11 +20,10 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState<string>('');
   const [otpMinute, setOtpMinute] = useState<number>(0);
   const [otpSecond, setOtpSecond] = useState<number>(0);
-  const navigateToBack = useNavigateToBack()
-
+  const navigateToBack = useNavigateToBack();
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-   const emailSchema = z.object({
+  const emailSchema = z.object({
     email: z
       .string({ error: 'Email is required' })
       .regex(new RegExp(emailRegex), 'Invalid email format.'),
@@ -49,12 +48,12 @@ const ForgotPassword = () => {
       );
 
       if (response.data.success) {
-        toast.success(response.data.message)
+        toast.success(response.data.message);
         setEmail(data.email);
         setShowOtpForm(true);
         startOtpTime();
       }
-    } catch (error) { 
+    } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       const errorMessage =
         axiosError?.response?.data?.message ||
@@ -85,17 +84,10 @@ const ForgotPassword = () => {
         setOtpMinute(minute);
         setOtpSecond(second);
       } else {
-        clearInterval(intervalid); 
+        clearInterval(intervalid);
       }
     }, 1000);
   };
-
-
-
-
-
-
-
 
   return (
     <div className="bg-gray-200">
@@ -104,7 +96,11 @@ const ForgotPassword = () => {
       <div className="flex items-center justify-center pt-[100px] ">
         <div className="max-w-[506px] w-full  bg-[#FFFFFF] rounded-[12px]">
           <div className="flex items-start  flex-col mt-[32px] px-8">
-            <Button type='button' onClick={navigateToBack} className="py-2 px-4 bg-[#1D2939] hover:bg-[#1D2939] cursor-pointer rounded-[360px] w-[85px] h-[36px]">
+            <Button
+              type="button"
+              onClick={navigateToBack}
+              className="py-2 px-4 bg-[#1D2939] hover:bg-[#1D2939] cursor-pointer rounded-[360px] w-[85px] h-[36px]"
+            >
               <MoveLeft /> <span>Back</span>
             </Button>
             <p className="font-semibold text-2xl leading-8 tracking-normal mt-4">

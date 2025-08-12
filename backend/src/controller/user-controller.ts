@@ -656,24 +656,7 @@ export const resetPassword = async (req: Request, res: Response) => {
   }
 };
 
-export const userDetails = async (req: Request, res: Response) => {
-  try { 
-    return res.status(200).json({
-      success: true,
-      message: 'User details successfully.',
- 
-    });
-  } catch (error) {
-    log.error('user details  : ', error);
-    const errorMessage =
-      error instanceof Error ? error.message : 'Internal server error';
 
-    return res.status(400).json({
-      success: false,
-      error: errorMessage,
-    });
-  }
-};
 
 export const sendInvitation = async (req: Request, res: Response) => {
   try {
@@ -729,47 +712,47 @@ export const sendInvitation = async (req: Request, res: Response) => {
     const date = new Date();
     date.setMinutes(date.getMinutes() + 10);
 
-    
-    const companyId = req.user?.id
+    const companyId = req.user?.id;
 
-    if(!companyId){
+    if (!companyId) {
       return res.status(400).json({
         success: false,
-        message: "Please provide company id!"
-      })
+        message: 'Please provide company id!',
+      });
     }
     const user = await prisma.employee.findUnique({
-      where: {email}
-    })
-    
-    if(!user){
-    await prisma.employee.create({
-      data: {
-        email: email,
-        isInvited: true,
-        invitationToken: hashedToken,
-        invitationTokenExpiry: date,
-        fullname: '',
-        password: '',
-        companyId 
-      },
+      where: { email },
     });
 
-  } 
-  if(user){
-    await prisma.employee.update({
-      where: {email},
-      data: {  isInvited: true,
-        invitationToken: hashedToken,
-        invitationTokenExpiry: date, 
-        companyId  }
-    })
-  }
+    if (!user) {
+      await prisma.employee.create({
+        data: {
+          email: email,
+          isInvited: true,
+          invitationToken: hashedToken,
+          invitationTokenExpiry: date,
+          fullname: '',
+          password: '',
+          companyId,
+        },
+      });
+    }
+    if (user) {
+      await prisma.employee.update({
+        where: { email },
+        data: {
+          isInvited: true,
+          invitationToken: hashedToken,
+          invitationTokenExpiry: date,
+          companyId,
+        },
+      });
+    }
 
     return res.status(200).json({
       success: true,
       message: `A message send to the email ${email}`,
-      url
+      url,
     });
   } catch (error) {
     log.error('user details  : ', error);

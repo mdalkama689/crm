@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import type { AxiosError } from 'axios'; 
+import type { AxiosError } from 'axios';
 import { axiosInstance } from '../../../api/axios';
 import type { ApiResponse } from '../../../types/ApiResponse';
 import Header from '../../../layout/Header';
@@ -32,7 +32,10 @@ const SignUp = () => {
   const onSubmit = async (data: FormData) => {
     try {
       setIsSubmitting(true);
-      const response = await axiosInstance.post<ApiResponse>('/admin/sign-up', data);
+      const response = await axiosInstance.post<ApiResponse>(
+        '/admin/sign-up',
+        data,
+      );
 
       if (response.data.success) {
         toast.success('Account created successfully!');

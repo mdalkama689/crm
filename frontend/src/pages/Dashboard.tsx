@@ -1,25 +1,13 @@
-import { useEffect, useState } from "react"
+import Sidebar from '../layout/Sidebar';
+import Topbar from '../layout/Topbar';
 
 const Dashboard = () => {
-const [login, setLogin] = useState<boolean>(false)
-
-
-    useEffect(() => {
-const isLogin = localStorage.getItem("login")
-
-if(isLogin){
-    setLogin(true)
-}
-
-
-    }, [])
-
-    if(!login){
-        return <p>You are not loggedin , pleae logi</p>
-    }
   return (
-    <div>Welcome to the dashboard </div>
-  )
-}
+    <div>
+      <Sidebar />
+      <Topbar />
+    </div>
+  );
+};
 
-export default Dashboard
+export default Dashboard;

@@ -1,11 +1,14 @@
-import { Eye, EyeOff, KeyRound  } from 'lucide-react';
+import { Eye, EyeOff, KeyRound } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import  { employeeSignUpSchema, type employeeSignUpInput } from 'shared/src/schema/employee-sign-up-schema';
+import {
+  employeeSignUpSchema,
+  type employeeSignUpInput,
+} from 'shared/src/schema/employee-sign-up-schema';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import type { AxiosError } from 'axios'; 
+import type { AxiosError } from 'axios';
 import { axiosInstance } from '../../../api/axios';
 import type { ApiResponse } from '../../../types/ApiResponse';
 import Header from '../../../layout/Header';
@@ -14,16 +17,16 @@ import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 
 const SignUp = () => {
-  const location = useLocation()
-  const search = new URLSearchParams(location.search)
-const email = search.get("email") ?? ""
-const token = search.get("token") ?? ""
+  const location = useLocation();
+  const search = new URLSearchParams(location.search);
+  const email = search.get('email') ?? '';
+  const token = search.get('token') ?? '';
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
- 
+
   const {
     handleSubmit,
-    register,  
+    register,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(employeeSignUpSchema),
@@ -38,7 +41,7 @@ const token = search.get("token") ?? ""
 
       if (response.data.success) {
         toast.success('Account created successfully!');
-        navigate('/sign-in')
+        navigate('/sign-in');
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -53,23 +56,19 @@ const token = search.get("token") ?? ""
   };
 
   const onError = () => {
-   
-   
-      if(errors.token){
-      return toast.error(errors.token.message)
+    if (errors.token) {
+      return toast.error(errors.token.message);
     }
-      if(errors.password){
-      return toast.error(errors.password.message)
+    if (errors.password) {
+      return toast.error(errors.password.message);
     }
 
-     if(errors.email){
-      return toast.error(errors.email.message)
+    if (errors.email) {
+      return toast.error(errors.email.message);
     }
-      if(errors.fullname){
-      return toast.error(errors.fullname.message)
+    if (errors.fullname) {
+      return toast.error(errors.fullname.message);
     }
-
-     
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -77,8 +76,6 @@ const token = search.get("token") ?? ""
   const togglePassword = () => {
     setShowPassword(!showPassword);
   };
-
- 
 
   return (
     <div className="bg-gray-200">
@@ -102,7 +99,6 @@ const token = search.get("token") ?? ""
             className="flex gap-4 flex-col pt-12 px-8"
             onSubmit={handleSubmit(onSubmit, onError)}
           >
-            
             <div className="hidden flex-col gap-[6px]">
               <Label
                 htmlFor="email"
@@ -110,24 +106,24 @@ const token = search.get("token") ?? ""
               >
                 Email
               </Label>
-              
-                <Input
-                  id="email"
-                  type="text"
-                  defaultValue={email}
-                  {...register('email')}
-                  placeholder="sample@email.com"
-                  className="rounded-full py-4  px-5 pl-8 h-[52px] text-black"
-                  disabled={isSubmitting}
-                /> 
+
+              <Input
+                id="email"
+                type="text"
+                defaultValue={email}
+                {...register('email')}
+                placeholder="sample@email.com"
+                className="rounded-full py-4  px-5 pl-8 h-[52px] text-black"
+                disabled={isSubmitting}
+              />
             </div>
-            
+
             <div className="hidden flex-col gap-[6px]">
               <Label
                 htmlFor="token"
                 className="font-normal text-[#101828] text-[14px] leading-[21px]"
               >
-             Token 
+                Token
               </Label>
               <Input
                 id="token"
@@ -140,7 +136,7 @@ const token = search.get("token") ?? ""
               />
             </div>
 
- <div className="flex flex-col gap-[6px]">
+            <div className="flex flex-col gap-[6px]">
               <Label
                 htmlFor="fullname"
                 className="font-normal text-[#101828] text-[14px] leading-[21px]"
@@ -156,7 +152,6 @@ const token = search.get("token") ?? ""
                 disabled={isSubmitting}
               />
             </div>
-             
 
             <div className="flex flex-col gap-[6px]">
               <Label
@@ -254,4 +249,4 @@ const token = search.get("token") ?? ""
   );
 };
 
-export default SignUp; 
+export default SignUp;

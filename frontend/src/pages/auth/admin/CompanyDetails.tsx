@@ -14,7 +14,7 @@ import { companyDetailsSchema } from 'shared/src/schema/sign-up-schema';
 import * as z from 'zod';
 
 import { toast } from 'sonner';
-import type { AxiosError } from 'axios'; 
+import type { AxiosError } from 'axios';
 import { useNavigateToBack } from '../../../utils/navigateToBack';
 import { axiosInstance } from '../../../api/axios';
 import type { ApiResponse } from '../../../types/ApiResponse';
@@ -49,7 +49,7 @@ const CompanyDetails = () => {
   const search = new URLSearchParams(location.search);
   const email = search.get('email') ?? '';
 
-  const navigateToBack = useNavigateToBack()
+  const navigateToBack = useNavigateToBack();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   type FormData = z.infer<typeof companyDetailsSchema>;
@@ -89,7 +89,7 @@ const CompanyDetails = () => {
     }
   };
 
-  // need to fix this 
+  // need to fix this
   const onError = () => {
     if (errors.address) {
     }
@@ -106,7 +106,11 @@ const CompanyDetails = () => {
       <div className="flex items-center justify-center pt-[100px] ">
         <div className="max-w-[506px] w-full  bg-[#FFFFFF] rounded-[12px]">
           <div className="flex items-start  flex-col mt-[32px] px-8">
-            <Button type='button' onClick={navigateToBack} className="py-2 px-4 bg-[#1D2939] hover:bg-[#1D2939] cursor-pointer rounded-[360px] w-[85px] h-[36px]">
+            <Button
+              type="button"
+              onClick={navigateToBack}
+              className="py-2 px-4 bg-[#1D2939] hover:bg-[#1D2939] cursor-pointer rounded-[360px] w-[85px] h-[36px]"
+            >
               <MoveLeft /> <span>Back</span>
             </Button>
             <p className="font-semibold text-2xl leading-8 tracking-normal mt-4">
@@ -227,7 +231,7 @@ const CompanyDetails = () => {
 
             <div className="flex gap-3">
               <Button
-              type='button'
+                type="button"
                 className="h-[60px] w-[50%] py-[18px] border border-gray-300 bg-transparent cursor-pointer hover:bg-transparent rounded-[360px] font-medium text-[16px] leading-[24px] text-[#101828]"
                 onClick={navigateToHome}
               >

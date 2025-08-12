@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { Eye, EyeOff, KeyRound, Mail } from 'lucide-react'; 
+import { Eye, EyeOff, KeyRound, Mail } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   signInSchema,
   type SignInInputUser,
-} from 'shared/src/schema/sign-in-schema'; 
-import type { AxiosError } from 'axios'; 
+} from 'shared/src/schema/sign-in-schema';
+import type { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { axiosInstance } from '../../../api/axios';
 import type { ApiResponse } from '../../../types/ApiResponse';
@@ -39,7 +39,7 @@ const SignIn = () => {
       if (response.data.success) {
         toast.success('Logged in successfully!');
         navigate('/');
-        localStorage.setItem("login", "true")
+        localStorage.setItem('login', 'true');
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -145,7 +145,7 @@ const SignIn = () => {
                 )}
               </div>
             </div>
-            <Button 
+            <Button
               type="submit"
               className="h-[60px] py-[18px] bg-[#F16334] cursor-pointer hover:bg-[#F16334] rounded-[360px] font-medium text-[16px] leading-[24px] text-[#101828]"
               disabled={isSubmitting}
@@ -227,4 +227,3 @@ const SignIn = () => {
 };
 
 export default SignIn;
- 

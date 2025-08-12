@@ -1,4 +1,4 @@
-import { Eye, EyeOff, KeyRound, MoveLeft } from 'lucide-react'; 
+import { Eye, EyeOff, KeyRound, MoveLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -7,14 +7,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   type ResetPasswordInput,
   resetPasswordSchema,
-} from 'shared/src/schema/reset-password-schema'; 
-import { toast } from 'sonner'; 
-import type { AxiosError } from 'axios'; 
+} from 'shared/src/schema/reset-password-schema';
+import { toast } from 'sonner';
+import type { AxiosError } from 'axios';
 import { useNavigateToBack } from '../../../utils/navigateToBack';
 import { axiosInstance } from '../../../api/axios';
 import type { ApiResponse } from '../../../types/ApiResponse';
 import Header from '../../../layout/Header';
-import { Button } from '../../../components/ui/button'; 
+import { Button } from '../../../components/ui/button';
 import { Label } from '../../../components/ui/label';
 import { Input } from '../../../components/ui/input';
 
@@ -127,7 +127,7 @@ const ResetPassword = () => {
             onSubmit={handleSubmit(onSubmit, onError)}
           >
             <div className="hidden flex-col gap-[6px]">
-              <Label 
+              <Label
                 htmlFor="email"
                 className="font-normal text-[#101828] text-[14px] leading-[21px]"
               >

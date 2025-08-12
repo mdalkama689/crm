@@ -28,7 +28,7 @@ export async function authMiddleware(
 ) {
   try {
     const cookie = req.cookies;
-    
+
     if (cookie) {
       const accessToken = cookie.accessToken;
       if (!accessToken) {
@@ -46,12 +46,10 @@ export async function authMiddleware(
           success: false,
           message: 'Unauthorized. Please log in to continue.',
         });
-      } 
-      req.user = decodedToken as User; 
-        next();
+      }
+      req.user = decodedToken as User;
+      next();
     }
-
-  
   } catch {
     return res.status(400).json({
       success: false,
