@@ -10,6 +10,9 @@ import Dashboard from './pages/Dashboard';
 import SignUp from './pages/auth/employee/SignUp';
 import SignIn from './pages/auth/employee/SignIn';
 import SendInvitation from './pages/auth/admin/SendInvitation';
+import NewsLetter from './pages/auth/employee/NewsLetter';
+import ForgotPassword from './pages/auth/employee/ForgotPassword';
+import ResetPassword from './pages/auth/employee/ResetPassword';
 
 function App() {
   return (
@@ -27,6 +30,9 @@ function App() {
        {/* employee routes  */}
     <Route path="/invite" element={<SignUp />} />
 <Route path="/sign-in" element={<SignIn/>} />
+  <Route path="/subscribe-news-letter" element={<NewsLetter />} />
+       <Route path="/forgot-password" element={<ForgotPassword/>} />
+      <Route path="/reset-password" element={<ResetPassword/>} />
 
     </Routes>
   );

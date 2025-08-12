@@ -1048,3 +1048,5 @@ Unique constraint failed on the fields: (`email`)
 2025-08-11T12:26:53.665Z [info]: server is runnig at 8000
 2025-08-11T12:28:16.712Z [error]: hii
 2025-08-11T12:28:17.082Z [info]: server is runnig at 8000
+2025-08-12T05:30:14.801Z [error]: hii
+2025-08-12T05:30:15.220Z [info]: server is runnig at 8000

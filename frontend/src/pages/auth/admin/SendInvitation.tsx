@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
 import { axiosInstance } from "../../../api/axios"
 import type { AxiosError } from "axios"
-import type { ApiResponse } from "../../../types/ApiResponse"
+import type { ApiResponse } from "../../../types/ApiResponse" 
 const SendInvitation = () => {
 
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
