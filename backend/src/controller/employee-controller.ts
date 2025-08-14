@@ -25,9 +25,8 @@ import {
   ResetPasswordInput,
   resetPasswordSchema,
 } from 'shared/src/schema/reset-password-schema';
-import gravatar from 'gravatar'
-import crypto from 'crypto'
-
+import gravatar from 'gravatar';
+import crypto from 'crypto';
 
 const accessTokencookieOptions = {
   httpOnly: true,
@@ -634,10 +633,20 @@ export const userDetails = async (req: Request, res: Response) => {
     if (role && role.toLowerCase() === 'owner') {
       user = await prisma.company.findUnique({
         where: { id },
+        select: {
+          fullname: true,
+          email: true,
+                role: true
+        },
       });
-    } else if (role && role.toLowerCase() === 'employee') {
+    } else  {
       user = await prisma.employee.findUnique({
         where: { id },
+        select: {
+          fullname: true,
+          email: true,
+          role: true
+        },
       });
     }
 
@@ -658,71 +667,71 @@ export const userDetails = async (req: Request, res: Response) => {
   }
 };
 
-
-// export const fetchProfilePhotoFromGravatar = async (req: Request, res: Response) => {
-//   try {
-
-//     // const email = "hello@betasaurus.com"
-// const email = "mdalkama220@gmail.com"
-// const avatarUrl = gravatar.url(email, { s: '200', r: 'pg', d: 'mm' }); 
-
-
-// return res.status(200).json({
-//   success: true,
-//   message: "Avatar images fetch successfully!",
-//   email, 
-//   avatarUrl 
-// })
-
-
-//   } catch (error) {
-//     log.error(" Error while fetching user profile pic from gravatar : ", error)
-//     const errorMessage = error instanceof Error ? error.message : "Error while fetching user profile pic from gravatar"
-
-//     return res.status(400).json({
-//       success: false,
-//       message: errorMessage
-//     })
-  
-//   }
-
-
-// }
-
-
-
-export const fetchProfilePhotoFromGravatar = async (req: Request, res: Response) => {
+export const fetchProfilePhotoFromGravatar = async (
+  req: Request,
+  res: Response,
+) => {
   try {
-    const email = "hello@betasaurus.com"; // test email
- 
-    const hash = crypto.createHash("md5").update(email.trim().toLowerCase()).digest("hex");
- 
-    const checkUrl = `https://www.gravatar.com/avatar/${hash}?d=404`; 
-    const checkResponse = await fetch(checkUrl);
+    const loggedInUser = req.user;
 
-    let avatarUrl: string;
-
-    if (checkResponse.status === 200) { 
-      avatarUrl = gravatar.url(email, { s: "200", r: "pg", d: "mm" });
-    } else {
-    
-      avatarUrl = "/images/default-avatar.png"; 
+    if (!loggedInUser) {
+      return res.status(400).json({
+        success: false,
+        message: 'Unauthenticated, please login to continue!',
+      });
     }
 
+    const { role, id } = loggedInUser;
+    let user;
+
+    if (role.trim().toLowerCase() === 'owner') {
+      user = await prisma.company.findUnique({
+        where: {
+          id,
+        },
+      });
+    } else {
+      user = await prisma.employee.findUnique({
+        where: {
+          id,
+        },
+      });
+    }
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'User not found!',
+      });
+    }
+
+    const { email } = user;
+
+    const hash = crypto
+      .createHash('md5')
+      .update(email.trim().toLowerCase())
+      .digest('hex');
+    const checkUrl = `https://www.gravatar.com/avatar/${hash}?d=404`;
+    const response = await fetch(checkUrl);
+
+    let avatarUrl: string = '';
+    if (response.status === 200) {
+      avatarUrl = gravatar.url(email, { s: '200', r: 'pg', d: 'mm' });
+    }
     return res.status(200).json({
       success: true,
-      message: "Avatar image fetched successfully!",
-      email,
+      message: 'Avatar image fetched successfully!',
       avatarUrl,
-      checkUrl,
-      checkResponse
     });
   } catch (error) {
-    console.error("Error while fetching user profile pic from gravatar:", error);
+    console.error(
+      'Error while fetching user profile pic from gravatar:',
+      error,
+    );
     const errorMessage =
       error instanceof Error
         ? error.message
-        : "Error while fetching user profile pic from gravatar";
+        : 'Error while fetching user profile pic from gravatar';
 
     return res.status(400).json({
       success: false,
@@ -730,3 +739,5 @@ export const fetchProfilePhotoFromGravatar = async (req: Request, res: Response)
     });
   }
 };
+
+

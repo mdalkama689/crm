@@ -17,6 +17,9 @@ import {
   VerifyOtpInput,
   verifyOtpSchema,
 } from 'shared/src/schema/verify-otp-schema';
+import { 
+  ChangeRoleInput, changeRoleSchema
+} from 'shared/src/schema/change-role-schema';
 import prisma from '../../db';
 import argon2 from 'argon2';
 import jwt, { JwtPayload } from 'jsonwebtoken';
@@ -656,8 +659,6 @@ export const resetPassword = async (req: Request, res: Response) => {
   }
 };
 
-
-
 export const sendInvitation = async (req: Request, res: Response) => {
   try {
     const body = req.body;
@@ -765,3 +766,87 @@ export const sendInvitation = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const changeRole = async (req: Request, res: Response) => {
+  try {
+
+    const body: ChangeRoleInput  = req.body
+
+    if(!body){
+      return res.status(400).json({
+        success: false,
+        message: "Please provide inputs!"
+      })
+    }
+
+const parseResult = changeRoleSchema.safeParse(body)
+
+ if (!parseResult.success) {
+      const errorMessage = parseResult.error.issues.map((issue) => ({
+        field: issue.path.join('.'),
+        message: issue.message,
+      }));
+
+      return res.status(400).json({
+        success: false,
+        message: errorMessage,
+      });
+    }
+
+    const {email, role} = parseResult.data
+
+const user = await prisma.employee.findUnique({
+  where: {
+    email
+  }
+})
+
+
+if(!user){
+  return res.status(400).json({
+    success: false, 
+    message: "User nor found!"
+  })
+}
+
+if(user && !user.isAccountCreated){
+   return res.status(400).json({
+    success: false, 
+   message: "Your account has not been created yet. Please complete your registration to proceed."
+  })
+}
+
+await prisma.employee.update({
+  where: {email},
+  data: {
+    role
+  }
+})
+
+return res.status(200).json({
+  success: true,
+  message: "Role updated successfully!"
+})
+
+  } catch (error) {
+    
+const errorMessage =  error instanceof Error ? error.message : "Error during updatig the role!"
+log.error("Error during updatig the role : ", errorMessage)
+
+return res.status(400).json({
+  success: false,
+  message: errorMessage
+})
+
+  }
+}
+
+
+
+// export const createProject = async (req: Request, res: Response) => {
+//   try {
+    
+//   } catch (error) {
+    
+//   }
+// }

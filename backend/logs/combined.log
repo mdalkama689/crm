@@ -1106,3 +1106,272 @@ Unique constraint failed on the fields: (`email`)
 2025-08-12T10:28:07.231Z [info]: server is runnig at 8000
 2025-08-12T10:29:15.431Z [error]: hii
 2025-08-12T10:29:15.781Z [info]: server is runnig at 8000
+2025-08-12T10:51:27.053Z [error]: hii
+2025-08-12T10:51:28.307Z [info]: server is runnig at 8000
+2025-08-12T10:58:12.464Z [error]: hii
+2025-08-12T10:58:13.025Z [info]: server is runnig at 8000
+2025-08-12T11:00:22.636Z [error]: hii
+2025-08-12T11:00:23.000Z [info]: server is runnig at 8000
+2025-08-12T11:01:36.795Z [error]: hii
+2025-08-12T11:01:37.234Z [info]: server is runnig at 8000
+2025-08-12T11:01:49.150Z [error]: hii
+2025-08-12T11:01:49.656Z [info]: server is runnig at 8000
+2025-08-12T11:02:17.710Z [error]: hii
+2025-08-12T11:02:18.098Z [info]: server is runnig at 8000
+2025-08-12T11:02:57.160Z [error]: hii
+2025-08-12T11:02:57.465Z [info]: server is runnig at 8000
+2025-08-12T11:03:12.340Z [error]: hii
+2025-08-12T11:03:12.637Z [info]: server is runnig at 8000
+2025-08-12T11:11:20.300Z [error]: hii
+2025-08-12T11:11:20.676Z [info]: server is runnig at 8000
+2025-08-12T11:11:36.890Z [error]: hii
+2025-08-12T11:11:37.487Z [info]: server is runnig at 8000
+2025-08-12T12:13:13.365Z [error]: hii
+2025-08-12T12:13:13.776Z [info]: server is runnig at 8000
+2025-08-13T06:16:15.926Z [error]: hii
+2025-08-13T06:16:16.334Z [info]: server is runnig at 8000
+2025-08-13T06:17:08.032Z [error]: hii
+2025-08-13T06:17:08.410Z [info]: server is runnig at 8000
+2025-08-13T06:22:21.257Z [error]: hii
+2025-08-13T06:22:21.969Z [info]: server is runnig at 8000
+2025-08-13T06:23:03.585Z [error]: hii
+2025-08-13T06:23:04.325Z [info]: server is runnig at 8000
+2025-08-13T06:23:08.101Z [error]: PrismaClientValidationError: 
+Invalid `prisma.employee.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\employee-controller.ts:641:36
+
+  638     },
+  639   });
+  640 } else if (role && role.toLowerCase() === 'employee') {
+→ 641   user = await prisma.employee.findUnique({
+          where: {
+            id: "6b900fd5-f131-48fb-85ff-fb6565ea9d96"
+          },
+          select: {
+        ?   id?: true,
+        ?   fullname?: true,
+        ?   email?: true,
+        ?   password?: true,
+        ?   isVerified?: true,
+        ?   role?: true,
+        ?   isInvited?: true,
+        ?   isAccountCreated?: true,
+        ?   invitationToken?: true,
+        ?   invitationTokenExpiry?: true,
+        ?   isInvitedTokenUsed?: true,
+        ?   companyName?: true,
+        ?   isNewsLetterSubscribe?: true,
+        ?   forgotPasswordOtp?: true,
+        ?   forgotPasswordExpiry?: true,
+        ?   isVerifiedOtp?: true,
+        ?   forgotPasswordUrl?: true,
+        ?   forgotPasswordUrlExpiry?: true,
+        ?   companyId?: true,
+        ?   company?: true
+          }
+        })
+
+The `select` statement for type Employee needs at least one truthy value.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-13T06:23:10.140Z [error]: PrismaClientValidationError: 
+Invalid `prisma.employee.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\employee-controller.ts:641:36
+
+  638     },
+  639   });
+  640 } else if (role && role.toLowerCase() === 'employee') {
+→ 641   user = await prisma.employee.findUnique({
+          where: {
+            id: "6b900fd5-f131-48fb-85ff-fb6565ea9d96"
+          },
+          select: {
+        ?   id?: true,
+        ?   fullname?: true,
+        ?   email?: true,
+        ?   password?: true,
+        ?   isVerified?: true,
+        ?   role?: true,
+        ?   isInvited?: true,
+        ?   isAccountCreated?: true,
+        ?   invitationToken?: true,
+        ?   invitationTokenExpiry?: true,
+        ?   isInvitedTokenUsed?: true,
+        ?   companyName?: true,
+        ?   isNewsLetterSubscribe?: true,
+        ?   forgotPasswordOtp?: true,
+        ?   forgotPasswordExpiry?: true,
+        ?   isVerifiedOtp?: true,
+        ?   forgotPasswordUrl?: true,
+        ?   forgotPasswordUrlExpiry?: true,
+        ?   companyId?: true,
+        ?   company?: true
+          }
+        })
+
+The `select` statement for type Employee needs at least one truthy value.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-13T06:23:50.515Z [error]: hii
+2025-08-13T06:23:51.097Z [info]: server is runnig at 8000
+2025-08-13T06:23:55.753Z [error]: PrismaClientValidationError: 
+Invalid `prisma.employee.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\employee-controller.ts:641:36
+
+  638     },
+  639   });
+  640 } else if (role && role.toLowerCase() === 'employee') {
+→ 641   user = await prisma.employee.findUnique({
+          where: {
+            id: "6b900fd5-f131-48fb-85ff-fb6565ea9d96"
+          },
+          select: {
+        ?   id?: true,
+        ?   fullname?: true,
+        ?   email?: true,
+        ?   password?: true,
+        ?   isVerified?: true,
+        ?   role?: true,
+        ?   isInvited?: true,
+        ?   isAccountCreated?: true,
+        ?   invitationToken?: true,
+        ?   invitationTokenExpiry?: true,
+        ?   isInvitedTokenUsed?: true,
+        ?   companyName?: true,
+        ?   isNewsLetterSubscribe?: true,
+        ?   forgotPasswordOtp?: true,
+        ?   forgotPasswordExpiry?: true,
+        ?   isVerifiedOtp?: true,
+        ?   forgotPasswordUrl?: true,
+        ?   forgotPasswordUrlExpiry?: true,
+        ?   companyId?: true,
+        ?   company?: true
+          }
+        })
+
+The `select` statement for type Employee needs at least one truthy value.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-13T06:23:58.634Z [error]: PrismaClientValidationError: 
+Invalid `prisma.employee.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\employee-controller.ts:641:36
+
+  638     },
+  639   });
+  640 } else if (role && role.toLowerCase() === 'employee') {
+→ 641   user = await prisma.employee.findUnique({
+          where: {
+            id: "6b900fd5-f131-48fb-85ff-fb6565ea9d96"
+          },
+          select: {
+        ?   id?: true,
+        ?   fullname?: true,
+        ?   email?: true,
+        ?   password?: true,
+        ?   isVerified?: true,
+        ?   role?: true,
+        ?   isInvited?: true,
+        ?   isAccountCreated?: true,
+        ?   invitationToken?: true,
+        ?   invitationTokenExpiry?: true,
+        ?   isInvitedTokenUsed?: true,
+        ?   companyName?: true,
+        ?   isNewsLetterSubscribe?: true,
+        ?   forgotPasswordOtp?: true,
+        ?   forgotPasswordExpiry?: true,
+        ?   isVerifiedOtp?: true,
+        ?   forgotPasswordUrl?: true,
+        ?   forgotPasswordUrlExpiry?: true,
+        ?   companyId?: true,
+        ?   company?: true
+          }
+        })
+
+The `select` statement for type Employee needs at least one truthy value.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-13T06:25:30.881Z [error]: hii
+2025-08-13T06:25:31.501Z [info]: server is runnig at 8000
+2025-08-13T06:27:09.316Z [error]: hii
+2025-08-13T06:27:09.788Z [info]: server is runnig at 8000
+2025-08-13T06:28:19.711Z [error]: hii
+2025-08-13T06:28:20.354Z [info]: server is runnig at 8000
+2025-08-13T06:28:28.058Z [error]: hii
+2025-08-13T06:28:29.643Z [info]: server is runnig at 8000
+2025-08-13T06:28:39.806Z [error]: PrismaClientInitializationError: 
+Invalid `prisma.employee.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\employee-controller.ts:641:36
+
+  638     },
+  639   });
+  640 } else if (role && role.toLowerCase() === 'employee') {
+→ 641   user = await prisma.employee.findUnique(
+Can't reach database server at `ep-little-butterfly-adrh17j6-pooler.c-2.us-east-1.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-little-butterfly-adrh17j6-pooler.c-2.us-east-1.aws.neon.tech:5432`.
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:242:13)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-13T06:28:39.821Z [error]: PrismaClientInitializationError: 
+Invalid `prisma.employee.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\employee-controller.ts:641:36
+
+  638     },
+  639   });
+  640 } else if (role && role.toLowerCase() === 'employee') {
+→ 641   user = await prisma.employee.findUnique(
+Can't reach database server at `ep-little-butterfly-adrh17j6-pooler.c-2.us-east-1.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-little-butterfly-adrh17j6-pooler.c-2.us-east-1.aws.neon.tech:5432`.
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:242:13)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-13T06:29:35.979Z [error]: hii
+2025-08-13T06:29:37.321Z [info]: server is runnig at 8000
+2025-08-13T06:30:36.530Z [error]: hii
+2025-08-13T06:30:37.060Z [info]: server is runnig at 8000
+2025-08-13T06:30:48.694Z [error]: hii
+2025-08-13T06:30:50.511Z [info]: server is runnig at 8000
+2025-08-13T06:31:35.748Z [error]: hii
+2025-08-13T06:31:36.293Z [info]: server is runnig at 8000
+2025-08-13T10:44:11.361Z [error]: hii
+2025-08-13T10:44:13.502Z [info]: server is runnig at 8000
+2025-08-13T10:58:07.568Z [error]: hii
+2025-08-13T10:58:08.132Z [info]: server is runnig at 8000
+2025-08-14T05:27:39.512Z [error]: hii
+2025-08-14T05:27:39.955Z [info]: server is runnig at 8000
+2025-08-14T06:01:38.088Z [error]: hii
+2025-08-14T06:01:38.882Z [info]: server is runnig at 8000
+2025-08-14T06:11:47.055Z [error]: hii
+2025-08-14T06:11:47.914Z [info]: server is runnig at 8000
+2025-08-14T06:24:30.103Z [error]: hii
+2025-08-14T06:24:30.436Z [info]: server is runnig at 8000
+2025-08-14T06:25:00.437Z [error]: hii
+2025-08-14T06:25:00.752Z [info]: server is runnig at 8000
+2025-08-14T06:25:07.005Z [error]: hii
+2025-08-14T06:25:07.320Z [info]: server is runnig at 8000
+2025-08-14T06:30:51.597Z [error]: hii
+2025-08-14T06:30:51.986Z [info]: server is runnig at 8000
+2025-08-14T06:33:14.417Z [error]: hii
+2025-08-14T06:33:14.777Z [info]: server is runnig at 8000
+2025-08-14T06:33:53.400Z [error]: Error during updatig the role : 
+2025-08-14T06:40:03.126Z [error]: hii
+2025-08-14T06:40:03.501Z [info]: server is runnig at 8000
+2025-08-14T06:47:13.086Z [error]: hii
+2025-08-14T06:47:14.856Z [info]: server is runnig at 8000
+2025-08-14T06:54:58.501Z [error]: hii
+2025-08-14T06:54:59.095Z [info]: server is runnig at 8000

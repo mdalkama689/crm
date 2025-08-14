@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  changeRole,
   companyDetails,
   forgotPassword,
   logout,
@@ -7,7 +8,7 @@ import {
   sendInvitation,
   signIn,
   signUp,
-  subscribeNewLetter, 
+  subscribeNewLetter,
   verifyOtp,
 } from '../controller/user-controller';
 
@@ -29,6 +30,12 @@ router.post(
   authMiddleware,
   adminMiddleware,
   sendInvitation,
+);
+router.post(
+  '/change-role',
+  authMiddleware,
+  adminMiddleware,
+  changeRole,
 );
 
 

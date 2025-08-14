@@ -22,6 +22,10 @@ router.post('/forgot-password', forgotPassword);
 router.post('/verify-otp', verifyOtp);
 router.post('/reset-password', resetPassword);
 router.get('/me', authMiddleware, userDetails);
-router.get("/fetch-profile-pic-from-gravatar", fetchProfilePhotoFromGravatar)
+router.get(
+  '/fetch-profile-pic-from-gravatar',
+  authMiddleware,
+  fetchProfilePhotoFromGravatar,
+);
 
 export default router;

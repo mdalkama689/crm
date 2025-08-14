@@ -47,5 +47,5 @@ const combinedSchema = z.object({
 export type UserPayload = z.infer<typeof combinedSchema> & {
   id: string;
   isVerified: boolean;
-  role: string
+  role: string;
 };

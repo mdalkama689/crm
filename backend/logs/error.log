@@ -838,3 +838,235 @@ Unique constraint failed on the fields: (`email`)
 2025-08-12T10:27:47.337Z [error]: hii
 2025-08-12T10:28:06.857Z [error]: hii
 2025-08-12T10:29:15.431Z [error]: hii
+2025-08-12T10:51:27.053Z [error]: hii
+2025-08-12T10:58:12.464Z [error]: hii
+2025-08-12T11:00:22.636Z [error]: hii
+2025-08-12T11:01:36.795Z [error]: hii
+2025-08-12T11:01:49.150Z [error]: hii
+2025-08-12T11:02:17.710Z [error]: hii
+2025-08-12T11:02:57.160Z [error]: hii
+2025-08-12T11:03:12.340Z [error]: hii
+2025-08-12T11:11:20.300Z [error]: hii
+2025-08-12T11:11:36.890Z [error]: hii
+2025-08-12T12:13:13.365Z [error]: hii
+2025-08-13T06:16:15.926Z [error]: hii
+2025-08-13T06:17:08.032Z [error]: hii
+2025-08-13T06:22:21.257Z [error]: hii
+2025-08-13T06:23:03.585Z [error]: hii
+2025-08-13T06:23:08.101Z [error]: PrismaClientValidationError: 
+Invalid `prisma.employee.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\employee-controller.ts:641:36
+
+  638     },
+  639   });
+  640 } else if (role && role.toLowerCase() === 'employee') {
+→ 641   user = await prisma.employee.findUnique({
+          where: {
+            id: "6b900fd5-f131-48fb-85ff-fb6565ea9d96"
+          },
+          select: {
+        ?   id?: true,
+        ?   fullname?: true,
+        ?   email?: true,
+        ?   password?: true,
+        ?   isVerified?: true,
+        ?   role?: true,
+        ?   isInvited?: true,
+        ?   isAccountCreated?: true,
+        ?   invitationToken?: true,
+        ?   invitationTokenExpiry?: true,
+        ?   isInvitedTokenUsed?: true,
+        ?   companyName?: true,
+        ?   isNewsLetterSubscribe?: true,
+        ?   forgotPasswordOtp?: true,
+        ?   forgotPasswordExpiry?: true,
+        ?   isVerifiedOtp?: true,
+        ?   forgotPasswordUrl?: true,
+        ?   forgotPasswordUrlExpiry?: true,
+        ?   companyId?: true,
+        ?   company?: true
+          }
+        })
+
+The `select` statement for type Employee needs at least one truthy value.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-13T06:23:10.140Z [error]: PrismaClientValidationError: 
+Invalid `prisma.employee.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\employee-controller.ts:641:36
+
+  638     },
+  639   });
+  640 } else if (role && role.toLowerCase() === 'employee') {
+→ 641   user = await prisma.employee.findUnique({
+          where: {
+            id: "6b900fd5-f131-48fb-85ff-fb6565ea9d96"
+          },
+          select: {
+        ?   id?: true,
+        ?   fullname?: true,
+        ?   email?: true,
+        ?   password?: true,
+        ?   isVerified?: true,
+        ?   role?: true,
+        ?   isInvited?: true,
+        ?   isAccountCreated?: true,
+        ?   invitationToken?: true,
+        ?   invitationTokenExpiry?: true,
+        ?   isInvitedTokenUsed?: true,
+        ?   companyName?: true,
+        ?   isNewsLetterSubscribe?: true,
+        ?   forgotPasswordOtp?: true,
+        ?   forgotPasswordExpiry?: true,
+        ?   isVerifiedOtp?: true,
+        ?   forgotPasswordUrl?: true,
+        ?   forgotPasswordUrlExpiry?: true,
+        ?   companyId?: true,
+        ?   company?: true
+          }
+        })
+
+The `select` statement for type Employee needs at least one truthy value.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-13T06:23:50.515Z [error]: hii
+2025-08-13T06:23:55.753Z [error]: PrismaClientValidationError: 
+Invalid `prisma.employee.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\employee-controller.ts:641:36
+
+  638     },
+  639   });
+  640 } else if (role && role.toLowerCase() === 'employee') {
+→ 641   user = await prisma.employee.findUnique({
+          where: {
+            id: "6b900fd5-f131-48fb-85ff-fb6565ea9d96"
+          },
+          select: {
+        ?   id?: true,
+        ?   fullname?: true,
+        ?   email?: true,
+        ?   password?: true,
+        ?   isVerified?: true,
+        ?   role?: true,
+        ?   isInvited?: true,
+        ?   isAccountCreated?: true,
+        ?   invitationToken?: true,
+        ?   invitationTokenExpiry?: true,
+        ?   isInvitedTokenUsed?: true,
+        ?   companyName?: true,
+        ?   isNewsLetterSubscribe?: true,
+        ?   forgotPasswordOtp?: true,
+        ?   forgotPasswordExpiry?: true,
+        ?   isVerifiedOtp?: true,
+        ?   forgotPasswordUrl?: true,
+        ?   forgotPasswordUrlExpiry?: true,
+        ?   companyId?: true,
+        ?   company?: true
+          }
+        })
+
+The `select` statement for type Employee needs at least one truthy value.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-13T06:23:58.634Z [error]: PrismaClientValidationError: 
+Invalid `prisma.employee.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\employee-controller.ts:641:36
+
+  638     },
+  639   });
+  640 } else if (role && role.toLowerCase() === 'employee') {
+→ 641   user = await prisma.employee.findUnique({
+          where: {
+            id: "6b900fd5-f131-48fb-85ff-fb6565ea9d96"
+          },
+          select: {
+        ?   id?: true,
+        ?   fullname?: true,
+        ?   email?: true,
+        ?   password?: true,
+        ?   isVerified?: true,
+        ?   role?: true,
+        ?   isInvited?: true,
+        ?   isAccountCreated?: true,
+        ?   invitationToken?: true,
+        ?   invitationTokenExpiry?: true,
+        ?   isInvitedTokenUsed?: true,
+        ?   companyName?: true,
+        ?   isNewsLetterSubscribe?: true,
+        ?   forgotPasswordOtp?: true,
+        ?   forgotPasswordExpiry?: true,
+        ?   isVerifiedOtp?: true,
+        ?   forgotPasswordUrl?: true,
+        ?   forgotPasswordUrlExpiry?: true,
+        ?   companyId?: true,
+        ?   company?: true
+          }
+        })
+
+The `select` statement for type Employee needs at least one truthy value.
+    at throwValidationException (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-13T06:25:30.881Z [error]: hii
+2025-08-13T06:27:09.316Z [error]: hii
+2025-08-13T06:28:19.711Z [error]: hii
+2025-08-13T06:28:28.058Z [error]: hii
+2025-08-13T06:28:39.806Z [error]: PrismaClientInitializationError: 
+Invalid `prisma.employee.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\employee-controller.ts:641:36
+
+  638     },
+  639   });
+  640 } else if (role && role.toLowerCase() === 'employee') {
+→ 641   user = await prisma.employee.findUnique(
+Can't reach database server at `ep-little-butterfly-adrh17j6-pooler.c-2.us-east-1.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-little-butterfly-adrh17j6-pooler.c-2.us-east-1.aws.neon.tech:5432`.
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:242:13)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-13T06:28:39.821Z [error]: PrismaClientInitializationError: 
+Invalid `prisma.employee.findUnique()` invocation in
+C:\Users\mdalk\crm\backend\src\controller\employee-controller.ts:641:36
+
+  638     },
+  639   });
+  640 } else if (role && role.toLowerCase() === 'employee') {
+→ 641   user = await prisma.employee.findUnique(
+Can't reach database server at `ep-little-butterfly-adrh17j6-pooler.c-2.us-east-1.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-little-butterfly-adrh17j6-pooler.c-2.us-east-1.aws.neon.tech:5432`.
+    at ri.handleRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:242:13)
+    at ri.handleAndLogRequestError (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ri.request (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async l (C:\Users\mdalk\crm\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:862:24)
+2025-08-13T06:29:35.979Z [error]: hii
+2025-08-13T06:30:36.530Z [error]: hii
+2025-08-13T06:30:48.694Z [error]: hii
+2025-08-13T06:31:35.748Z [error]: hii
+2025-08-13T10:44:11.361Z [error]: hii
+2025-08-13T10:58:07.568Z [error]: hii
+2025-08-14T05:27:39.512Z [error]: hii
+2025-08-14T06:01:38.088Z [error]: hii
+2025-08-14T06:11:47.055Z [error]: hii
+2025-08-14T06:24:30.103Z [error]: hii
+2025-08-14T06:25:00.437Z [error]: hii
+2025-08-14T06:25:07.005Z [error]: hii
+2025-08-14T06:30:51.597Z [error]: hii
+2025-08-14T06:33:14.417Z [error]: hii
+2025-08-14T06:33:53.400Z [error]: Error during updatig the role : 
+2025-08-14T06:40:03.126Z [error]: hii
+2025-08-14T06:47:13.086Z [error]: hii
+2025-08-14T06:54:58.501Z [error]: hii

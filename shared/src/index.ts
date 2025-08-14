@@ -1,1 +1,1 @@
-console.log("shared is also running")
+console.log('shared is also running');

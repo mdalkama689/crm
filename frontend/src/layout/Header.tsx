@@ -1,7 +1,7 @@
 import { ChevronDown, Globe } from 'lucide-react';
 import { Button } from '../components/ui/button';
-
 const Header = () => {
+
   return (
     <header className="flex items-center fixed top-0 left-0 w-full z-10 justify-between bg-[#FFFFFF] shadow-lg py-3 px-6">
       <p>ENPOINT </p>
@@ -17,9 +17,10 @@ const Header = () => {
         <Button className="bg-transparent border border-[#EAECF0] text-[#101828]  px-5 py-5 rounded-[360px] w-[144px] h-[52px] font-medium text-[14px] leading-[21px] cursor-pointer hover:bg-transparent">
           Request Demo
         </Button>
-        <Button className="bg-[#F16334] text-[#101828]  px-5 py-5 rounded-[360px] w-[144px] h-[52px] font-medium text-[14px] leading-[21px] cursor-pointer hover:bg-[#F16334]">
+       
+     <Button className="bg-[#F16334] text-[#101828]  px-5 py-5 rounded-[360px] w-[144px] h-[52px] font-medium text-[14px] leading-[21px] cursor-pointer hover:bg-[#F16334]">
           Sign in{' '}
-        </Button>
+        </Button> 
       </div>
     </header>
   );

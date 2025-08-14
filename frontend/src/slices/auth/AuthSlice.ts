@@ -13,14 +13,29 @@ export const fetchCurrentUser = createAsyncThunk(
   },
 );
 
-const authSlice = createSlice({
-  name: 'auth',
-  initialState: {
-    user: null,
-    isLoading: false,
+interface UserProps{
+  fullname: string,
+  email: string,
+  role: string
+}
+
+interface AuthProps{
+  user: UserProps  | null,
+ isLoading: boolean,
+    isLoggedIn: boolean,
+    error: null,
+}
+const initialState: AuthProps = {
+  user : null,
+    isLoading: true,
     isLoggedIn: false,
     error: null,
-  },
+
+}
+
+const authSlice = createSlice({
+  name: 'auth',
+  initialState, 
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -32,7 +47,6 @@ const authSlice = createSlice({
         state.isLoggedIn = true;
       })
       .addCase(fetchCurrentUser.rejected, (state) => {
-        console.log(' state in  reject  : ', state);
         ((state.isLoading = false), (state.user = null));
         state.isLoggedIn = false;
       });

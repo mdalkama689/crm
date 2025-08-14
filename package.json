@@ -14,8 +14,7 @@
     "lint": "eslint src --ext .js,.ts --fix",
     "format": "prettier --write .",
     "check": "npm run lint && npm run format",
-        "dev": "ts-node --require tsconfig-paths/register backend/src/index.ts"
-
+    "dev": "ts-node --require tsconfig-paths/register backend/src/index.ts"
   },
   "keywords": [],
   "author": "",

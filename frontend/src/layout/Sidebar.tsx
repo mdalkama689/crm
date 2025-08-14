@@ -43,7 +43,9 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-[300px] bg-[#101828] h-screen overflow-y-auto overflow-x-hidden transition-transform duration-300 ease-in-out ${isVisible ? 'translate-x-0' : 'translate-x-[-100px]'} [&::-webkit-scrollbar]:hidden scrollbar-hide`}
+      className={`fixed top-0 left-0 bg-[#101828] h-screen overflow-y-auto overflow-x-hidden transition-all duration-300 ease-in-out 
+    ${isVisible ? 'w-[300px]' : 'w-[80px]'} 
+    [&::-webkit-scrollbar]:hidden`}
     >
       <div
         className="absolute top-1 right-[-10px] bg-slate-700 cursor-pointer p-1 rounded-lg"
@@ -55,9 +57,14 @@ const Sidebar = () => {
           <ChevronRight className="text-white" />
         )}
       </div>
-      <div className="flex items-start justify-center gap-3 pt-3 px-4">
+
+      <div className="flex items-center gap-3 pt-3 px-4">
         <img src={logo} alt="logo" className="h-[50px] w-[50px]" />
-        <div className="flex flex-col gap-2">
+        <div
+          className={`flex flex-col gap-2 transition-all duration-300 ease-in-out ${
+            isVisible ? 'opacity-100 w-auto' : 'opacity-0 w-0 overflow-hidden'
+          }`}
+        >
           <p className="font-medium text-[22px] leading-4 text-white">
             OnPoint
           </p>
@@ -71,15 +78,25 @@ const Sidebar = () => {
         {menuItems.map((menu) => {
           const Icon = menu.icon;
           return (
-            <div className="flex gap-1 items-center justify-start bg-transparent mt-2  transition-transform duration-300 ease-in-out hover:bg-[#F16334] group p-2 mx-4 rounded-lg cursor-pointer">
+            <div
+              key={menu.id}
+              className="flex items-center gap-3 bg-transparent mt-2 hover:bg-[#F16334] group p-2 mx-4 rounded-lg cursor-pointer transition-colors duration-300"
+            >
               <Icon className="h-5 w-5 text-[#98A2B3] group-hover:text-black" />
-              <p className="font-normal leading-5 text-[#98A2B3]  text-[18px] group-hover:text-black">
+              <span
+                className={`font-normal leading-5 text-[#98A2B3] text-[18px] group-hover:text-black transition-all duration-300 ${
+                  isVisible
+                    ? 'opacity-100 w-auto'
+                    : 'opacity-0 w-0 overflow-hidden'
+                }`}
+              >
                 {menu.label}
-              </p>
+              </span>
             </div>
           );
         })}
       </div>
+
       <SocialHandle />
 
       <div className="pb-12"></div>

@@ -57,3 +57,16 @@ model Employee {
   companyId               String
   company                 Company       @relation(fields: [companyId], references: [id])
 }
+
+model Project{
+id String @id @default(uuid())
+name String
+icon String?
+dueDate DateTime?
+assignTo String[] @default([])
+description String?
+attachment String?
+projectDate DateTime
+createdBy String
+
+}
