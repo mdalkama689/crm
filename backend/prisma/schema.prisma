@@ -56,17 +56,20 @@ model Employee {
   forgotPasswordUrlExpiry DateTime?
   companyId               String
   company                 Company       @relation(fields: [companyId], references: [id])
+
+
 }
+
+
 
 model Project{
 id String @id @default(uuid())
 name String
 icon String?
+startDate String
 dueDate DateTime?
 assignTo String[] @default([])
 description String?
 attachment String?
-projectDate DateTime
 createdBy String
-
 }

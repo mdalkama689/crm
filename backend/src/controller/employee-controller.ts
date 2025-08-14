@@ -775,7 +775,46 @@ const errorMessage = error instanceof Error ? error.message : "An unexpected err
   }
 } 
 
+export const searchEmployee =  async (req: Request, res: Response) => {
+  try {
+    
+    const body = req.body
+
+    if(!body){
+      return res.status(400).json({
+        success: false,
+        message: "Please provide input"
+      })
+    }
+
+const {searchInput}: {searchInput: string} = body 
+
+const result = await prisma.employee.findMany({
+  where: {
+    OR: [
+      {email: {contains: searchInput, mode: "insensitive"}},
+      {fullname: {contains: searchInput, mode: "insensitive"}}
+    ]
+  },
+ 
+})
 
 
+return res.status(200).json({
+  success: true,
+  message: "Search Successfully!",
+  result
+})
+  } catch (error) {
+    
+    const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred while searchi the employee"
+    log.error(errorMessage)
 
-// export const 
+    return res.status(400).json({
+      success: false,
+      message: errorMessage
+    })
+  
+
+  }
+}

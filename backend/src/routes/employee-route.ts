@@ -10,6 +10,7 @@ import {
   userDetails,
   fetchProfilePhotoFromGravatar,
   getAllEmployee,
+  searchEmployee,
 } from '../controller/employee-controller';
 import { authMiddleware } from '../middlewares/auth-middleware';
 import { adminMiddleware } from '../middlewares/admin-middleware';
@@ -31,5 +32,12 @@ router.get(
 );
 
 router.get('/employees', authMiddleware, adminMiddleware, getAllEmployee)
+router.post(
+  '/search',
+  authMiddleware,
+  adminMiddleware,
+  searchEmployee,
+);
+
 
 export default router;

@@ -188,64 +188,70 @@ const [isChangingRole, setIsChangingRole] = useState<boolean>(false)
           />
         </div>
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[200px]">Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Current Role</TableHead>
-              <TableHead>Change Role</TableHead>
-            </TableRow>
-          </TableHeader>
+<div className="w-full overflow-x-auto">
+  <Table className="w-full">
+    <TableHeader>
+      <TableRow>
+               <TableHead >S.No</TableHead>
+        <TableHead >Name</TableHead>
+        <TableHead>Email</TableHead>
+        <TableHead>Current Role</TableHead>
+        <TableHead>Change Role</TableHead>
+      </TableRow>
+    </TableHeader>
 
+    <TableBody>
+      {employees &&
+        employees.map((emp,ind) => (
+          <TableRow key={emp.id}>
 
-          <TableBody>
-            {employees &&
-              employees.map((emp) => (
-                <TableRow key={emp.id}>
-                  <TableCell className="font-medium">
-                    {emp.fullname.charAt(0).toUpperCase() +
-                      emp.fullname.slice(1, emp.fullname.length)}
-                  </TableCell>
+             <TableCell >
+             {ind + 1}.
+            </TableCell>
+            <TableCell className="font-medium">
+              {emp.fullname.charAt(0).toUpperCase() +
+                emp.fullname.slice(1)}
+            </TableCell>
 
-                  <TableCell>{emp.email}</TableCell>
+            <TableCell>{emp.email}</TableCell>
 
-                  <TableCell>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
-                      {emp.role}
-                    </span>
-                  </TableCell>
+            <TableCell>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
+                {emp.role}
+              </span>
+            </TableCell>
 
-<TableCell>
-  {isChangingRole && selectedEmployeeEmail === emp.email ? (
-    <span className="text-sm text-blue-600 font-medium">
-      Changing role...
-    </span>
-  ) : (
-    <Select
-      defaultValue={emp.role}
-      onValueChange={(value) => promptRoleChange(emp.email, value)}
-    >
-      <SelectTrigger className="w-[180px] border rounded-lg bg-white shadow-sm hover:shadow-md transition-all">
-        <SelectValue placeholder="Select role" />
-      </SelectTrigger>
-      <SelectContent>
-        {allRoles.map((role) => (
-          <SelectItem key={role.id} value={role.value}>
-            {role.lable}
-          </SelectItem>
+            <TableCell>
+              {isChangingRole && selectedEmployeeEmail === emp.email ? (
+                <span className="text-sm text-blue-600 font-medium">
+                  Changing role...
+                </span>
+              ) : (
+                <Select
+                  defaultValue={emp.role}
+                  onValueChange={(value) =>
+                    promptRoleChange(emp.email, value)
+                  }
+                >
+                  <SelectTrigger className="max-w-[150px] w-full border rounded-lg bg-white shadow-sm hover:shadow-md transition-all">
+                    <SelectValue placeholder="Select role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {allRoles.map((role) => (
+                      <SelectItem key={role.id} value={role.value}>
+                        {role.lable}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </TableCell>
+          </TableRow>
         ))}
-      </SelectContent>
-    </Select>
-  )}
-</TableCell>
-
-
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </div>
+    </TableBody>
+  </Table>
+</div>
+</div>
     </HomeLayout>
   );
 };

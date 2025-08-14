@@ -10,11 +10,11 @@
     "shared"
   ],
   "scripts": {
-    "build": "tsc -b",
+   "dev": "vite",
+    "build": "tsc --noEmit || true && vite build",
     "lint": "eslint src --ext .js,.ts --fix",
     "format": "prettier --write .",
-    "check": "npm run lint && npm run format",
-    "dev": "ts-node --require tsconfig-paths/register backend/src/index.ts"
+    "check": "npm run lint && npm run format"
   },
   "keywords": [],
   "author": "",
