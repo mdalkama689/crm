@@ -740,4 +740,42 @@ export const fetchProfilePhotoFromGravatar = async (
   }
 };
 
+export const getAllEmployee = async (req: Request, res: Response) => {
+  try {
+    
+    const employees  = await prisma.employee.findMany({
+      where: {
+        isAccountCreated: true,
+      }, 
+      select: {
+        id: true, 
+        fullname: true,
+        email: true,
+        role: true
+      }
+    })
+    
 
+
+return res.status(200).json({
+  success: true,
+  message: employees.length ? "Successfully fetched all employee records.": "No employee records found.",
+employees 
+})
+
+
+  } catch (error) {
+const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred while fetching employee details"
+    log.error(errorMessage)
+
+    return res.status(400).json({
+      success: false,
+      message: errorMessage
+    })
+  }
+} 
+
+
+
+
+// export const 

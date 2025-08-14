@@ -13,29 +13,28 @@ export const fetchCurrentUser = createAsyncThunk(
   },
 );
 
-interface UserProps{
-  fullname: string,
-  email: string,
-  role: string
+interface UserProps {
+  fullname: string;
+  email: string;
+  role: string;
 }
 
-interface AuthProps{
-  user: UserProps  | null,
- isLoading: boolean,
-    isLoggedIn: boolean,
-    error: null,
+interface AuthProps {
+  user: UserProps | null;
+  isLoading: boolean;
+  isLoggedIn: boolean;
+  error: null;
 }
 const initialState: AuthProps = {
-  user : null,
-    isLoading: true,
-    isLoggedIn: false,
-    error: null,
-
-}
+  user: null,
+  isLoading: true,
+  isLoggedIn: false,
+  error: null,
+};
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState, 
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder

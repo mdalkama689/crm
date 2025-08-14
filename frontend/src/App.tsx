@@ -16,6 +16,7 @@ import AuthWrapper from './components/AuthWrapper';
 import PublicWrapper from './components/PublicWrapper';
 import RoleProtectRoute from './components/RoleProtectRoute';
 import NotFound from './pages/NotFound';
+import AllEmployee from './components/AllEmployee';
 
 function App() {
   return (
@@ -35,10 +36,10 @@ function App() {
           <Route path="/admin/sign-in" element={<AdminSignIn />} />
         </Route>
 
-        <Route element={<RoleProtectRoute allowedRole={['owner','admin']} />}>
-        <Route path="/send-invitation" element={<SendInvitation />} />
-
-</Route>
+        <Route element={<RoleProtectRoute allowedRole={['owner', 'admin']} />}>
+          <Route path="/send-invitation" element={<SendInvitation />} />
+          <Route path="/employees" element={<AllEmployee />} />
+        </Route>
 
         <Route element={<AuthWrapper />}>
           <Route path="/" element={<Dashboard />} />
@@ -54,7 +55,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
         </Route>
-        <Route  path='*' element={<NotFound />}/>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

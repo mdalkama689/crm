@@ -17,7 +17,6 @@ const AuthWrapper = () => {
   }, [dispatch]);
 
   useEffect(() => {
-
     if (!isLoading && !isLoggedIn) {
       navigate('/sign-in');
     }

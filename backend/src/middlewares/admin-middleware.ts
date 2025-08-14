@@ -8,7 +8,7 @@ export async function adminMiddleware(
   try {
     const user = req.user;
 
-    if (user && user.role.toLowerCase() === 'owner') {
+    if (user && (user.role.toLowerCase() === 'owner' || user.role.toLowerCase() === 'admin')) {
       return next();
     } else {
       return res.status(403).json({

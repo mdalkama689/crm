@@ -9,8 +9,10 @@ import {
   resetPassword,
   userDetails,
   fetchProfilePhotoFromGravatar,
+  getAllEmployee,
 } from '../controller/employee-controller';
 import { authMiddleware } from '../middlewares/auth-middleware';
+import { adminMiddleware } from '../middlewares/admin-middleware';
 
 const router = Router();
 
@@ -27,5 +29,7 @@ router.get(
   authMiddleware,
   fetchProfilePhotoFromGravatar,
 );
+
+router.get('/employees', authMiddleware, adminMiddleware, getAllEmployee)
 
 export default router;

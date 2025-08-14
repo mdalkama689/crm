@@ -1,12 +1,13 @@
+import HomeLayout from '../layout/HomeLayout';
 import Sidebar from '../layout/Sidebar';
 import Topbar from '../layout/Topbar';
 
 const Dashboard = () => {
   return (
-    <div>
+    <HomeLayout>
       <Sidebar />
       <Topbar />
-    </div>
+    </HomeLayout>
   );
 };
 
