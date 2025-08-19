@@ -1415,3 +1415,395 @@ Please make sure your database server is running at `ep-little-butterfly-adrh17j
 2025-08-14T11:40:44.273Z [info]: server is runnig at 8000
 2025-08-14T11:41:43.799Z [error]: hii
 2025-08-14T11:41:44.298Z [info]: server is runnig at 8000
+2025-08-14T12:06:58.503Z [error]: hii
+2025-08-14T12:06:59.250Z [info]: server is runnig at 8000
+2025-08-16T05:55:54.525Z [error]: hii
+2025-08-16T05:55:55.131Z [info]: server is runnig at 8000
+2025-08-16T09:40:11.354Z [error]: hii
+2025-08-16T09:40:11.812Z [info]: server is runnig at 8000
+2025-08-16T11:09:45.230Z [error]: TypeError: pchstr must be a non-empty string
+    at deserialize (C:\Users\mdalk\crm\node_modules\@phc\format\index.js:143:11)
+    at Object.verify (C:\Users\mdalk\crm\node_modules\argon2\argon2.cjs:167:27)
+    at C:\Users\mdalk\crm\backend\src\controller\employee-controller.ts:167:42
+    at Generator.next (<anonymous>)
+    at fulfilled (C:\Users\mdalk\crm\backend\src\controller\employee-controller.ts:5:58)
+2025-08-18T06:03:44.298Z [error]: hii
+2025-08-18T06:03:44.304Z [info]: server is runnig at 8000
+2025-08-18T06:03:52.575Z [error]: hii
+2025-08-18T06:03:52.580Z [info]: server is runnig at 8000
+2025-08-18T06:04:14.761Z [error]: hii
+2025-08-18T06:04:14.767Z [info]: server is runnig at 8000
+2025-08-18T06:04:45.375Z [error]: hii
+2025-08-18T06:04:45.380Z [info]: server is runnig at 8000
+2025-08-18T06:04:58.676Z [error]: hii
+2025-08-18T06:04:58.683Z [info]: server is runnig at 8000
+2025-08-18T06:05:32.445Z [error]: hii
+2025-08-18T06:05:32.452Z [info]: server is runnig at 8000
+2025-08-18T06:06:16.373Z [error]: hii
+2025-08-18T06:06:16.378Z [info]: server is runnig at 8000
+2025-08-18T06:06:41.582Z [error]: hii
+2025-08-18T06:06:41.588Z [info]: server is runnig at 8000
+2025-08-18T06:06:49.949Z [error]: hii
+2025-08-18T06:06:49.954Z [info]: server is runnig at 8000
+2025-08-18T06:07:47.099Z [error]: hii
+2025-08-18T06:07:47.106Z [info]: server is runnig at 8000
+2025-08-18T06:13:03.898Z [error]: hii
+2025-08-18T06:13:03.904Z [info]: server is runnig at 8000
+2025-08-18T06:13:10.690Z [error]: hii
+2025-08-18T06:13:10.695Z [info]: server is runnig at 8000
+2025-08-18T06:15:02.706Z [error]: hii
+2025-08-18T06:15:02.712Z [info]: server is runnig at 8000
+2025-08-18T06:15:08.621Z [error]: hii
+2025-08-18T06:15:08.629Z [info]: server is runnig at 8000
+2025-08-18T06:35:48.362Z [error]: hii
+2025-08-18T06:35:48.369Z [info]: server is runnig at 8000
+2025-08-18T06:35:56.200Z [error]: hii
+2025-08-18T06:35:56.207Z [info]: server is runnig at 8000
+2025-08-18T10:37:15.837Z [error]: hii
+2025-08-18T10:37:15.847Z [info]: server is runnig at 8000
+2025-08-18T10:39:07.027Z [error]: hii
+2025-08-18T10:39:07.034Z [info]: server is runnig at 8000
+2025-08-18T10:39:30.957Z [error]: hii
+2025-08-18T10:39:30.964Z [info]: server is runnig at 8000
+2025-08-18T10:39:56.506Z [error]: hii
+2025-08-18T10:39:56.512Z [info]: server is runnig at 8000
+2025-08-18T10:40:35.597Z [error]: hii
+2025-08-18T10:40:35.604Z [info]: server is runnig at 8000
+2025-08-18T10:41:16.867Z [error]: hii
+2025-08-18T10:41:16.873Z [info]: server is runnig at 8000
+2025-08-18T10:42:05.977Z [error]: hii
+2025-08-18T10:42:05.984Z [info]: server is runnig at 8000
+2025-08-18T10:42:36.857Z [error]: hii
+2025-08-18T10:42:36.865Z [info]: server is runnig at 8000
+2025-08-18T10:43:32.307Z [error]: hii
+2025-08-18T10:43:32.318Z [info]: server is runnig at 8000
+2025-08-18T10:43:52.935Z [error]: hii
+2025-08-18T10:43:52.941Z [info]: server is runnig at 8000
+2025-08-18T10:44:25.069Z [error]: hii
+2025-08-18T10:44:25.077Z [info]: server is runnig at 8000
+2025-08-18T10:46:24.909Z [error]: hii
+2025-08-18T10:46:24.988Z [info]: server is runnig at 8000
+2025-08-18T10:47:26.371Z [error]: hii
+2025-08-18T10:47:26.412Z [info]: server is runnig at 8000
+2025-08-18T10:48:19.326Z [error]: hii
+2025-08-18T10:48:19.334Z [info]: server is runnig at 8000
+2025-08-18T10:49:13.016Z [error]: hii
+2025-08-18T10:49:13.023Z [info]: server is runnig at 8000
+2025-08-18T10:50:25.063Z [error]: hii
+2025-08-18T10:50:25.087Z [info]: server is runnig at 8000
+2025-08-18T10:51:22.347Z [error]: hii
+2025-08-18T10:51:22.352Z [info]: server is runnig at 8000
+2025-08-18T10:52:28.313Z [error]: hii
+2025-08-18T10:52:28.349Z [info]: server is runnig at 8000
+2025-08-18T10:54:04.261Z [error]: hii
+2025-08-18T10:54:04.275Z [info]: server is runnig at 8000
+2025-08-18T11:00:46.678Z [error]: hii
+2025-08-18T11:00:46.690Z [info]: server is runnig at 8000
+2025-08-18T11:08:43.453Z [error]: hii
+2025-08-18T11:08:43.484Z [info]: server is runnig at 8000
+2025-08-18T11:09:20.506Z [error]: hii
+2025-08-18T11:09:20.530Z [info]: server is runnig at 8000
+2025-08-18T11:10:42.668Z [error]: hii
+2025-08-18T11:10:42.682Z [info]: server is runnig at 8000
+2025-08-18T11:26:52.683Z [error]: hii
+2025-08-18T11:26:52.691Z [info]: server is runnig at 8000
+2025-08-18T11:27:43.444Z [error]: hii
+2025-08-18T11:27:43.449Z [info]: server is runnig at 8000
+2025-08-18T11:28:38.562Z [error]: hii
+2025-08-18T11:28:38.567Z [info]: server is runnig at 8000
+2025-08-18T11:33:15.584Z [error]: hii
+2025-08-18T11:33:15.596Z [info]: server is runnig at 8000
+2025-08-18T11:36:03.833Z [error]: hii
+2025-08-18T11:36:03.976Z [info]: server is runnig at 8000
+2025-08-18T11:49:49.768Z [error]: hii
+2025-08-18T11:49:49.780Z [info]: server is runnig at 8000
+2025-08-18T11:51:18.820Z [error]: hii
+2025-08-18T11:51:18.826Z [info]: server is runnig at 8000
+2025-08-18T11:52:08.523Z [error]: hii
+2025-08-18T11:52:08.533Z [info]: server is runnig at 8000
+2025-08-18T11:52:42.139Z [error]: hii
+2025-08-18T11:52:42.148Z [info]: server is runnig at 8000
+2025-08-18T11:52:57.431Z [error]: hii
+2025-08-18T11:52:57.437Z [info]: server is runnig at 8000
+2025-08-18T11:55:02.487Z [error]: hii
+2025-08-18T11:55:02.517Z [info]: server is runnig at 8000
+2025-08-18T11:58:01.092Z [error]: hii
+2025-08-18T11:58:01.128Z [info]: server is runnig at 8000
+2025-08-18T12:00:11.071Z [error]: hii
+2025-08-18T12:00:11.084Z [info]: server is runnig at 8000
+2025-08-18T12:00:45.028Z [error]: hii
+2025-08-18T12:00:45.038Z [info]: server is runnig at 8000
+2025-08-18T12:14:08.341Z [error]: hii
+2025-08-18T12:14:08.354Z [info]: server is runnig at 8000
+2025-08-18T12:14:34.392Z [error]: hii
+2025-08-18T12:14:34.397Z [info]: server is runnig at 8000
+2025-08-18T12:14:53.763Z [error]: hii
+2025-08-18T12:14:53.772Z [info]: server is runnig at 8000
+2025-08-18T12:15:11.408Z [error]: hii
+2025-08-18T12:15:11.413Z [info]: server is runnig at 8000
+2025-08-18T12:15:47.351Z [error]: hii
+2025-08-18T12:15:47.359Z [info]: server is runnig at 8000
+2025-08-18T12:16:00.786Z [error]: hii
+2025-08-18T12:16:00.794Z [info]: server is runnig at 8000
+2025-08-18T12:16:16.395Z [error]: hii
+2025-08-18T12:16:16.401Z [info]: server is runnig at 8000
+2025-08-18T12:17:08.422Z [error]: hii
+2025-08-18T12:17:08.429Z [info]: server is runnig at 8000
+2025-08-18T12:18:07.178Z [error]: hii
+2025-08-18T12:18:07.184Z [info]: server is runnig at 8000
+2025-08-18T12:18:26.755Z [error]: hii
+2025-08-18T12:18:26.761Z [info]: server is runnig at 8000
+2025-08-18T12:18:46.730Z [error]: hii
+2025-08-18T12:18:46.737Z [info]: server is runnig at 8000
+2025-08-18T12:22:55.920Z [error]: hii
+2025-08-18T12:22:55.926Z [info]: server is runnig at 8000
+2025-08-18T12:27:04.838Z [error]: hii
+2025-08-18T12:27:04.844Z [info]: server is runnig at 8000
+2025-08-18T12:28:41.953Z [error]: hii
+2025-08-18T12:28:41.987Z [info]: server is runnig at 8000
+2025-08-18T12:36:21.788Z [error]: hii
+2025-08-18T12:36:21.800Z [info]: server is runnig at 8000
+2025-08-18T12:37:21.766Z [error]: hii
+2025-08-18T12:37:21.794Z [info]: server is runnig at 8000
+2025-08-18T12:39:23.936Z [error]: hii
+2025-08-18T12:39:23.960Z [info]: server is runnig at 8000
+2025-08-18T12:40:21.644Z [error]: hii
+2025-08-18T12:40:21.654Z [info]: server is runnig at 8000
+2025-08-18T12:53:49.331Z [error]: hii
+2025-08-18T12:53:49.354Z [info]: server is runnig at 8000
+2025-08-18T14:34:37.117Z [error]: hii
+2025-08-18T14:34:37.126Z [info]: server is runnig at 8000
+2025-08-18T14:35:35.279Z [error]: hii
+2025-08-18T14:35:35.284Z [info]: server is runnig at 8000
+2025-08-18T14:35:48.583Z [error]: hii
+2025-08-18T14:35:48.591Z [info]: server is runnig at 8000
+2025-08-18T14:36:27.923Z [error]: hii
+2025-08-18T14:36:27.928Z [info]: server is runnig at 8000
+2025-08-18T14:37:03.861Z [error]: hii
+2025-08-18T14:37:03.866Z [info]: server is runnig at 8000
+2025-08-18T14:37:21.438Z [error]: hii
+2025-08-18T14:37:21.446Z [info]: server is runnig at 8000
+2025-08-18T14:37:54.755Z [error]: hii
+2025-08-18T14:37:54.763Z [info]: server is runnig at 8000
+2025-08-18T14:39:45.877Z [error]: hii
+2025-08-18T14:39:45.883Z [info]: server is runnig at 8000
+2025-08-18T14:40:41.582Z [error]: hii
+2025-08-18T14:40:41.591Z [info]: server is runnig at 8000
+2025-08-18T14:41:24.814Z [error]: hii
+2025-08-18T14:41:24.821Z [info]: server is runnig at 8000
+2025-08-18T14:42:47.604Z [error]: hii
+2025-08-18T14:42:47.610Z [info]: server is runnig at 8000
+2025-08-18T14:43:14.029Z [error]: hii
+2025-08-18T14:43:14.040Z [info]: server is runnig at 8000
+2025-08-18T14:49:40.244Z [error]: hii
+2025-08-18T14:49:40.271Z [info]: server is runnig at 8000
+2025-08-18T14:49:52.170Z [error]: hii
+2025-08-18T14:49:52.175Z [info]: server is runnig at 8000
+2025-08-18T14:50:04.840Z [error]: hii
+2025-08-18T14:50:04.845Z [info]: server is runnig at 8000
+2025-08-18T14:50:32.852Z [error]: hii
+2025-08-18T14:50:32.857Z [info]: server is runnig at 8000
+2025-08-18T14:52:16.667Z [error]: hii
+2025-08-18T14:52:16.673Z [info]: server is runnig at 8000
+2025-08-18T14:53:19.930Z [error]: hii
+2025-08-18T14:53:19.935Z [info]: server is runnig at 8000
+2025-08-18T14:54:42.032Z [error]: hii
+2025-08-18T14:54:42.037Z [info]: server is runnig at 8000
+2025-08-18T14:54:56.880Z [error]: hii
+2025-08-18T14:54:56.887Z [info]: server is runnig at 8000
+2025-08-18T15:31:10.526Z [error]: hii
+2025-08-18T15:31:10.543Z [info]: server is runnig at 8000
+2025-08-18T15:36:43.161Z [error]: hii
+2025-08-18T15:36:43.178Z [info]: server is runnig at 8000
+2025-08-18T15:40:58.988Z [error]: hii
+2025-08-18T15:40:59.003Z [info]: server is runnig at 8000
+2025-08-18T15:41:14.412Z [error]: hii
+2025-08-18T15:41:14.475Z [info]: server is runnig at 8000
+2025-08-18T15:41:45.223Z [error]: hii
+2025-08-18T15:41:45.233Z [info]: server is runnig at 8000
+2025-08-18T15:42:27.143Z [error]: hii
+2025-08-18T15:42:27.153Z [info]: server is runnig at 8000
+2025-08-18T15:47:45.751Z [error]: hii
+2025-08-18T15:47:45.773Z [info]: server is runnig at 8000
+2025-08-18T15:48:58.135Z [error]: hii
+2025-08-18T15:48:58.145Z [info]: server is runnig at 8000
+2025-08-18T15:55:27.292Z [error]: hii
+2025-08-18T15:55:27.301Z [info]: server is runnig at 8000
+2025-08-18T15:56:36.721Z [error]: hii
+2025-08-18T15:56:36.734Z [info]: server is runnig at 8000
+2025-08-18T15:57:45.791Z [error]: hii
+2025-08-18T15:57:45.801Z [info]: server is runnig at 8000
+2025-08-18T15:59:16.430Z [error]: hii
+2025-08-18T15:59:16.442Z [info]: server is runnig at 8000
+2025-08-18T16:02:18.135Z [error]: hii
+2025-08-18T16:02:18.145Z [info]: server is runnig at 8000
+2025-08-18T16:02:47.779Z [error]: hii
+2025-08-18T16:02:47.786Z [info]: server is runnig at 8000
+2025-08-18T16:04:17.368Z [error]: hii
+2025-08-18T16:04:17.378Z [info]: server is runnig at 8000
+2025-08-18T16:10:01.751Z [error]: hii
+2025-08-18T16:10:01.762Z [info]: server is runnig at 8000
+2025-08-18T16:10:52.206Z [error]: hii
+2025-08-18T16:10:52.217Z [info]: server is runnig at 8000
+2025-08-18T16:12:46.729Z [error]: hii
+2025-08-18T16:12:46.743Z [info]: server is runnig at 8000
+2025-08-18T16:13:23.760Z [error]: hii
+2025-08-18T16:13:23.769Z [info]: server is runnig at 8000
+2025-08-18T16:13:56.407Z [error]: hii
+2025-08-18T16:13:56.419Z [info]: server is runnig at 8000
+2025-08-18T16:15:32.550Z [error]: hii
+2025-08-18T16:15:32.559Z [info]: server is runnig at 8000
+2025-08-18T16:17:16.162Z [error]: hii
+2025-08-18T16:17:16.168Z [info]: server is runnig at 8000
+2025-08-18T17:36:11.603Z [error]: hii
+2025-08-18T17:36:11.614Z [info]: server is runnig at 8000
+2025-08-18T17:36:37.463Z [error]: hii
+2025-08-18T17:36:37.470Z [info]: server is runnig at 8000
+2025-08-18T17:39:08.060Z [error]: hii
+2025-08-18T17:39:08.068Z [info]: server is runnig at 8000
+2025-08-18T17:39:58.873Z [error]: hii
+2025-08-18T17:39:58.883Z [info]: server is runnig at 8000
+2025-08-18T17:41:07.034Z [error]: hii
+2025-08-18T17:41:07.042Z [info]: server is runnig at 8000
+2025-08-18T17:42:13.913Z [error]: hii
+2025-08-18T17:42:13.919Z [info]: server is runnig at 8000
+2025-08-18T17:47:15.611Z [error]: hii
+2025-08-18T17:47:15.616Z [info]: server is runnig at 8000
+2025-08-18T17:51:50.436Z [error]: hii
+2025-08-18T17:51:50.443Z [info]: server is runnig at 8000
+2025-08-18T17:52:47.826Z [error]: hii
+2025-08-18T17:52:47.847Z [info]: server is runnig at 8000
+2025-08-18T17:52:54.656Z [error]: hii
+2025-08-18T17:52:54.668Z [info]: server is runnig at 8000
+2025-08-18T17:53:07.357Z [error]: hii
+2025-08-18T17:53:07.364Z [info]: server is runnig at 8000
+2025-08-18T17:57:04.670Z [error]: hii
+2025-08-18T17:57:04.675Z [info]: server is runnig at 8000
+2025-08-18T17:57:32.204Z [error]: hii
+2025-08-18T17:57:32.211Z [info]: server is runnig at 8000
+2025-08-18T17:58:13.991Z [error]: hii
+2025-08-18T17:58:13.997Z [info]: server is runnig at 8000
+2025-08-18T17:59:46.028Z [error]: hii
+2025-08-18T17:59:46.034Z [info]: server is runnig at 8000
+2025-08-18T18:01:57.244Z [error]: hii
+2025-08-18T18:01:57.254Z [info]: server is runnig at 8000
+2025-08-18T18:02:49.572Z [error]: hii
+2025-08-18T18:02:49.578Z [info]: server is runnig at 8000
+2025-08-18T18:03:42.455Z [error]: hii
+2025-08-18T18:03:42.462Z [info]: server is runnig at 8000
+2025-08-18T18:04:00.765Z [error]: hii
+2025-08-18T18:04:00.771Z [info]: server is runnig at 8000
+2025-08-18T18:05:27.084Z [error]: hii
+2025-08-18T18:05:27.091Z [info]: server is runnig at 8000
+2025-08-18T18:08:29.342Z [error]: hii
+2025-08-18T18:08:29.348Z [info]: server is runnig at 8000
+2025-08-18T18:09:26.195Z [error]: hii
+2025-08-18T18:09:26.202Z [info]: server is runnig at 8000
+2025-08-18T18:17:09.495Z [error]: hii
+2025-08-18T18:17:09.502Z [info]: server is runnig at 8000
+2025-08-18T18:18:27.489Z [error]: hii
+2025-08-18T18:18:27.503Z [info]: server is runnig at 8000
+2025-08-18T18:21:40.777Z [error]: hii
+2025-08-18T18:21:40.783Z [info]: server is runnig at 8000
+2025-08-18T18:25:35.749Z [error]: hii
+2025-08-18T18:25:35.758Z [info]: server is runnig at 8000
+2025-08-18T18:31:50.363Z [error]: hii
+2025-08-18T18:31:50.373Z [info]: server is runnig at 8000
+2025-08-18T18:33:34.326Z [error]: hii
+2025-08-18T18:33:34.331Z [info]: server is runnig at 8000
+2025-08-18T18:35:39.456Z [error]: hii
+2025-08-18T18:35:39.465Z [info]: server is runnig at 8000
+2025-08-18T18:36:12.669Z [error]: hii
+2025-08-18T18:36:12.679Z [info]: server is runnig at 8000
+2025-08-18T18:40:43.923Z [error]: hii
+2025-08-18T18:40:43.935Z [info]: server is runnig at 8000
+2025-08-18T18:56:21.830Z [error]: hii
+2025-08-18T18:56:21.845Z [info]: server is runnig at 8000
+2025-08-18T18:59:44.499Z [error]: hii
+2025-08-18T18:59:44.515Z [info]: server is runnig at 8000
+2025-08-18T19:05:39.412Z [error]: hii
+2025-08-18T19:05:39.423Z [info]: server is runnig at 8000
+2025-08-18T19:05:59.089Z [error]: hii
+2025-08-18T19:05:59.100Z [info]: server is runnig at 8000
+2025-08-18T19:08:47.791Z [error]: hii
+2025-08-18T19:08:47.806Z [info]: server is runnig at 8000
+2025-08-18T19:13:18.330Z [error]: hii
+2025-08-18T19:13:18.351Z [info]: server is runnig at 8000
+2025-08-18T19:14:16.863Z [error]: hii
+2025-08-18T19:14:16.874Z [info]: server is runnig at 8000
+2025-08-18T19:15:18.442Z [error]: hii
+2025-08-18T19:15:18.460Z [info]: server is runnig at 8000
+2025-08-18T19:15:31.499Z [error]: hii
+2025-08-18T19:15:31.508Z [info]: server is runnig at 8000
+2025-08-18T19:52:17.771Z [error]: hii
+2025-08-18T19:52:17.780Z [info]: server is runnig at 8000
+2025-08-19T04:52:20.444Z [error]: hii
+2025-08-19T04:52:20.453Z [info]: server is runnig at 8000
+2025-08-19T05:26:04.082Z [error]: hii
+2025-08-19T05:26:04.090Z [info]: server is runnig at 8000
+2025-08-19T05:26:16.111Z [error]: hii
+2025-08-19T05:26:16.119Z [info]: server is runnig at 8000
+2025-08-19T05:34:19.062Z [error]: hii
+2025-08-19T05:34:19.066Z [info]: server is runnig at 8000
+2025-08-19T05:36:49.151Z [error]: hii
+2025-08-19T05:36:49.156Z [info]: server is runnig at 8000
+2025-08-19T05:38:51.090Z [error]: hii
+2025-08-19T05:38:51.095Z [info]: server is runnig at 8000
+2025-08-19T05:42:39.108Z [error]: hii
+2025-08-19T05:42:39.115Z [info]: server is runnig at 8000
+2025-08-19T05:48:12.128Z [error]: hii
+2025-08-19T05:48:12.135Z [info]: server is runnig at 8000
+2025-08-19T05:53:23.894Z [error]: hii
+2025-08-19T05:53:23.902Z [info]: server is runnig at 8000
+2025-08-19T11:58:26.770Z [error]: hii
+2025-08-19T11:58:26.785Z [info]: server is runnig at 8000
+2025-08-19T11:59:22.032Z [error]: hii
+2025-08-19T11:59:22.037Z [info]: server is runnig at 8000
+2025-08-19T11:59:43.967Z [error]: hii
+2025-08-19T11:59:43.972Z [info]: server is runnig at 8000
+2025-08-19T12:07:42.873Z [error]: hii
+2025-08-19T12:07:42.880Z [info]: server is runnig at 8000
+2025-08-19T12:09:59.007Z [error]: hii
+2025-08-19T12:09:59.012Z [info]: server is runnig at 8000
+2025-08-19T12:13:13.503Z [error]: hii
+2025-08-19T12:13:13.508Z [info]: server is runnig at 8000
+2025-08-19T12:16:55.976Z [error]: hii
+2025-08-19T12:16:55.985Z [info]: server is runnig at 8000
+2025-08-19T12:17:21.976Z [error]: hii
+2025-08-19T12:17:21.984Z [info]: server is runnig at 8000
+2025-08-19T12:17:51.166Z [error]: hii
+2025-08-19T12:17:51.208Z [info]: server is runnig at 8000
+2025-08-19T12:18:36.089Z [error]: hii
+2025-08-19T12:18:36.097Z [info]: server is runnig at 8000
+2025-08-19T12:19:38.874Z [error]: hii
+2025-08-19T12:19:38.883Z [info]: server is runnig at 8000
+2025-08-19T12:20:02.821Z [error]: hii
+2025-08-19T12:20:02.829Z [info]: server is runnig at 8000
+2025-08-19T12:20:30.305Z [error]: hii
+2025-08-19T12:20:30.309Z [info]: server is runnig at 8000
+2025-08-19T12:20:39.803Z [error]: hii
+2025-08-19T12:20:39.809Z [info]: server is runnig at 8000
+2025-08-19T12:21:26.247Z [error]: hii
+2025-08-19T12:21:26.252Z [info]: server is runnig at 8000
+2025-08-19T12:27:36.036Z [error]: hii
+2025-08-19T12:27:36.048Z [info]: server is runnig at 8000
+2025-08-19T12:27:46.873Z [error]: hii
+2025-08-19T12:27:46.879Z [info]: server is runnig at 8000
+2025-08-19T12:28:05.270Z [error]: hii
+2025-08-19T12:28:05.276Z [info]: server is runnig at 8000
+2025-08-19T12:29:36.019Z [error]: hii
+2025-08-19T12:29:36.026Z [info]: server is runnig at 8000
+2025-08-19T12:29:42.020Z [error]: hii
+2025-08-19T12:29:42.025Z [info]: server is runnig at 8000
+2025-08-19T12:29:54.179Z [error]: hii
+2025-08-19T12:29:54.184Z [info]: server is runnig at 8000
+2025-08-19T12:30:06.758Z [error]: hii
+2025-08-19T12:30:06.763Z [info]: server is runnig at 8000
+2025-08-19T12:30:23.355Z [error]: hii
+2025-08-19T12:30:23.360Z [info]: server is runnig at 8000
+2025-08-19T12:30:55.142Z [error]: hii
+2025-08-19T12:30:55.147Z [info]: server is runnig at 8000
+2025-08-19T12:31:31.995Z [error]: hii
+2025-08-19T12:31:32.003Z [info]: server is runnig at 8000
+2025-08-19T12:31:40.614Z [error]: hii
+2025-08-19T12:31:40.622Z [info]: server is runnig at 8000

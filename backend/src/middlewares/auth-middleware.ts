@@ -9,20 +9,22 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+const JWT_TOKEN_SECRET = process.env.JWT_TOKEN_SECRET;
 
 interface User extends JwtPayload {
   id: string;
   role: string;
 }
-declare module 'express' {
-  interface Request {
-    user?: User;
-  }
+
+export interface AuthenticatedRequest extends Request {
+  user?: {
+    id: string;
+    role: string;
+  };
 }
 
 export async function authMiddleware(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ) {
@@ -30,17 +32,16 @@ export async function authMiddleware(
     const cookie = req.cookies;
 
     if (cookie) {
-      const accessToken = cookie.accessToken;
-      if (!accessToken) {
+      const token = cookie.token;
+      if (!token) {
         return res.status(400).json({
           success: false,
           message: 'Unauthorized. Please log in to continue.',
         });
       }
-      const decodedToken = (await jwt.verify(
-        accessToken,
-        ACCESS_TOKEN_SECRET!,
-      )) as JwtPayload | string;
+      const decodedToken = (await jwt.verify(token, JWT_TOKEN_SECRET!)) as
+        | JwtPayload
+        | string;
       if (typeof decodedToken === 'string' || !decodedToken.id) {
         return res.status(400).json({
           success: false,

@@ -15,61 +15,50 @@ enum EmployeeRange {
 }
 
 
-model Company {
-  id                      String         @id @default(uuid())
-  fullname                String
-  email                   String         @unique
-  password                String
-  isVerified              Boolean        @default(false)
-  role                    String         @default("owner")
-  companyName             String?
-  employeeRange           EmployeeRange?
+model Tenant {
+  id   String         @id @default(uuid())
+  name String @unique
+  normalizedName String @unique
+  isVerified Boolean
+  employeeRange EmployeeRange?
   businessType            String?
   address                 String?
-  isNewsLetterSubscribe   Boolean?       @default(false)
-  forgotPasswordOtp       String?
-  forgotPasswordExpiry    DateTime?
-  isVerifiedOtp           Boolean?       @default(false)
-  forgotPasswordUrl       String?
-  forgotPasswordUrlExpiry DateTime? 
-  employees               Employee[]
+  employees Employee[]
+  projects Project[]
 }
 
 model Employee {
-  id                      String        @id @default(uuid())
-  fullname                String
-  email                   String        @unique
-  password                String
-  isVerified              Boolean       @default(false)
-  role                    String @default("employee")
-  isInvited  Boolean @default(false)
-  isAccountCreated Boolean @default(false)
-  invitationToken String 
-  invitationTokenExpiry DateTime
-  isInvitedTokenUsed Boolean @default(false)
-  companyName             String?
-  isNewsLetterSubscribe   Boolean?      @default(false)
-  forgotPasswordOtp       String?
-  forgotPasswordExpiry    DateTime? 
-  isVerifiedOtp           Boolean?      @default(false)
-  forgotPasswordUrl       String?
-  forgotPasswordUrlExpiry DateTime?
-  companyId               String
-  company                 Company       @relation(fields: [companyId], references: [id])
-
-
+   id                      String    @id @default(uuid())
+   fullname                String
+   email                   String    @unique
+   password                String
+   role                    String    @default("employee")
+   invitationLink   String?
+   invitationLinkExpireTime DateTime?
+   isVerified Boolean @default(false)
+   forgotPasswordOtp String?
+   forgotPasswordExpiry DateTime?
+   isOtpVerified Boolean @default(false)
+   passwordResetToken String?
+   passwordResetTokenExpiry DateTime?
+   isNewLetterSubscribed Boolean @default(false)
+   tenantId String?
+   tenant Tenant? @relation(fields: [tenantId], references: [id])
+   projects Project[]
+  projectAssigned Project[] @relation("ProjectAssignment")
 }
-
-
-
-model Project{
-id String @id @default(uuid())
-name String
-icon String?
-startDate String
-dueDate DateTime?
-assignTo String[] @default([])
-description String?
-attachment String?
-createdBy String
+ 
+model Project {
+    id               String     @id @default(uuid())
+    name             String
+    icon             String?
+    createdAt DateTime @default(now())
+    dueDate          DateTime?
+    description      String?
+    attachment       String?
+    createdBy       String
+    employee         Employee   @relation(fields: [createdBy], references: [id])
+    tenantId String
+    tenant Tenant? @relation(fields: [tenantId], references: [id])
+    assignToEmployee Employee[] @relation("ProjectAssignment")
 }

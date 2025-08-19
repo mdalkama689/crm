@@ -1,14 +1,15 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
+import { AuthenticatedRequest } from './auth-middleware';
 
 export async function adminMiddleware(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ) {
   try {
-    const user = req.user;
+    const user = req?.user;
 
-    if (user && (user.role.toLowerCase() === 'owner' || user.role.toLowerCase() === 'admin')) {
+    if (user && user.role.toLowerCase() === 'admin') {
       return next();
     } else {
       return res.status(403).json({

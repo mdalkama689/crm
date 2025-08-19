@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import logo from '../../src/assets/logo/logo.png';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Grid,
   Folder,
@@ -17,6 +17,7 @@ import {
   HelpCircle,
 } from 'lucide-react';
 import SocialHandle from './SocialHandle';
+import { useDispatch, useSelector } from 'react-redux';
 
 const menuItems = [
   { id: 1, label: 'Dashboard', icon: Grid },
@@ -35,6 +36,8 @@ const menuItems = [
 ];
 
 const Sidebar = () => {
+
+
   const [isVisible, setIsVisible] = useState<boolean>(true);
 
   const toggleSidebar = () => {

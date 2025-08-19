@@ -2,8 +2,12 @@ import { Bolt, ChevronDown, Globe, Grid, Plus } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import SearchBar from '../components/Searchbar';
 import Profile from '../components/Profile';
+import { useState } from 'react';
+import CreateMenu from '../components/CreateMenu';
 
 const Topbar = () => {
+  const [showCreateMenu, setShowCreateMenu] = useState<boolean>(false);
+
   return (
     <div className="fixed top-0 left-[300px] flex items-center w-[calc(100%-300px)] bg-[#e6e0e0] py-2">
       <div className="flex items-center justify-between w-full px-5">
@@ -15,7 +19,7 @@ const Topbar = () => {
         </div>
         <SearchBar />
 
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-3 items-center relative">
           <Button className="bg-transparent text-black hover:bg-transparent">
             <Globe size={24} color="#667085" />
             <span className="font-normal text-[14px] leading-[21px] text-[#101828]">
@@ -24,10 +28,19 @@ const Topbar = () => {
             <ChevronDown size={16} color="#667085" />
           </Button>
           <Bolt size={24} color="#667085" />
-          <Button className="flex items-center justify-center gap-2 cursor-pointer bg-[#A176F7] hover:bg-[#9d6dfd] rounded-full">
-            <span className="text-[#fefefe]">Add</span>
-            <Plus size={24} color="#fefefe" />
-          </Button>
+          <div>
+            <Button
+              className="flex items-center justify-center gap-2 cursor-pointer bg-[#A176F7] hover:bg-[#9d6dfd] rounded-full"
+              onClick={() => setShowCreateMenu(!showCreateMenu)}
+            >
+              <span className="text-[#fefefe]">Add</span>
+              <Plus size={24} color="#fefefe" />
+            </Button>
+            <CreateMenu
+              open={showCreateMenu}
+              onClose={() => setShowCreateMenu(false)}
+            />
+          </div>
         </div>
         <Profile />
       </div>

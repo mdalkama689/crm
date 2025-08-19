@@ -69,9 +69,10 @@ const AllEmployee = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRoleChangeDialogOpen, setIsRoleChangeDialogOpen] =
     useState<boolean>(false);
-  const [selectedEmployeeEmail, setSelectedEmployeeEmail] = useState<string>('');
+  const [selectedEmployeeEmail, setSelectedEmployeeEmail] =
+    useState<string>('');
   const [selectedNewRole, setSelectedNewRole] = useState<string>('');
-const [isChangingRole, setIsChangingRole] = useState<boolean>(false)
+  const [isChangingRole, setIsChangingRole] = useState<boolean>(false);
 
   const fetchEmployees = async () => {
     try {
@@ -103,14 +104,18 @@ const [isChangingRole, setIsChangingRole] = useState<boolean>(false)
 
   const updateEmployeeRole = async (data: FormData) => {
     try {
-        setIsChangingRole(true)
+      setIsChangingRole(true);
       const response = await axiosInstance.post<ApiResponse>(
         '/admin/change-role',
         data,
       );
 
       if (response.data.success) {
-        toast.success(response.data.message + " " +  "Refresh the page to see the latest changes" );
+        toast.success(
+          response.data.message +
+            ' ' +
+            'Refresh the page to see the latest changes',
+        );
       }
     } catch (error) {
       console.log(' error : ', error);
@@ -120,7 +125,7 @@ const [isChangingRole, setIsChangingRole] = useState<boolean>(false)
         'Something went wrong  while changing the role';
       toast.error(errorMessage);
     } finally {
-       setIsChangingRole(false)
+      setIsChangingRole(false);
     }
   };
 
@@ -188,70 +193,67 @@ const [isChangingRole, setIsChangingRole] = useState<boolean>(false)
           />
         </div>
 
-<div className="w-full overflow-x-auto">
-  <Table className="w-full">
-    <TableHeader>
-      <TableRow>
-               <TableHead >S.No</TableHead>
-        <TableHead >Name</TableHead>
-        <TableHead>Email</TableHead>
-        <TableHead>Current Role</TableHead>
-        <TableHead>Change Role</TableHead>
-      </TableRow>
-    </TableHeader>
+        <div className="w-full overflow-x-auto">
+          <Table className="w-full">
+            <TableHeader>
+              <TableRow>
+                <TableHead>S.No</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Current Role</TableHead>
+                <TableHead>Change Role</TableHead>
+              </TableRow>
+            </TableHeader>
 
-    <TableBody>
-      {employees &&
-        employees.map((emp,ind) => (
-          <TableRow key={emp.id}>
+            <TableBody>
+              {employees &&
+                employees.map((emp, ind) => (
+                  <TableRow key={emp.id}>
+                    <TableCell>{ind + 1}.</TableCell>
+                    <TableCell className="font-medium">
+                      {emp.fullname.charAt(0).toUpperCase() +
+                        emp.fullname.slice(1)}
+                    </TableCell>
 
-             <TableCell >
-             {ind + 1}.
-            </TableCell>
-            <TableCell className="font-medium">
-              {emp.fullname.charAt(0).toUpperCase() +
-                emp.fullname.slice(1)}
-            </TableCell>
+                    <TableCell>{emp.email}</TableCell>
 
-            <TableCell>{emp.email}</TableCell>
+                    <TableCell>
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
+                        {emp.role}
+                      </span>
+                    </TableCell>
 
-            <TableCell>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
-                {emp.role}
-              </span>
-            </TableCell>
-
-            <TableCell>
-              {isChangingRole && selectedEmployeeEmail === emp.email ? (
-                <span className="text-sm text-blue-600 font-medium">
-                  Changing role...
-                </span>
-              ) : (
-                <Select
-                  defaultValue={emp.role}
-                  onValueChange={(value) =>
-                    promptRoleChange(emp.email, value)
-                  }
-                >
-                  <SelectTrigger className="max-w-[150px] w-full border rounded-lg bg-white shadow-sm hover:shadow-md transition-all">
-                    <SelectValue placeholder="Select role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {allRoles.map((role) => (
-                      <SelectItem key={role.id} value={role.value}>
-                        {role.lable}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            </TableCell>
-          </TableRow>
-        ))}
-    </TableBody>
-  </Table>
-</div>
-</div>
+                    <TableCell>
+                      {isChangingRole && selectedEmployeeEmail === emp.email ? (
+                        <span className="text-sm text-blue-600 font-medium">
+                          Changing role...
+                        </span>
+                      ) : (
+                        <Select
+                          defaultValue={emp.role}
+                          onValueChange={(value) =>
+                            promptRoleChange(emp.email, value)
+                          }
+                        >
+                          <SelectTrigger className="max-w-[150px] w-full border rounded-lg bg-white shadow-sm hover:shadow-md transition-all">
+                            <SelectValue placeholder="Select role" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {allRoles.map((role) => (
+                              <SelectItem key={role.id} value={role.value}>
+                                {role.lable}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
     </HomeLayout>
   );
 };
