@@ -1,7 +1,6 @@
 import { ArrowUp, ArrowDown } from 'lucide-react';
 
 const Overview = () => {
-    
   const metrics = [
     {
       title: 'Sales',

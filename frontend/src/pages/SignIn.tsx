@@ -9,13 +9,13 @@ import {
 } from 'shared/src/schema/sign-in-schema';
 import type { AxiosError } from 'axios';
 import { toast } from 'sonner';
-import { axiosInstance } from '../api/axios';  
-import type { ApiResponse } from '../types/ApiResponse'; 
-import { Label } from '../components/ui/label'; 
-import { Input } from '../components/ui/input';  
-import { Button } from '../components/ui/button';  
-import { Checkbox } from '../components/ui/checkbox';  
-import HomeLayout from '../layout/HomeLayout'; 
+import { axiosInstance } from '../api/axios';
+import type { ApiResponse } from '../types/ApiResponse';
+import { Label } from '../components/ui/label';
+import { Input } from '../components/ui/input';
+import { Button } from '../components/ui/button';
+import { Checkbox } from '../components/ui/checkbox';
+import HomeLayout from '../layout/HomeLayout';
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -35,10 +35,7 @@ const SignIn = () => {
   const onSubmit = async (data: SignInInputUser) => {
     try {
       setIsSubmitting(true);
-      const response = await axiosInstance.post<ApiResponse>(
-        '/sign-in',
-        data,
-      );
+      const response = await axiosInstance.post<ApiResponse>('/sign-in', data);
       if (response.data.success) {
         toast.success('Logged in successfully!');
         navigate('/');

@@ -34,14 +34,14 @@ import {
   AlertDialogTrigger,
 } from '../components/ui/alert-dialog';
 
-interface Employee {
+export interface Employee {
   id: string;
   email: string;
   fullname: string;
   role: string;
 }
 
-interface EmployeesApiResponse extends ApiResponse {
+export interface EmployeesApiResponse extends ApiResponse {
   employees: Employee[];
 }
 

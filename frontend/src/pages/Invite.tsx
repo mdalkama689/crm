@@ -9,20 +9,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import type { AxiosError } from 'axios';
-import { axiosInstance } from '../api/axios';  
+import { axiosInstance } from '../api/axios';
 import type { ApiResponse } from '../types/ApiResponse';
-import { Label } from '../components/ui/label'; 
-import { Input } from '../components/ui/input'; 
-import { Button } from '../components/ui/button'; 
-import HomeLayout from '../layout/HomeLayout'; 
+import { Label } from '../components/ui/label';
+import { Input } from '../components/ui/input';
+import { Button } from '../components/ui/button';
+import HomeLayout from '../layout/HomeLayout';
 
-
-const Invite  = () => {
+const Invite = () => {
   const location = useLocation();
   const search = new URLSearchParams(location.search);
   const email = search.get('email') ?? '';
   const token = search.get('token') ?? '';
-const tenantId = search.get("tenantId") ?? ""
+  const tenantId = search.get('tenantId') ?? '';
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const {
@@ -37,8 +36,8 @@ const tenantId = search.get("tenantId") ?? ""
 
   const onSubmit = async (data: employeeSignUpInput) => {
     try {
-        console.log(" tenandt Id L : ", tenantId)
-        console.log(" adta : ", data)
+      console.log(' tenandt Id L : ', tenantId);
+      console.log(' adta : ', data);
       setIsSubmitting(true);
       const response = await axiosInstance.post<ApiResponse>('/sign-up', data);
 
@@ -101,12 +100,12 @@ const tenantId = search.get("tenantId") ?? ""
               className="flex gap-4 flex-col pt-12 px-8"
               onSubmit={handleSubmit(onSubmit, onError)}
             >
-                     <div className="hidden flex-col gap-[6px]">
+              <div className="hidden flex-col gap-[6px]">
                 <Label
                   htmlFor="tenantId"
                   className="font-normal text-[#101828] text-[14px] leading-[21px]"
                 >
-                tenantId
+                  tenantId
                 </Label>
 
                 <Input
@@ -278,4 +277,4 @@ const tenantId = search.get("tenantId") ?? ""
   );
 };
 
-export default Invite 
+export default Invite;

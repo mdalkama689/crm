@@ -10,13 +10,13 @@ import {
 } from 'shared/src/schema/reset-password-schema';
 import { toast } from 'sonner';
 import type { AxiosError } from 'axios';
-import { useNavigateToBack } from '../utils/navigateToBack'; 
-import { axiosInstance} from '../api/axios';
+import { useNavigateToBack } from '../utils/navigateToBack';
+import { axiosInstance } from '../api/axios';
 import type { ApiResponse } from '../types/ApiResponse';
 import { Button } from '../components/ui/button';
-import { Label } from '../components/ui/label'; 
-import { Input } from '../components/ui/input'; 
-import HomeLayout from '../layout/HomeLayout'; 
+import { Label } from '../components/ui/label';
+import { Input } from '../components/ui/input';
+import HomeLayout from '../layout/HomeLayout';
 
 const ResetPassword = () => {
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false);

@@ -1,50 +1,8 @@
 import { ChevronRight, User } from 'lucide-react';
+import { messages } from './constant';
 
 const Chat = () => {
-  const messages = [
-    {
-      name: 'Josh',
-      message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-      time: '24 m',
-      avatar: 'J',
-      isOnline: true,
-    },
-    {
-      name: 'Martin',
-      message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, se...',
-      time: '31 m',
-      avatar: 'M',
-      isOnline: true,
-    },
-    {
-      name: 'Kennedy',
-      message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, se...',
-      time: '1 hr',
-      avatar: 'K',
-      isOnline: true,
-    },
-    {
-      name: 'Mike',
-      message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, se...',
-      time: '1 hr',
-      avatar: 'M',
-      isOnline: true,
-    },
-    {
-      name: 'Joshua',
-      message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, se...',
-      time: '2 hr',
-      avatar: 'J',
-      isOnline: true,
-    },
-    {
-      name: 'Ahmed',
-      message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, se...',
-      time: '2 hr',
-      avatar: 'A',
-      isOnline: false,
-    },
-  ];
+ 
 
   return (
     <div>

@@ -1,179 +1,183 @@
-// // import {Request, Response} from 'express'
-// // import AWS from 'aws-sdk'
-// // import fs from 'fs'
-// // import multer from 'multer'
-// // // import prisma from 'backend/db'
-// // // import googleLogo from '../assets/google.png'
-
-// // // get project input
-// // // validate that
-// // // store value in digital ocean
-// // // and in db
-// // // notify to all the employee(if)
-
-// //      const storage  =    multer.diskStorage({
-// //             destination: (_, __,  cb) => {
-// //                 cb(null, "")
-// //             },
-// //             filename: (_, file,  cb) => {
-// //                     cb(null, Date.now() + " -" + file.originalname);
-// //             }
-// //         })
-
-// //      export const upload =   multer({storage})
-
-// // export const createProject =  async (req:Request, res: Response) => {
-// //     try {
-// //  const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID
-// //     const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY
-// //     const ENDPOINT_URL = process.env.ENDPOINT_URL
-// //     const BUCKET_NAME =  process.env.BUCKET_NAME
-
-// //     const spacesEndpoint = new AWS.Endpoint(ENDPOINT_URL!)
-
-// //     const s3 = new AWS.S3({
-// //         endpoint: spacesEndpoint,
-// //         accessKeyId: ACCESS_KEY_ID,
-// //         secretAccessKey: SECRET_ACCESS_KEY
-// //     })
-
-// //    const file = fs.readFileSync('../assets/google.png')
-
-// //     await s3.listObjectsV2({Bucket: BUCKET_NAME!, MaxKeys: 5}).promise()
-// //  s3.putObject({Bucket:BUCKET_NAME!, Key: "any_file_or_path_name.jpg", Body: file, ACL: "public"}, (err, data) => {
-// // if (err) return console.log(err);
-// // console.log("Your file has been uploaded successfully!", data);
-// // });
-
-// //     return res.status(200).json({
-// //       success: true,
-// //       message: 'Connection to DigitalOcean Spaces verified!',
-// //  file
-// //     });
-
-// //     } catch (error) {
-
-// //     return res.status(200).json({
-// //             success: true,
-// //             message:  error
-// //         })
-// //     }
-// // }
-
-// import { Request, Response } from 'express';
-// import AWS from 'aws-sdk';
-// import fs from 'fs';
-
-// export const createProject = async (_: Request, res: Response) => {
-//   try {
-//     const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
-//     const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
-//     const ENDPOINT_URL = process.env.ENDPOINT_URL;
-//     const BUCKET_NAME = process.env.BUCKET_NAME;
-
-//     const spacesEndpoint = new AWS.Endpoint(ENDPOINT_URL!);
-
-//     const s3 = new AWS.S3({
-//       endpoint: spacesEndpoint,
-//       accessKeyId: ACCESS_KEY_ID,
-//       secretAccessKey: SECRET_ACCESS_KEY,
-//     });
-
-//     // Local file read
-//     const file = fs.readFileSync('../assets/google.png');
-
-//     // Unique file name
-//     const fileName = `uploads/google-${Date.now()}.png`;
-
-//     // Upload file and wait for completion
-//     const uploadResult = await s3
-//       .putObject({
-//         Bucket: BUCKET_NAME!,
-//         Key: fileName,
-//         Body: file,
-//         ACL: 'public-read', // make file publicly accessible
-//       })
-//       .promise();
-
-//     console.log('Upload success:', uploadResult);
-
-//     return res.status(200).json({
-//       success: true,
-//       message: 'File uploaded successfully to DigitalOcean Spaces!',
-//       result: uploadResult, // contains ETag
-//       fileUrl: `${ENDPOINT_URL}/${BUCKET_NAME}/${fileName}`,
-//     });
-//   } catch (error) {
-//     console.error('Upload failed:', error);
-//     return res.status(500).json({
-//       success: false,
-//       message: error,
-//     });
-//   }
-// };
-
-//  const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID
-//     const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY
-//     const ENDPOINT_URL = process.env.ENDPOINT_URL
-//     const BUCKET_NAME =  process.env.BUCKET_NAME
-
-//     const spacesEndpoint = new AWS.Endpoint(ENDPOINT_URL!)
-
-//     const s3 = new AWS.S3({
-//         endpoint: spacesEndpoint,
-//         accessKeyId: ACCESS_KEY_ID,
-//         secretAccessKey: SECRET_ACCESS_KEY
-//     })
-
-//     await s3.listObjectsV2({Bucket: BUCKET_NAME!, MaxKeys: 5}).promise()
-
-
-import prisma from "backend/db";
-import {Response }  from "express"
+import AWS from 'aws-sdk';
+import prisma from 'backend/db';
+import type { Response } from 'express';
 import {
-createProjectInput, createProjectSchema
+  // createProjectInput,
+  createProjectSchema,
 } from 'shared/src/schema/create-project-schema';
-import { AuthenticatedRequest } from "../middlewares/auth-middleware";
+import { AuthenticatedRequest } from '../middlewares/auth-middleware';
 
+const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
+const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
+const ENDPOINT_URL = process.env.ENDPOINT_URL;
+const BUCKET_NAME = process.env.BUCKET_NAME;
 
-export const createProject = async (req: AuthenticatedRequest, res: Response) => {
+const spacesEndpoint = new AWS.Endpoint(ENDPOINT_URL!);
+
+const s3 = new AWS.S3({
+  endpoint: spacesEndpoint,
+  accessKeyId: ACCESS_KEY_ID,
+  secretAccessKey: SECRET_ACCESS_KEY,
+});
+
+interface MulterFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  size: number;
+  buffer: Buffer;
+}
+
+// add auth and admin middleware
+
+export const createProject = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
-    const requestBody: createProjectInput = req.body;
+    const body = req.body;
 
-    if (!requestBody) {
+    console.log(body);
+
+    if (!body) {
       return res.status(400).json({
         success: false,
-        message: "Please provide inputs!",
+        message: 'Please provide inputs!',
       });
     }
 
-   
-    const parseResult = createProjectSchema.safeParse(requestBody);
+    const parseResult = createProjectSchema.safeParse(body);
     if (!parseResult.success) {
       const validationErrors = parseResult.error.issues.map((issue) => ({
-        field: issue.path.join("."),
+        field: issue.path.join('.'),
         message: issue.message,
       }));
 
       return res.status(422).json({
         success: false,
-        message:  validationErrors 
+        message: validationErrors,
       });
     }
 
-    const { name, icon, description, dueDate, attachment, assignToEmployee } =
-      parseResult.data;
+    let iconUrl = '';
+    let attachmentUrl = '';
+
+    let { name, description, dueDate, assignToEmployee } = parseResult.data;
+
+    if (req.files) {
+      const files = req.files as
+        | { [fieldname: string]: MulterFile[] }
+        | undefined;
+
+      const iconFile = files?.['icon']?.[0];
+      const attachmentFile = files?.['attachment']?.[0];
+
+      const allowedIconTypes = [
+        'image/png',
+        'image/jpeg',
+        'image/jpg',
+        'image/svg+xml',
+      ];
+
+      if (iconFile && !allowedIconTypes.includes(iconFile.mimetype)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Icon must be a valid image (png, jpeg, jpg, svg)',
+        });
+      }
+
+      const allowedAttachmentTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'image/png',
+        'image/jpeg',
+      ];
+      if (
+        attachmentFile &&
+        !allowedAttachmentTypes.includes(attachmentFile.mimetype)
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: 'Attachment type not allowed',
+        });
+      }
+
+      const maxSizeOFIconFile = 5 * 1024 * 1024;
+      const maxSizeOFAttachmeFile = 25 * 1024 * 1024;
+
+      if (iconFile && iconFile.size > maxSizeOFIconFile) {
+        return res.status(400).json({
+          success: false,
+          message: 'Icon size cannot be more than 5 MB',
+        });
+      }
+
+      if (attachmentFile && attachmentFile.size > maxSizeOFAttachmeFile) {
+        return res.status(400).json({
+          success: false,
+          message: 'Attachment size cannot be more than 25 MB',
+        });
+      }
+
+      if (iconFile) {
+        const params: AWS.S3.PutObjectRequest = {
+          Bucket: BUCKET_NAME!,
+          Key: `uploads/${Date.now()}-${iconFile.originalname}`,
+          Body: iconFile.buffer,
+          ACL: 'private',
+          ContentType: iconFile.mimetype,
+        };
+        const iconReponse = await s3.upload(params).promise();
+        iconUrl = iconReponse.Location;
+      }
+
+      if (attachmentFile) {
+        const params: AWS.S3.PutObjectRequest = {
+          Bucket: BUCKET_NAME!,
+          Key: `uploads/${Date.now()}-${attachmentFile.originalname}`,
+          Body: attachmentFile.buffer,
+          ACL: 'private',
+          ContentType: attachmentFile.mimetype,
+        };
+
+        const attchmentReponse = await s3.upload(params).promise();
+        attachmentUrl = attchmentReponse.Location;
+      }
+    }
+
+    const yearFormatRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+
+    if (dueDate?.trim()) {
+      if (!yearFormatRegex.test(dueDate)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Due date format is invalid!',
+        });
+      }
+
+      const currentDate = new Date();
+      const dueDateInFormat = new Date(dueDate);
+      currentDate.setHours(0, 0, 0, 0);
+
+      if (currentDate > dueDateInFormat) {
+        return res.status(400).json({
+          success: false,
+          message: 'Due date cannot be in past!',
+        });
+      }
+    }
 
     const currentUserId = req.user?.id;
 
     if (!currentUserId) {
       return res.status(401).json({
         success: false,
-        message: "Unauthorized. Please log in to continue.",
+        message: 'Unauthorized. Please log in to continue.',
       });
     }
 
- 
     const currentUser = await prisma.employee.findUnique({
       where: { id: currentUserId },
     });
@@ -181,14 +185,14 @@ export const createProject = async (req: AuthenticatedRequest, res: Response) =>
     if (!currentUser) {
       return res.status(404).json({
         success: false,
-        message: "User not found.",
+        message: 'User not found.',
       });
     }
 
     if (!currentUser.isVerified) {
       return res.status(403).json({
         success: false,
-        message: "User is not verified. Please verify your account first.",
+        message: 'User is not verified. Please verify your account first.',
       });
     }
 
@@ -196,15 +200,15 @@ export const createProject = async (req: AuthenticatedRequest, res: Response) =>
     if (!tenantId) {
       return res.status(400).json({
         success: false,
-        message: "Tenant ID does not exist for the current user.",
+        message: 'Tenant ID does not exist for the current user.',
       });
     }
- 
+
     const tenant = await prisma.tenant.findUnique({ where: { id: tenantId } });
     if (!tenant) {
       return res.status(404).json({
         success: false,
-        message: "Tenant not found.",
+        message: 'Tenant not found.',
       });
     }
 
@@ -212,62 +216,557 @@ export const createProject = async (req: AuthenticatedRequest, res: Response) =>
       return res.status(403).json({
         success: false,
         message:
-          "Tenant is not verified. Verified tenants are required to create projects.",
+          'Tenant is not verified. Verified tenants are required to create projects.',
       });
     }
 
- 
-    if (assignToEmployee.length > 0) {
-      const verifiedEmployees = await prisma.employee.findMany({
-        where: {
-          id: { in: assignToEmployee },
-          isVerified: true,
-          tenantId,
-        },
-      });
+    const uniqueEmployeeIds = new Set();
 
-      if (verifiedEmployees.length !== assignToEmployee.length) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "Some employees are either not verified or do not belong to this tenant. Please provide only valid employees.",
+    if (typeof assignToEmployee === 'string') {
+      const employeeIds = JSON.parse(assignToEmployee);
+
+      for (let i = 0; i < employeeIds.length; i++) {
+        if (uniqueEmployeeIds.has(employeeIds[i])) {
+          const duplicateEmployee = await prisma.employee.findUnique({
+            where: { id: employeeIds[i] },
+          });
+
+          if (!duplicateEmployee) {
+            return res.status(400).json({
+              success: false,
+              message: 'This employee does not exist',
+            });
+          }
+
+          return res.status(400).json({
+            success: false,
+            message: `Duplicate assignment detected: Employee ${duplicateEmployee?.fullname.charAt(0).toUpperCase() + duplicateEmployee?.fullname?.slice(1, duplicateEmployee.fullname.length)} (ID: ${duplicateEmployee?.id}) is assigned more than once. Please ensure each employee is assigned only once.`,
+          });
+        } else {
+          uniqueEmployeeIds.add(employeeIds[i]);
+        }
+      }
+
+      if (employeeIds.length > 0) {
+        const verifiedEmployees = await prisma.employee.findMany({
+          where: {
+            id: { in: employeeIds },
+            isVerified: true,
+            tenantId,
+          },
         });
+
+        if (verifiedEmployees.length !== employeeIds.length) {
+          return res.status(400).json({
+            success: false,
+            message:
+              'Some employees are either not verified or do not belong to this tenant. Please provide only valid employees.',
+          });
+        }
       }
     }
 
+    const employeeIds = [...new Set(uniqueEmployeeIds)] as string[];
 
     const newProject = await prisma.project.create({
       data: {
         name,
         description,
         dueDate,
-        attachment,
-        icon,
+        attachmentUrl,
+        iconUrl,
         tenantId,
         createdBy: currentUserId,
         assignToEmployee:
-          assignToEmployee.length > 0
-            ? { connect: assignToEmployee.map((id) => ({ id })) }
+          employeeIds && employeeIds.length > 0
+            ? { connect: employeeIds.map((id) => ({ id })) }
             : undefined,
+      },
+      include: {
+        assignToEmployee: true,
       },
     });
 
     return res.status(201).json({
       success: true,
-      message: "Project created successfully!",
-      project: newProject,
+      message: 'Project created successfully!',
+      projectId: newProject.id,
     });
   } catch (error) {
     const errorMessage =
-      error instanceof Error ? error.message : "Unexpected error occurred.";
+      error instanceof Error ? error.message : 'Unexpected error occurred.';
 
-    console.error("Error while creating project:", errorMessage);
+    console.error('Error while creating project:', errorMessage);
 
     return res.status(500).json({
       success: false,
-      message: "Failed to create project.",
-      error: errorMessage,
+      message: errorMessage,
     });
   }
 };
 
+// add auth and admin middleware
+export const deleteProject = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  try {
+    const projectId = req.params.id;
+    if (!projectId) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Project ID is required.' });
+    }
+
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+    });
+    if (!project) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'Project not found.' });
+    }
+
+    const loggedInUserId = req.user?.id;
+    if (!loggedInUserId) {
+      return res.status(401).json({
+        success: false,
+        message: 'You must be logged in to perform this action.',
+      });
+    }
+
+    const loggedInUser = await prisma.employee.findUnique({
+      where: { id: loggedInUserId },
+    });
+    if (!loggedInUser) {
+      return res.status(401).json({
+        success: false,
+        message: 'You must be logged in to perform this action.',
+      });
+    }
+
+    if (!loggedInUser.isVerified) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Your account is not verified.' });
+    }
+
+    if (!loggedInUser.tenantId?.trim()) {
+      return res.status(403).json({
+        success: false,
+        message:
+          'You are not associated with any tenant and cannot delete this project.',
+      });
+    }
+
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: loggedInUser.tenantId },
+    });
+    if (!tenant) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Tenant not found.' });
+    }
+
+    if (!tenant.isVerified) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Tenant account is not verified.' });
+    }
+
+    if (project.tenantId !== loggedInUser.tenantId) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not authorized to delete this project.',
+      });
+    }
+
+    if (project.iconUrl) {
+      const iconKey = project.iconUrl.split('.com/')[1];
+      const response = await s3
+        .deleteObject({
+          Bucket: BUCKET_NAME!,
+          Key: iconKey,
+        })
+        .promise();
+      console.log(' reposne l : ', response);
+    }
+    if (project.attachmentUrl) {
+      const attachmentKey = project.attachmentUrl.split('.com/')[1];
+      await s3
+        .deleteObject({
+          Bucket: BUCKET_NAME!,
+          Key: attachmentKey,
+        })
+        .promise();
+    }
+
+    await prisma.project.delete({ where: { id: projectId } });
+
+    return res
+      .status(200)
+      .json({ success: true, message: 'Project deleted successfully.' });
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'An unexpected error occurred.';
+    console.error('Error deleting project:', errorMessage);
+    return res.status(500).json({
+      success: false,
+      message: `An unexpected error occurred: ${errorMessage}`,
+    });
+  }
+};
+
+// add auth and admin middleware
+
+// who can get the project details:-
+// any admin
+// and assigned user
+
+export const getSpecificProjectToAdmin = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  try {
+    const projectId = req.params.id;
+    if (!projectId) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Project ID is required.' });
+    }
+
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+      include: {
+        assignToEmployee: {
+          select: {
+            id: true,
+            fullname: true,
+          },
+        },
+      },
+    });
+
+    if (!project) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'Project not found.' });
+    }
+
+    const loggedInUserId = req.user?.id;
+    if (!loggedInUserId) {
+      return res.status(401).json({
+        success: false,
+        message: 'You must be logged in to perform this action.',
+      });
+    }
+
+    const loggedInUser = await prisma.employee.findUnique({
+      where: { id: loggedInUserId },
+    });
+    if (!loggedInUser) {
+      return res.status(401).json({
+        success: false,
+        message: 'You must be logged in to perform this action.',
+      });
+    }
+
+    if (!loggedInUser.isVerified) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Your account is not verified.' });
+    }
+
+    if (!loggedInUser.tenantId?.trim()) {
+      return res.status(403).json({
+        success: false,
+        message:
+          'You are not associated with any tenant and cannot access this project.',
+      });
+    }
+
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: loggedInUser.tenantId },
+    });
+    if (!tenant) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Tenant not found.' });
+    }
+
+    if (!tenant.isVerified) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Tenant account is not verified.' });
+    }
+
+    if (project.tenantId !== loggedInUser.tenantId) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not authorized to view this project.',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Project fetched successfully.',
+      project,
+    });
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'An unexpected error occurred.';
+    console.error('Error fetching project:', errorMessage);
+    return res.status(500).json({
+      success: false,
+      message: `An unexpected error occurred: ${errorMessage}`,
+    });
+  }
+};
+
+// add auth and admin middleware
+
+export const getAdminCreatedProjects = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  try {
+    const loggedInUserId = req.user?.id;
+    if (!loggedInUserId) {
+      return res.status(401).json({
+        success: false,
+        message: 'You must be logged in to perform this action.',
+      });
+    }
+
+    const loggedInUser = await prisma.employee.findUnique({
+      where: { id: loggedInUserId },
+    });
+    if (!loggedInUser) {
+      return res.status(401).json({
+        success: false,
+        message: 'You must be logged in to perform this action.',
+      });
+    }
+
+    if (!loggedInUser.isVerified) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Your account is not verified.' });
+    }
+
+    if (!loggedInUser.tenantId?.trim()) {
+      return res.status(403).json({
+        success: false,
+        message:
+          'You are not associated with any tenant and cannot delete this project.',
+      });
+    }
+
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: loggedInUser.tenantId },
+    });
+    if (!tenant) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Tenant not found.' });
+    }
+
+    if (!tenant.isVerified) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Tenant account is not verified.' });
+    }
+
+    const allProjectsCreatedByYou = await prisma.project.findMany({
+      where: {
+        createdBy: loggedInUserId,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'All projects created by you have been fetched successfully.',
+      projects: allProjectsCreatedByYou,
+    });
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'An unexpected error occurred.';
+    console.error('Error deleting project:', errorMessage);
+    return res.status(500).json({
+      success: false,
+      message: `An unexpected error occurred: ${errorMessage}`,
+    });
+  }
+};
+
+// get all project of my company/tenant
+
+// add auth and admin middleware
+export const getAllProjectsOfCompany = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  try {
+    const loggedInUserId = req.user?.id;
+    if (!loggedInUserId) {
+      return res.status(401).json({
+        success: false,
+        message: 'You must be logged in to perform this action.',
+      });
+    }
+
+    const loggedInUser = await prisma.employee.findUnique({
+      where: { id: loggedInUserId },
+    });
+    if (!loggedInUser) {
+      return res.status(401).json({
+        success: false,
+        message: 'You must be logged in to perform this action.',
+      });
+    }
+
+    if (!loggedInUser.isVerified) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Your account is not verified.' });
+    }
+
+    if (!loggedInUser.tenantId?.trim()) {
+      return res.status(403).json({
+        success: false,
+        message:
+          'You are not associated with any tenant and cannot access projects.',
+      });
+    }
+
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: loggedInUser.tenantId },
+    });
+    if (!tenant) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Tenant not found.' });
+    }
+
+    if (!tenant.isVerified) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Tenant account is not verified.' });
+    }
+
+    const allProjectsOfCompany = await prisma.project.findMany({
+      where: {
+        tenantId: tenant.id,
+      },
+      include: {
+        assignToEmployee: true,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Projects fetched successfully.',
+      projects: allProjectsOfCompany,
+    });
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'An unexpected error occurred.';
+    console.error('Error fetching company projects:', errorMessage);
+    return res.status(500).json({
+      success: false,
+      message: `An unexpected error occurred: ${errorMessage}`,
+    });
+  }
+};
+
+// crud for task
+
+// add auth only  middleware
+
+// export const addTask = async (req: AuthenticatedRequest, res: Response) => {
+//   try {
+//     const projectId = req.params.id;
+//     if (!projectId) {
+//       return res
+//         .status(400)
+//         .json({ success: false, message: 'Project ID is required.' });
+//     }
+
+//     const project = await prisma.project.findUnique({
+//       where: { id: projectId },
+//       include: {
+//         assignToEmployee: true,
+//       },
+//     });
+//     if (!project) {
+//       return res
+//         .status(404)
+//         .json({ success: false, message: 'Project not found.' });
+//     }
+
+//     const loggedInUserId = req.user?.id;
+//     if (!loggedInUserId) {
+//       return res.status(401).json({
+//         success: false,
+//         message: 'You must be logged in to perform this action.',
+//       });
+//     }
+
+//     const loggedInUser = await prisma.employee.findUnique({
+//       where: { id: loggedInUserId },
+//     });
+//     if (!loggedInUser) {
+//       return res.status(401).json({
+//         success: false,
+//         message: 'You must be logged in to perform this action.',
+//       });
+//     }
+
+//     if (!loggedInUser.isVerified) {
+//       return res
+//         .status(403)
+//         .json({ success: false, message: 'Your account is not verified.' });
+//     }
+
+//     if (!loggedInUser.tenantId?.trim()) {
+//       return res.status(403).json({
+//         success: false,
+//         message:
+//           'You are not associated with any tenant and cannot delete this project.',
+//       });
+//     }
+
+//     const tenant = await prisma.tenant.findUnique({
+//       where: { id: loggedInUser.tenantId },
+//     });
+//     if (!tenant) {
+//       return res
+//         .status(403)
+//         .json({ success: false, message: 'Tenant not found.' });
+//     }
+
+//     if (!tenant.isVerified) {
+//       return res
+//         .status(403)
+//         .json({ success: false, message: 'Tenant account is not verified.' });
+//     }
+
+//     if (project.tenantId !== loggedInUser.tenantId) {
+//       return res.status(403).json({
+//         success: false,
+//         message: 'You are not authorized to add task in  this project.',
+//       });
+//     }
+
+//     // if(loggedInUser.role === "admin"){
+
+//     // }
+
+//     // if you are admin you can add
+//     // check your are assinged or not
+//     // if not give error
+//     // else he/she can add
+//   } catch {
+//     console.error(' errpr');
+//   }
+// };

@@ -1,9 +1,9 @@
-import { ChevronDown,  Power } from 'lucide-react';
+import { ChevronDown, Power } from 'lucide-react';
 import { axiosInstance } from '../api/axios';
 import type { ApiResponse } from '../types/ApiResponse';
 import { useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
-import { toast } from 'sonner'; 
+import { toast } from 'sonner';
 
 interface UserProfileResponse extends ApiResponse {
   user: {
@@ -27,7 +27,7 @@ const Profile = () => {
     try {
       const profileResponse =
         await axiosInstance.get<UserProfileResponse>('/me');
-     
+
       const gravatarReponse = await axiosInstance.get<AvatarUrlReponse>(
         '/get-avatar-url-from-gravatar',
       );
@@ -67,9 +67,8 @@ const Profile = () => {
   }, []);
 
   const handleLogout = async () => {
-   await axiosInstance.post('/log-out')
- 
-  }
+    await axiosInstance.post('/log-out');
+  };
   return (
     <div className="flex gap-2 items-center justify-center">
       <div className="h-[50px] w-[50px] bg-[#D0D5DD] rounded-full flex items-center justify-center text-black font-bold">
@@ -86,13 +85,8 @@ const Profile = () => {
         </p>
         <p className="font-normal text-[15px]">{email}</p>
       </div>
-      <ChevronDown /> 
-  <Power 
-    className="cursor-pointer" 
-    onClick={handleLogout} 
-  />
- 
-
+      <ChevronDown />
+      <Power className="cursor-pointer" onClick={handleLogout} />
     </div>
   );
 };

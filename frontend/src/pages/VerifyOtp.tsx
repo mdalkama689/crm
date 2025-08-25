@@ -8,11 +8,11 @@ import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
-import type { ApiResponse } from '../types/ApiResponse'; 
-import { axiosInstance } from '../api/axios';  
-import { Label } from '../components/ui/label'; 
-import { Input } from '../components/ui/input';  
-import { Button } from '../components/ui/button';  
+import type { ApiResponse } from '../types/ApiResponse';
+import { axiosInstance } from '../api/axios';
+import { Label } from '../components/ui/label';
+import { Input } from '../components/ui/input';
+import { Button } from '../components/ui/button';
 
 const VeifyOtp = ({ email }: { email: string }) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);

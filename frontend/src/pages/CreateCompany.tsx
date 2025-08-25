@@ -7,14 +7,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import type { AxiosError } from 'axios';
-import { axiosInstance } from '../api/axios'; 
-import type { ApiResponse } from '../types/ApiResponse'; 
+import { axiosInstance } from '../api/axios';
+import type { ApiResponse } from '../types/ApiResponse';
 import { Label } from '../components/ui/label';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
-import HomeLayout from '../layout/HomeLayout'; 
+import HomeLayout from '../layout/HomeLayout';
 
-const CreateCompany  = () => {
+const CreateCompany = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const {
@@ -241,4 +241,4 @@ const CreateCompany  = () => {
   );
 };
 
-export default CreateCompany
+export default CreateCompany;

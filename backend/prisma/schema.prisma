@@ -25,6 +25,7 @@ model Tenant {
   address                 String?
   employees Employee[]
   projects Project[]
+  tasks Task[]
 }
 
 model Employee {
@@ -45,20 +46,43 @@ model Employee {
    tenantId String?
    tenant Tenant? @relation(fields: [tenantId], references: [id])
    projects Project[]
-  projectAssigned Project[] @relation("ProjectAssignment")
+   projectAssigned Project[] @relation("ProjectAssignment")
+   tasks Task[]
 }
  
 model Project {
     id               String     @id @default(uuid())
     name             String
-    icon             String?
+    iconUrl             String?
     createdAt DateTime @default(now())
-    dueDate          DateTime?
+    dueDate          String? 
     description      String?
-    attachment       String?
+    attachmentUrl       String?
     createdBy       String
     employee         Employee   @relation(fields: [createdBy], references: [id])
     tenantId String
     tenant Tenant? @relation(fields: [tenantId], references: [id])
     assignToEmployee Employee[] @relation("ProjectAssignment")
+    tasks Task[]
 }
+
+
+enum TaskStatus {
+   PENDING
+   ON_HOLDING
+   DONE 
+}
+
+model Task {
+      id               String     @id @default(uuid())
+      task String
+      status  TaskStatus @default(PENDING)
+      createdBy String
+      employee Employee @relation(fields: [createdBy], references: [id])
+      projectId String
+      project Project @relation(fields: [projectId],references: [id])
+      tenantId String
+      tenant Tenant @relation(fields: [tenantId], references: [id])
+
+}
+

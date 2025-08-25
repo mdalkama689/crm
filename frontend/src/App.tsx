@@ -12,7 +12,9 @@ import SendInvitation from './pages/SendInvitation';
 import AuthWrapper from './components/AuthWrapper';
 import Dashboard from './pages/Dashboard';
 import Invite from './pages/Invite';
+import CreateProject from './components/project/CreateProject';
 import EachProject from './components/project/EachProject';
+import Employee from './components/admin/Employee';
 
 function App() {
   return (
@@ -21,38 +23,25 @@ function App() {
         <Route element={<PublicWrapper />}>
           <Route path="/create-company" element={<CreateCompany />} />
           <Route path="/company-details" element={<CompanyDetails />} />
-           <Route
-            path="/subscribe-news-letter"
-            element={<NewsLetter />}
-          />
-    <Route
-            path="/forgot-password"
-            element={<ForgotPassword />}
-          />
-          <Route
-            path="/reset-password"
-            element={<ResetPassword />}
-          />
-          <Route path="/sign-in" element={<SignIn />} />  
-           <Route path="/invite" element={<Invite  />} />
-        </Route>  
+          <Route path="/subscribe-news-letter" element={<NewsLetter />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/invite" element={<Invite />} />
+        </Route>
 
-        <Route element={<RoleProtectRoute allowedRole={[ 'admin']} />}>
+        <Route element={<RoleProtectRoute allowedRole={['admin']} />}>
           <Route path="/send-invitation" element={<SendInvitation />} />
-          {/* <Route path="/employees" element={<AllEmployee />} /> */}
+          <Route path="/add-project" element={<CreateProject />} />
+          <Route path="/employees" element={<Employee />} />
         </Route>
 
         <Route element={<AuthWrapper />}>
-          <Route path="/" element={<Dashboard />} />
-          {/* <Route path="/projects" element={<Project />} /> */}
-          
-         
+          <Route path="/" element={<Dashboard />} /> 
+                <Route path="/project/:id" element={<EachProject />} />
         </Route>
-   <Route path="/project/:id" element={<EachProject />} /> 
-    
 
         <Route path="*" element={<NotFound />} />
-
       </Routes>
     </>
   );

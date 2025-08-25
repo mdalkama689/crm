@@ -36,8 +36,6 @@ const menuItems = [
 ];
 
 const Sidebar = () => {
-
-
   const [isVisible, setIsVisible] = useState<boolean>(true);
 
   const toggleSidebar = () => {

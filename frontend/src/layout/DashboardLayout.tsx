@@ -4,7 +4,7 @@ import Topbar from './Topbar';
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <div>
+    <div className="relative">
       <Sidebar />
       <Topbar />
       {children}

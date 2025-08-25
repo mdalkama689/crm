@@ -5,9 +5,8 @@ import cors from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import tenantRouter from './routes/tenant-route';
-import employeeRouter from './routes/employee-route'; 
-import projectRouter from './routes/project-route'
-
+import employeeRouter from './routes/employee-route';
+import projectRouter from './routes/project-route';
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 

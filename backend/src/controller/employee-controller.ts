@@ -51,7 +51,7 @@ export const signIn = async (req: Request, res: Response) => {
 
       return res.status(422).json({
         success: false,
-        message:  errorMessage
+        message: errorMessage,
       });
     }
 
@@ -150,7 +150,7 @@ export const sendInvitation = async (
   try {
     const body = req.body;
 
-    console.log(" body : ", body)
+    console.log(' body : ', body);
     if (!body) {
       return res.status(400).json({
         success: false,
@@ -367,8 +367,8 @@ export const validateTokenAndSignUp = async (req: Request, res: Response) => {
       },
     });
 
-    console.log(" body : ", req.body)
-    console.log(" tenand ",  tenant)
+    console.log(' body : ', req.body);
+    console.log(' tenand ', tenant);
     if (!tenant) {
       return res.status(400).json({
         success: false,
@@ -393,7 +393,6 @@ export const validateTokenAndSignUp = async (req: Request, res: Response) => {
     return res.status(200).json({
       success: true,
       message: 'Account verified and created successfully.',
-    
     });
   } catch (error) {
     console.error('Unexpected error during employee signup:', error);
@@ -622,7 +621,6 @@ export const verifyOtp = async (req: Request, res: Response) => {
       return res.status(422).json({
         success: false,
         message: errorMessage,
-        
       });
     }
 
@@ -676,7 +674,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
       success: true,
       message:
         'OTP verified successfully. Use the token to reset your password.',
-      token: resetToken
+      token: resetToken,
     });
   } catch (error) {
     console.error('Error during OTP verification:', error);
@@ -821,7 +819,7 @@ export const fetchAuthenticatedUser = async (
         fullname: true,
         email: true,
         role: true,
-        tenantId: true
+        tenantId: true,
       },
     });
 
@@ -949,15 +947,19 @@ export const fetchAllEmployeesForTenant = async (
     if (!tenant.isVerified) {
       return res.status(403).json({
         success: false,
-        message: 'Your company (tenant) is not verified. Access denied.',
+        message: 'Your company(tenant) is not verified. Access denied.',
       });
     }
 
+    const currentLoggedUserId = loggedInEmployeeId;
+
     const employees = await prisma.employee.findMany({
       where: {
+        NOT: { id: currentLoggedUserId },
         tenantId,
         isVerified: true,
       },
+
       select: {
         id: true,
         fullname: true,

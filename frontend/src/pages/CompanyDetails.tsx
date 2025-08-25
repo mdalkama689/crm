@@ -12,16 +12,19 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import type { AxiosError } from 'axios';
-import { useNavigateToBack } from '../utils/navigateToBack';  
-import { axiosInstance } from '../api/axios';  
-import type { ApiResponse } from '../types/ApiResponse';  
+import { useNavigateToBack } from '../utils/navigateToBack';
+import { axiosInstance } from '../api/axios';
+import type { ApiResponse } from '../types/ApiResponse';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button } from '../components/ui/button'; 
-import { Label } from '../components/ui/label';  
-import { Input } from '../components/ui/input';  
-import { Textarea } from '../components/ui/textarea';  
-import HomeLayout from '../layout/HomeLayout'; 
-import  {type TenantInput, tenantSchema} from 'shared/src/schema/tenant-schema'
+import { Button } from '../components/ui/button';
+import { Label } from '../components/ui/label';
+import { Input } from '../components/ui/input';
+import { Textarea } from '../components/ui/textarea';
+import HomeLayout from '../layout/HomeLayout';
+import {
+  type TenantInput,
+  tenantSchema,
+} from 'shared/src/schema/tenant-schema';
 
 const employeeRangeOptions = [
   {
@@ -50,7 +53,6 @@ const CompanyDetails = () => {
   const navigateToBack = useNavigateToBack();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-
   const {
     handleSubmit,
     setValue,
@@ -65,11 +67,10 @@ const CompanyDetails = () => {
 
   const onSubmit = async (data: TenantInput) => {
     try {
-       
       setIsSubmitting(true);
       const response = await axiosInstance.post<ApiResponse>(
         `/tenant/add-company-details/${email}`,
-       data,
+        data,
       );
 
       if (response.data.success) {

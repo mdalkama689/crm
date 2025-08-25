@@ -5,14 +5,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
-import { useNavigateToBack } from '../utils/navigateToBack';  
-import { axiosInstance } from '../api/axios'; 
-import type { ApiResponse } from '../types/ApiResponse'; 
-import { Button } from '../components/ui/button'; 
-import { Label } from '../components/ui/label'; 
-import { Input } from '../components/ui/input'; 
-import VeifyOtp from './VerifyOtp'; 
-import HomeLayout from '../layout/HomeLayout'; 
+import { useNavigateToBack } from '../utils/navigateToBack';
+import { axiosInstance } from '../api/axios';
+import type { ApiResponse } from '../types/ApiResponse';
+import { Button } from '../components/ui/button';
+import { Label } from '../components/ui/label';
+import { Input } from '../components/ui/input';
+import VeifyOtp from './VerifyOtp';
+import HomeLayout from '../layout/HomeLayout';
 
 const ForgotPassword = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);

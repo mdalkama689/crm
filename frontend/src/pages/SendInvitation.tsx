@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Label } from '../components/ui/label';  
-import { Input } from '../components/ui/input';  
-import { Button } from '../components/ui/button';  
+import { Label } from '../components/ui/label';
+import { Input } from '../components/ui/input';
+import { Button } from '../components/ui/button';
 import { Mail } from 'lucide-react';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { axiosInstance } from '../api/axios';  
+import { axiosInstance } from '../api/axios';
 import type { AxiosError } from 'axios';
-import type { ApiResponse } from '../types/ApiResponse'; 
-import HomeLayout from '../layout/HomeLayout';  
-import {  useSelector } from 'react-redux';
+import type { ApiResponse } from '../types/ApiResponse';
+import HomeLayout from '../layout/HomeLayout';
+import { useSelector } from 'react-redux';
 import { type RootState } from '../slices/store';
 
 const SendInvitation = () => {
@@ -43,24 +43,22 @@ const SendInvitation = () => {
 
   type FormData = z.infer<typeof emailSchema>;
 
-
-  const {user} = useSelector((state: RootState) => state.auth)
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const onSubmit = async (data: FormData) => {
     try {
-      
       setIsSubmitting(true);
-      console.log(" data : ", data)
+      console.log(' data : ', data);
       const payload = {
         ...data,
-        tenantId: user?.tenantId 
-      }
+        tenantId: user?.tenantId,
+      };
       const response = await axiosInstance.post<ApiResponse>(
         '/send-invitation',
         payload,
       );
 
-      console.log(response.data)
+      console.log(response.data);
       if (response.data.success) {
         return toast.info(response.data.message);
       } else {

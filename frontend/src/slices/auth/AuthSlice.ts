@@ -17,9 +17,8 @@ interface UserProps {
   fullname: string;
   email: string;
   role: string;
-  tenantId: string 
+  tenantId: string;
 }
-
 
 interface AuthProps {
   user: UserProps | null;
@@ -37,8 +36,7 @@ const initialState: AuthProps = {
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchCurrentUser.pending, (state) => {
@@ -54,7 +52,5 @@ const authSlice = createSlice({
       });
   },
 });
-
-
 
 export default authSlice.reducer;

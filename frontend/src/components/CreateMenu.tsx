@@ -6,6 +6,7 @@ import {
   List,
   UserPlus,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface ICreateMenuProps {
   open: boolean;
@@ -25,6 +26,15 @@ const CreateMenu = ({ open, onClose }: ICreateMenuProps) => {
   if (!open) {
     return;
   }
+
+  const navigate = useNavigate();
+
+  const toggleProjectForm = (taskName: string) => {
+    if (taskName.toLowerCase().trim() === 'new projects') {
+      navigate('/add-project');
+    }
+  };
+
   return (
     <div
       className="bg-white w-56 absolute top-[50px] right-0 rounded-2xl shadow-lg p-2"
@@ -36,6 +46,7 @@ const CreateMenu = ({ open, onClose }: ICreateMenuProps) => {
           <div
             key={menu.id}
             className="flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition"
+            onClick={() => toggleProjectForm(menu.text)}
           >
             <Icon className="w-5 h-5" />
             <p className="text-sm font-medium">{menu.text}</p>
