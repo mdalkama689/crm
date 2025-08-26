@@ -1,9 +1,5 @@
-
-
 const Activity = () => {
-  return (
-    <div>Activity</div>
-  )
-}
+  return <div>Activity</div>;
+};
 
-export default Activity
+export default Activity;

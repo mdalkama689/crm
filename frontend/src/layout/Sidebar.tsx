@@ -1,6 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import logo from '../../src/assets/logo/logo.png';
-import { useEffect, useState } from 'react';
 import {
   Grid,
   Folder,
@@ -18,41 +17,62 @@ import {
 } from 'lucide-react';
 import SocialHandle from './SocialHandle';
 import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../slices/store';
+import {
+  setCurrentSideBarTab,
+  toggleSidebar,
+} from '../slices/sidebar/SideBarSlice';
+import { useNavigate } from 'react-router-dom';
 
 const menuItems = [
-  { id: 1, label: 'Dashboard', icon: Grid },
-  { id: 2, label: 'Projects', icon: Folder },
-  { id: 3, label: 'Tasks', icon: CheckSquare },
-  { id: 4, label: 'Workspaces', icon: LayoutGrid },
-  { id: 5, label: 'Calendar', icon: Calendar },
-  { id: 6, label: 'Contacts', icon: Users },
-  { id: 7, label: 'Messages', icon: MessageSquare },
-  { id: 8, label: 'Products', icon: Package },
-  { id: 9, label: 'Invoices', icon: FileText },
-  { id: 10, label: 'File Browser', icon: FolderOpen },
-  { id: 11, label: 'Notifications', icon: Bell },
-  { id: 12, label: 'Reports', icon: BarChart2 },
-  { id: 13, label: 'Help Center', icon: HelpCircle },
+  { id: 1, label: 'Dashboard', icon: Grid, url: '/' },
+  { id: 2, label: 'Projects', icon: Folder, url: '/projects' },
+  { id: 3, label: 'Tasks', icon: CheckSquare, url: '/tasks' },
+  { id: 4, label: 'Workspaces', icon: LayoutGrid, url: '/workspaces' },
+  { id: 5, label: 'Calendar', icon: Calendar, url: '/calendar' },
+  { id: 6, label: 'Contacts', icon: Users, url: '/contacts' },
+  { id: 7, label: 'Messages', icon: MessageSquare, url: '/messages' },
+  { id: 8, label: 'Products', icon: Package, url: '/products' },
+  { id: 9, label: 'Invoices', icon: FileText, url: '/invoices' },
+  { id: 10, label: 'File Browser', icon: FolderOpen, url: '/files' },
+  { id: 11, label: 'Notifications', icon: Bell, url: '/notifications' },
+  { id: 12, label: 'Reports', icon: BarChart2, url: '/reports' },
+  { id: 13, label: 'Help Center', icon: HelpCircle, url: '/help' },
 ];
 
 const Sidebar = () => {
-  const [isVisible, setIsVisible] = useState<boolean>(true);
+  const dispatch = useDispatch<AppDispatch>();
+  const { isSideBarOpen, currentSideBarTab, notificationCount } = useSelector(
+    (state: RootState) => state.sidebar,
+  );
 
-  const toggleSidebar = () => {
-    setIsVisible(!isVisible);
+  const handleToggleSideBar = () => {
+    dispatch(toggleSidebar());
+  };
+
+  const navigate = useNavigate();
+
+  const navigateTo = (url: string) => {
+    navigate(`${url}`);
+  };
+
+  const handleCurrentSideBarTab = (lable: string, url: string) => {
+    dispatch(setCurrentSideBarTab(lable.replace(/\s+/g, '')));
+
+    navigateTo(url);
   };
 
   return (
     <div
       className={`fixed top-0 left-0 bg-[#101828] h-screen overflow-y-auto overflow-x-hidden transition-all duration-300 ease-in-out 
-    ${isVisible ? 'w-[300px]' : 'w-[80px]'} 
+    ${isSideBarOpen ? 'w-[300px]' : 'w-[80px]'} 
     [&::-webkit-scrollbar]:hidden`}
     >
       <div
         className="absolute top-1 right-[-10px] bg-slate-700 cursor-pointer p-1 rounded-lg"
-        onClick={toggleSidebar}
+        onClick={handleToggleSideBar}
       >
-        {isVisible ? (
+        {isSideBarOpen ? (
           <ChevronLeft className="text-white" />
         ) : (
           <ChevronRight className="text-white" />
@@ -63,7 +83,9 @@ const Sidebar = () => {
         <img src={logo} alt="logo" className="h-[50px] w-[50px]" />
         <div
           className={`flex flex-col gap-2 transition-all duration-300 ease-in-out ${
-            isVisible ? 'opacity-100 w-auto' : 'opacity-0 w-0 overflow-hidden'
+            isSideBarOpen
+              ? 'opacity-100 w-auto'
+              : 'opacity-0 w-0 overflow-hidden'
           }`}
         >
           <p className="font-medium text-[22px] leading-4 text-white">
@@ -81,12 +103,29 @@ const Sidebar = () => {
           return (
             <div
               key={menu.id}
-              className="flex items-center gap-3 bg-transparent mt-2 hover:bg-[#F16334] group p-2 mx-4 rounded-lg cursor-pointer transition-colors duration-300"
+              className={`flex items-center gap-3 mt-2 ${menu.label.toLowerCase() === currentSideBarTab ? 'bg-[#F16334]' : 'bg-transparent'} hover:bg-[#F16334] group p-2 mx-4 rounded-lg cursor-pointer transition-colors duration-300`}
+              onClick={() => handleCurrentSideBarTab(menu.label, menu.url)}
             >
-              <Icon className="h-5 w-5 text-[#98A2B3] group-hover:text-black" />
+              <div className="relative">
+                <Icon
+                  className={`h-5 w-5 text-[#98A2B3] group-hover:text-black ${
+                    menu.label.toLowerCase() === currentSideBarTab
+                      ? 'text-black'
+                      : ''
+                  }`}
+                />
+
+                {menu.label.trim().toLowerCase() === 'notifications' &&
+                  notificationCount > 0 && (
+                    <span className="absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                      {notificationCount}
+                    </span>
+                  )}
+              </div>
+
               <span
-                className={`font-normal leading-5 text-[#98A2B3] text-[18px] group-hover:text-black transition-all duration-300 ${
-                  isVisible
+                className={`font-normal leading-5 ${menu.label.toLowerCase() === currentSideBarTab ? 'text-black' : ''}  text-[#98A2B3] text-[18px] group-hover:text-black transition-all duration-300 ${
+                  isSideBarOpen
                     ? 'opacity-100 w-auto'
                     : 'opacity-0 w-0 overflow-hidden'
                 }`}

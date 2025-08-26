@@ -1,16 +1,13 @@
-import { useEffect, useState } from "react";
-import { allBgGradient, months } from "../constant";
-import { Calendar } from "lucide-react";
-import { Progress } from "../../ui/progress";
-
+import { useEffect, useState } from 'react';
+import { allBgGradient, months } from '../constant';
+import { Calendar } from 'lucide-react';
+import { Progress } from '../../ui/progress';
 
 interface ProjectOverview {
   description: string | null;
   dueDate: string | null;
   assignEmployee: { id: string; fullname: string }[];
 }
-
-
 
 const Overview = ({
   description,
@@ -23,7 +20,6 @@ const Overview = ({
     const randomNumber = Math.floor(Math.random() * allBgGradient.length);
     setBgGradient([...bgGradient, allBgGradient[randomNumber]]);
   };
-
 
   const [readableDueDate, setReadableDueDate] = useState<string>('');
 
@@ -98,6 +94,5 @@ const Overview = ({
     </div>
   );
 };
- 
 
-export default Overview 
+export default Overview;

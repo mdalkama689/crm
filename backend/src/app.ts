@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import tenantRouter from './routes/tenant-route';
 import employeeRouter from './routes/employee-route';
 import projectRouter from './routes/project-route';
+import notificationRouter from './routes/notification-route';
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
@@ -25,5 +26,5 @@ app.use(morgan('tiny'));
 app.use('/api/v1/tenant', tenantRouter);
 app.use('/api/v1', employeeRouter);
 app.use('/api/v1', projectRouter);
-
+app.use('/api/v1/notification', notificationRouter);
 export default app;

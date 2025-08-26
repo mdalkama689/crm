@@ -1,9 +1,5 @@
-
-
 const File = () => {
-  return (
-    <div>File</div>
-  )
-}
+  return <div>File</div>;
+};
 
-export default File
+export default File;

@@ -1,9 +1,5 @@
-
-
 const Desk = () => {
-  return (
-    <div>Desk</div>
-  )
-}
+  return <div>Desk</div>;
+};
 
-export default Desk
+export default Desk;

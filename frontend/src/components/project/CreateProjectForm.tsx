@@ -2,8 +2,8 @@ import { X, Plus, Upload, CalendarDays } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';  
-import z from 'zod'; 
+import { toast } from 'sonner';
+import z from 'zod';
 import type { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import type { ApiResponse } from '../../types/ApiResponse';
@@ -15,8 +15,6 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { allBgGradient } from './constant';
-
-
 
 interface CreateProjectResponse extends ApiResponse {
   projectId: string;

@@ -1,9 +1,10 @@
 import { ChevronDown, Globe } from 'lucide-react';
 import { Button } from '../components/ui/button';
+import { Link } from 'react-router-dom';
 const Header = () => {
   return (
     <header className="flex items-center fixed top-0 left-0 w-full z-10 justify-between bg-[#FFFFFF] shadow-lg py-3 px-6">
-      <p>ENPOINT </p>
+      <Link to="/">ENPOINT </Link>
 
       <div className="flex gap-3 items-center">
         <Button className="bg-transparent text-black hover:bg-transparent">

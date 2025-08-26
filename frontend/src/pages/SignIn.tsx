@@ -168,7 +168,7 @@ const SignIn = () => {
               </div>
 
               <Link
-                to="/admin/forgot-password"
+                to="/forgot-password"
                 className="text-[#A176F7] font-medium text-[14px] leading-[21px]"
               >
                 Forgot Password

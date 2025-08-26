@@ -2,8 +2,6 @@ import { ChevronRight, User } from 'lucide-react';
 import { messages } from './constant';
 
 const Chat = () => {
- 
-
   return (
     <div>
       <div className="flex items-center justify-between mb-4">

@@ -1,4 +1,3 @@
-
 export interface IProject {
   id: string;
   name: string;
@@ -10,4 +9,4 @@ export interface IProject {
   createdBy: string;
   tenantId: string;
   assignToEmployee: { id: string; fullname: string }[];
-} 
+}

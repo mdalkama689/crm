@@ -1,13 +1,13 @@
-import {   ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useEffect, useState } from 'react';
 import DashboardLayout from '../../layout/DashboardLayout';
 import { useNavigate, useParams } from 'react-router-dom';
-import { axiosInstance } from '../../api/axios'; 
+import { axiosInstance } from '../../api/axios';
 import type { ApiResponse } from '../../types/ApiResponse';
 import type { AxiosError } from 'axios';
 import { toast } from 'sonner';
-import { menuItems} from './constant';
+import { menuItems } from './constant';
 import type { IProject } from './types';
 import Overview from './tabs/Overview';
 import Task from './tabs/Task';
@@ -17,11 +17,9 @@ import File from './tabs/File';
 import Report from './tabs/Report';
 import Setting from './tabs/Setting';
 
-
 interface ProjectResponse extends ApiResponse {
   project: IProject;
 }
-
 
 const EachProject = () => {
   const params = useParams();
@@ -37,9 +35,8 @@ const EachProject = () => {
   };
 
   useEffect(() => {
-
-    console.log(" curret ta b : ", currentTab)
-  }, [currentTab])
+    console.log(' curret ta b : ', currentTab);
+  }, [currentTab]);
 
   const navigate = useNavigate();
 
@@ -80,7 +77,7 @@ const EachProject = () => {
 
           <div className="mt-5 w-full">
             {menuItems.map((menu) => (
-              <Button  
+              <Button
                 className={`rounded-full mr-3  text-slate-900 cursor-pointer hover:bg-purple-500 hover:text-white ${currentTab.toLowerCase() === menu.name.toLowerCase() ? 'bg-purple-500 text-white' : 'bg-[#E2E8F0]'}`}
                 key={menu.id}
                 onClick={() => handleCurrentTab(menu.name)}
@@ -89,33 +86,20 @@ const EachProject = () => {
               </Button>
             ))}
           </div>
-{currentTab === "overview" && (
-          <Overview
-            description={project.description}
-            dueDate={project.dueDate}
-            assignEmployee={project.assignToEmployee}
-          />
+          {currentTab === 'overview' && (
+            <Overview
+              description={project.description}
+              dueDate={project.dueDate}
+              assignEmployee={project.assignToEmployee}
+            />
+          )}
 
-          )} 
-
-          {currentTab === "task" && (
-            <Task/>
-          )}
-           {currentTab === "desk" && (
-            <Desk/>
-          )}
-           {currentTab === "activity" && (
-            <Activity/>
-          )}
-           {currentTab === "files" && (
-            <File/>
-          )}
-           {currentTab === "reports" && (
-            <Report/>
-          )}
-           {currentTab === "settings" && (
-            <Setting/>
-          )}
+          {currentTab === 'task' && <Task />}
+          {currentTab === 'desk' && <Desk />}
+          {currentTab === 'activity' && <Activity />}
+          {currentTab === 'files' && <File />}
+          {currentTab === 'reports' && <Report />}
+          {currentTab === 'settings' && <Setting />}
         </div>
       </div>
     </DashboardLayout>
@@ -123,4 +107,3 @@ const EachProject = () => {
 };
 
 export default EachProject;
-

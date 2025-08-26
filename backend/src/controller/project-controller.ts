@@ -1,11 +1,9 @@
 import AWS from 'aws-sdk';
 import prisma from 'backend/db';
 import type { Response } from 'express';
-import {
-  // createProjectInput,
-  createProjectSchema,
-} from 'shared/src/schema/create-project-schema';
+import { createProjectSchema } from 'shared/src/schema/create-project-schema';
 import { AuthenticatedRequest } from '../middlewares/auth-middleware';
+import { generateNotificationForProject } from '../utils/generateNotification';
 
 const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
 const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
@@ -286,6 +284,22 @@ export const createProject = async (
         assignToEmployee: true,
       },
     });
+
+    const notification = generateNotificationForProject({
+      adminName: currentUser.fullname,
+      projectName: name,
+    });
+
+    for (let i = 0; i < employeeIds.length; i++) {
+      await prisma.notification.create({
+        data: {
+          text: notification,
+          enitityId: newProject.id,
+          entityType: 'PROJECT',
+          employeeId: employeeIds[i],
+        },
+      });
+    }
 
     return res.status(201).json({
       success: true,
