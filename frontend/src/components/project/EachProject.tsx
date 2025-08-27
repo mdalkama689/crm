@@ -16,6 +16,7 @@ import Activity from './tabs/Activity';
 import File from './tabs/File';
 import Report from './tabs/Report';
 import Setting from './tabs/Setting';
+import Loader from '../Loader';
 
 interface ProjectResponse extends ApiResponse {
   project: IProject;
@@ -29,24 +30,26 @@ const EachProject = () => {
 
   const [currentTab, setCurrentTab] = useState('overview');
   const [project, setProject] = useState<IProject | null>(null);
+const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const handleCurrentTab = (tabName: string) => {
     setCurrentTab(tabName.toLowerCase());
   };
 
-  useEffect(() => {
-    console.log(' curret ta b : ', currentTab);
-  }, [currentTab]);
+
 
   const navigate = useNavigate();
 
   const fetchProjectDetails = async () => {
     try {
+      setIsLoading(true)
       const response = await axiosInstance.get<ProjectResponse>(
         `/project/${projectId}`,
       );
       if (response.data.success) {
-        setProject(response.data.project);
+        setProject(response.data.project); 
+      }else{
+         navigate('/');
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -56,6 +59,9 @@ const EachProject = () => {
       toast.error(errorMessage);
       navigate('/');
       console.log(error);
+    }finally{
+      setIsLoading(false)
+  
     }
   };
 
@@ -66,6 +72,11 @@ const EachProject = () => {
   if (!project) return;
 
   return (
+    <>
+      {isLoading ? (
+      <Loader /> 
+      ) : (
+        
     <DashboardLayout>
       <div className="flex gap-1 mt-8 ml-[300px]">
         <div className="mt-12 ml-12 w-[calc(100%-300px)]">
@@ -102,7 +113,9 @@ const EachProject = () => {
           {currentTab === 'settings' && <Setting />}
         </div>
       </div>
-    </DashboardLayout>
+    </DashboardLayout> 
+      )}
+    </>
   );
 };
 

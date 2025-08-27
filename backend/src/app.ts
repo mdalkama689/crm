@@ -8,6 +8,9 @@ import tenantRouter from './routes/tenant-route';
 import employeeRouter from './routes/employee-route';
 import projectRouter from './routes/project-route';
 import notificationRouter from './routes/notification-route';
+import taskRouter from './routes/task-route'
+import AWS from 'aws-sdk';
+
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
@@ -22,9 +25,24 @@ const corsOption = {
 
 app.use(express.json());
 app.use(cors(corsOption));
+const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
+const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
+const ENDPOINT_URL = process.env.ENDPOINT_URL;
+export const BUCKET_NAME = process.env.BUCKET_NAME;
+
+export const spacesEndpoint = new AWS.Endpoint(ENDPOINT_URL!);
+
+export const s3 = new AWS.S3({
+  endpoint: spacesEndpoint,
+  accessKeyId: ACCESS_KEY_ID,
+  secretAccessKey: SECRET_ACCESS_KEY,
+});
+
 app.use(morgan('tiny'));
 app.use('/api/v1/tenant', tenantRouter);
 app.use('/api/v1', employeeRouter);
 app.use('/api/v1', projectRouter);
 app.use('/api/v1/notification', notificationRouter);
+app.use('/api/v1', taskRouter)
+
 export default app;

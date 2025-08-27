@@ -4,19 +4,9 @@ import type { Response } from 'express';
 import { createProjectSchema } from 'shared/src/schema/create-project-schema';
 import { AuthenticatedRequest } from '../middlewares/auth-middleware';
 import { generateNotificationForProject } from '../utils/generateNotification';
+import { BUCKET_NAME, s3 } from '../app';
 
-const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
-const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
-const ENDPOINT_URL = process.env.ENDPOINT_URL;
-const BUCKET_NAME = process.env.BUCKET_NAME;
 
-const spacesEndpoint = new AWS.Endpoint(ENDPOINT_URL!);
-
-const s3 = new AWS.S3({
-  endpoint: spacesEndpoint,
-  accessKeyId: ACCESS_KEY_ID,
-  secretAccessKey: SECRET_ACCESS_KEY,
-});
 
 interface MulterFile {
   fieldname: string;
@@ -29,6 +19,15 @@ interface MulterFile {
 
 // add auth and admin middleware
 
+export  const allowedAttachmentTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'image/png',
+        'image/jpeg',
+        'image/jpg'
+      ];
+
 export const createProject = async (
   req: AuthenticatedRequest,
   res: Response,
@@ -37,7 +36,7 @@ export const createProject = async (
     const body = req.body;
 
     console.log(body);
-
+ 
     if (!body) {
       return res.status(400).json({
         success: false,
@@ -85,13 +84,7 @@ export const createProject = async (
         });
       }
 
-      const allowedAttachmentTypes = [
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'image/png',
-        'image/jpeg',
-      ];
+     
       if (
         attachmentFile &&
         !allowedAttachmentTypes.includes(attachmentFile.mimetype)
@@ -437,7 +430,7 @@ export const deleteProject = async (
 // any admin
 // and assigned user
 
-export const getSpecificProjectToAdmin = async (
+export const getProjectForAdminAndAssignee = async (
   req: AuthenticatedRequest,
   res: Response,
 ) => {
@@ -520,11 +513,39 @@ export const getSpecificProjectToAdmin = async (
         message: 'You are not authorized to view this project.',
       });
     }
+ 
+  const assignedEmployee = project.assignToEmployee
+
+    if(assignedEmployee.length === 0 && loggedInUser.role !== "admin"){
+return res.status(400).json({
+ success: false,
+  message : "No employee is assigned to this project, and you are not an admin, so you cannot view it."
+
+})
+    }
+
+  
+if(assignedEmployee.length > 0){ 
+  const isAssignedEmployee = assignedEmployee.some((emp) => emp.id === loggedInUserId)
+
+if(!isAssignedEmployee){
+  return res.status(400).json({
+  success: false,
+  message: "You are not assigned to this project or an admin, so you are not authorized to access it."
+
+  })
+}
+  
+}
+
+
+
 
     return res.status(200).json({
       success: true,
       message: 'Project fetched successfully.',
       project,
+      assignedEmployee 
     });
   } catch (error) {
     const errorMessage =
@@ -691,96 +712,4 @@ export const getAllProjectsOfCompany = async (
       message: `An unexpected error occurred: ${errorMessage}`,
     });
   }
-};
-
-// crud for task
-
-// add auth only  middleware
-
-// export const addTask = async (req: AuthenticatedRequest, res: Response) => {
-//   try {
-//     const projectId = req.params.id;
-//     if (!projectId) {
-//       return res
-//         .status(400)
-//         .json({ success: false, message: 'Project ID is required.' });
-//     }
-
-//     const project = await prisma.project.findUnique({
-//       where: { id: projectId },
-//       include: {
-//         assignToEmployee: true,
-//       },
-//     });
-//     if (!project) {
-//       return res
-//         .status(404)
-//         .json({ success: false, message: 'Project not found.' });
-//     }
-
-//     const loggedInUserId = req.user?.id;
-//     if (!loggedInUserId) {
-//       return res.status(401).json({
-//         success: false,
-//         message: 'You must be logged in to perform this action.',
-//       });
-//     }
-
-//     const loggedInUser = await prisma.employee.findUnique({
-//       where: { id: loggedInUserId },
-//     });
-//     if (!loggedInUser) {
-//       return res.status(401).json({
-//         success: false,
-//         message: 'You must be logged in to perform this action.',
-//       });
-//     }
-
-//     if (!loggedInUser.isVerified) {
-//       return res
-//         .status(403)
-//         .json({ success: false, message: 'Your account is not verified.' });
-//     }
-
-//     if (!loggedInUser.tenantId?.trim()) {
-//       return res.status(403).json({
-//         success: false,
-//         message:
-//           'You are not associated with any tenant and cannot delete this project.',
-//       });
-//     }
-
-//     const tenant = await prisma.tenant.findUnique({
-//       where: { id: loggedInUser.tenantId },
-//     });
-//     if (!tenant) {
-//       return res
-//         .status(403)
-//         .json({ success: false, message: 'Tenant not found.' });
-//     }
-
-//     if (!tenant.isVerified) {
-//       return res
-//         .status(403)
-//         .json({ success: false, message: 'Tenant account is not verified.' });
-//     }
-
-//     if (project.tenantId !== loggedInUser.tenantId) {
-//       return res.status(403).json({
-//         success: false,
-//         message: 'You are not authorized to add task in  this project.',
-//       });
-//     }
-
-//     // if(loggedInUser.role === "admin"){
-
-//     // }
-
-//     // if you are admin you can add
-//     // check your are assinged or not
-//     // if not give error
-//     // else he/she can add
-//   } catch {
-//     console.error(' errpr');
-//   }
-// };
+}; 

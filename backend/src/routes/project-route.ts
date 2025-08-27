@@ -6,7 +6,7 @@ import {
   deleteProject,
   getAdminCreatedProjects,
   getAllProjectsOfCompany,
-  getSpecificProjectToAdmin,
+getProjectForAdminAndAssignee
 } from '../controller/project-controller';
 import upload from '../middlewares/multer.middleware';
 
@@ -29,7 +29,7 @@ router.delete(
   adminMiddleware,
   deleteProject,
 );
-router.get('/project/:id', authMiddleware, getSpecificProjectToAdmin);
+router.get('/project/:id', authMiddleware, getProjectForAdminAndAssignee);
 router.get(
   '/projects-created-by-me',
   authMiddleware,

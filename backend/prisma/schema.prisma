@@ -60,6 +60,7 @@ model Employee {
    tenant Tenant? @relation(fields: [tenantId], references: [id])
    projects Project[]
    projectAssigned Project[] @relation("ProjectAssignment")
+   taskAssigned Task[] @relation("TaskAssignment")
    tasks Task[]
    notifications Notification[]
 }
@@ -80,12 +81,15 @@ model Project {
     tasks Task[]
 }
 
-
-
+ 
 model Task {
       id               String     @id @default(uuid())
-      task String
+      name String
+      dueDate String?
+      description String?
+      attachmentUrl String?  
       status  TaskStatus @default(PENDING)
+      assigedEmployees Employee[] @relation("TaskAssignment")
       createdBy String
       employee Employee @relation(fields: [createdBy], references: [id])
       projectId String

@@ -9,20 +9,35 @@ import {
 } from 'lucide-react';
 import type { NotificationProps, NotificationResponse, TypeIcon } from './type';
 import { formatDistanceToNow } from 'date-fns';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '../../slices/store';
+import { useNavigate } from 'react-router-dom'; 
+import type { ApiResponse } from '../../types/ApiResponse';
+import { toast } from 'sonner';
+import {  useDispatch, useSelector } from 'react-redux';
+import type {  AppDispatch, RootState } from '../../slices/store';
 import { setNotificationCount } from '../../slices/sidebar/SideBarSlice';
-import { useNavigate } from 'react-router-dom';
-import { AxiosHeaders } from 'axios';
+import type { AxiosError } from 'axios';
 
 const Notification = () => {
-  const [notificationList, setNotificationList] = useState<NotificationProps[]>(
-    [],
-  );
+  const [notificationList, setNotificationList] = useState<NotificationProps[]>([]);
 
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<AppDispatch>()
+  const {notificationCount} = useSelector((state: RootState) => state.sidebar)
 
-  const handleMarkAllAsRead = () => {};
+ 
+
+  const handleMarkAllAsRead = async  () => {
+    try {
+      
+      const response = await axiosInstance.patch<ApiResponse>('/notification/mark-all-seen')
+      
+      if(response.data.success){
+dispatch(setNotificationCount(0)) ;
+      }
+
+    } catch (error) {
+    toast.error("Something went wrong while marking all unread notifications as read.");
+}
+  };
 
   const fetchAllNotifications = async () => {
     try {
@@ -31,9 +46,15 @@ const Notification = () => {
 
       if (response.data.success) {
         setNotificationList(response.data.notifications);
+
+
       }
     } catch (error) {
-      console.log(' error : ', error);
+      const axiosError = error as AxiosError<ApiResponse>;
+const errorMessage = axiosError.response?.data?.message || "Something went wrong while fetching notifications.";
+console.error('Error fetching notifications:', error);
+toast.error(errorMessage);
+
     }
   };
 
@@ -64,8 +85,6 @@ const Notification = () => {
     return colors[type] || 'bg-green-500';
   };
 
-  const unreadCount = notificationList.filter((notify) => !notify.seen).length;
-
   const getInAgo = (date: Date) => {
     const relativeTime = formatDistanceToNow(new Date(date), {
       addSuffix: true,
@@ -73,17 +92,12 @@ const Notification = () => {
     return relativeTime;
   };
 
-  useEffect(() => {
-    if (!notificationList || notificationList.length === 0) return;
 
-    dispatch(setNotificationCount(unreadCount));
-  }, [notificationList]);
 
   const navigate = useNavigate();
 
   const markAsRead = async (id: string) => {
-    try {
-      console.log(' syatt');
+    try { 
       const response = await axiosInstance.get(`/notification/${id}`);
       console.log(' response via marl : ', response);
     } catch (error) {
@@ -102,6 +116,8 @@ const Notification = () => {
     }
   };
 
+
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <div className="flex-1 flex flex-col">
@@ -113,9 +129,9 @@ const Notification = () => {
                   <div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Recent Activity
-                      {unreadCount > 0 && (
+                      {notificationCount > 0 && (
                         <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          {unreadCount} unread
+                          {notificationCount} unread
                         </span>
                       )}
                     </h2>
@@ -123,10 +139,10 @@ const Notification = () => {
                       Stay updated with your latest notifications
                     </p>
                   </div>
-                  {unreadCount > 0 && (
+                  {notificationCount > 0 && (
                     <button
                       onClick={handleMarkAllAsRead}
-                      className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+                      className="text-blue-600 cursor-pointer hover:text-blue-700 text-sm font-medium transition-colors"
                     >
                       Mark all as read
                     </button>

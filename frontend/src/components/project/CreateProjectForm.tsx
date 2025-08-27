@@ -118,8 +118,11 @@ const CreateProjectForm = () => {
       formData.append('assignToEmployee', JSON.stringify(allAssignedId));
       formData.append('description', data.description ? data.description : '');
 
+      console.log(" for : ", formData.get('assignToEmployee')) 
+
       setIsSubmitting(true);
 
+      toast.info(" project is creaeting")
       const response = await axiosInstance.post<CreateProjectResponse>(
         '/create-project',
         formData,
@@ -195,6 +198,7 @@ const CreateProjectForm = () => {
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 relative">
         <Button
           onClick={navigateToHome}
+          disabled={isSubmitting}
           className="text-slate-900 bg-transparent  hover:text-gray-600 hover:bg-gray-100 rounded-full p-1 transition-colors absolute right-0 top-0"
         >
           <X className="h-5 w-5" />
@@ -293,10 +297,10 @@ const CreateProjectForm = () => {
                 <div className="flex -space-x-2">
                   {assignedEmpoloyee.length > 0 &&
                     assignedEmpoloyee.map((emp, ind) => (
-                      <div className="relative">
+                      <div className="relative"     key={emp.id}>
                         <div
                           className={`w-9 h-9 ${bgGradient[ind]} group flex items-center justify-center rounded-full border-2 border-white shadow-sm`}
-                          key={emp.id}
+                      
                         >
                           {emp.fullname.charAt(0).toUpperCase()}
 

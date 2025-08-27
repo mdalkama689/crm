@@ -1,41 +1,13 @@
-import { useDispatch, useSelector } from 'react-redux';
-import DashboardLayout from '../../layout/DashboardLayout';
-import Chat from './Chat';
-import ChatPanel from './ChatPanel';
-import { Button } from '../ui/button';
-import {
-  ChevronDown,
-  Filter,
-  Funnel,
-  Grid2X2,
-  Grid2x2,
-  List,
-  Rows2,
-} from 'lucide-react';
-import ProjectList from './ProjectList';
-import ProjectGrid from './ProjectGrid';
-import { useState } from 'react';
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { ChevronDown, Filter, Grid2X2, List } from "lucide-react";
+import ProjectList from "./ProjectList";
+import ProjectGrid from "./ProjectGrid";
 
-const Project = () => {
-  return (
-    <div className="relative">
-      <DashboardLayout>
-        <div className="ml-[80px]">
-          <ChatPanel />
-        </div>
-
-        <div className="absolute top-[80px] left-[450px]">
-          <Fix />
-        </div>
-      </DashboardLayout>
-    </div>
-  );
-};
-
-export default Project;
-
-const Fix = () => {
+const ProjectToolbar = () => {
   const [showProjectList, setShowProjectList] = useState<boolean>(false);
+
+  
 
   return (
     <div>
@@ -75,3 +47,6 @@ const Fix = () => {
     </div>
   );
 };
+
+
+export default ProjectToolbar

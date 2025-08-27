@@ -16,6 +16,7 @@ import CreateProject from './components/project/CreateProject';
 import EachProject from './components/project/EachProject';
 import Employee from './components/admin/Employee';
 import AllNotifications from './components/notification/AllNotifications';
+import AllProjects from './components/project/AllProjects';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/send-invitation" element={<SendInvitation />} />
           <Route path="/add-project" element={<CreateProject />} />
           <Route path="/employees" element={<Employee />} />
+              <Route path="/projects" element={<AllProjects/>} />
         </Route>
 
         <Route element={<AuthWrapper />}>
