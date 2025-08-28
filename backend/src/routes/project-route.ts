@@ -6,6 +6,7 @@ import {
   deleteProject,
   getAdminCreatedProjects,
   getAllProjectsOfCompany,
+  getAssignedEmployeesForProject,
   getProjectForAdminAndAssignee,
 } from '../controller/project-controller';
 import upload from '../middlewares/multer.middleware';
@@ -42,4 +43,8 @@ router.get(
   adminMiddleware,
   getAllProjectsOfCompany,
 );
+
+router.post('/projects/:id/assigned-employees', authMiddleware, getAssignedEmployeesForProject)
+
+
 export default router;

@@ -5,7 +5,7 @@ import { createProjectSchema } from 'shared/src/schema/create-project-schema';
 import { AuthenticatedRequest } from '../middlewares/auth-middleware';
 import { generateNotificationForProject } from '../utils/generateNotification';
 import { BUCKET_NAME, s3 } from '../app';
-import { validateDueDate } from '../utils/validateDueDate';
+import { validateDueDate } from '../utils/validateDueDate'; 
 
 interface MulterFile {
   fieldname: string;
@@ -700,3 +700,99 @@ export const getAllProjectsOfCompany = async (
     });
   }
 };
+
+
+
+
+export const getAssignedEmployeesForProject   =  async (req: AuthenticatedRequest, res: Response) => {
+
+  try {
+    
+const loggedInUserId = req.user?.id
+const projectId = req.params.id 
+
+if(!loggedInUserId){
+  return res.status(400).json({
+    success: false,
+    message: "Unauthenticated, Please logged in continue "
+  })
+}
+
+const loggedInUser = await prisma.employee.findUnique({
+  where :  {
+id: loggedInUserId
+  }
+})
+
+if(!loggedInUser){
+  return res.status(400).json({
+    success: false,
+    message: "Unauthenticated, Please logged in continue "
+  })
+}
+
+
+if(!projectId){
+  return res.status(400).json({
+    success: false,
+    message: "Projetc id not found !"
+  })
+}
+
+
+const project = await prisma.project.findUnique({
+  where: {
+    id:projectId
+  },
+  include: {
+    assignToEmployee: true 
+  }
+})
+
+if(!project){
+  return res.status(400).json({
+    success: false,
+    message: "Projetc not found !"
+  })
+}
+
+if(loggedInUser.tenantId !== project.tenantId){
+ return res.status(403).json({
+        success: false,
+        message: "You do not belong to the same tenant as this project."
+      });
+
+}
+
+const assignedEmployees   = project.assignToEmployee
+
+const isAssigned = assignedEmployees.some((empl) => empl.id === loggedInUserId)
+const isAdmin = loggedInUser.role.trim().toLowerCase() !== "admin" 
+
+  if (!isAssigned && !isAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not assigned to this project and do not have admin access."
+      });
+    }
+
+return res.status(200).json({
+ success: true,
+      message: "Assigned employees fetched successfully.",
+      employees: assignedEmployees 
+})
+
+
+  } catch (error) {
+        console.error("Error fetching assigned employees:", error);
+
+    const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred while fetching assigned employees."
+
+  return res.status(400).json({
+    success: false,
+    message : errorMessage
+  })
+  }
+
+
+}
