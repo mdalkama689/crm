@@ -16,9 +16,11 @@ import {  useDispatch, useSelector } from 'react-redux';
 import type {  AppDispatch, RootState } from '../../slices/store';
 import { setNotificationCount } from '../../slices/sidebar/SideBarSlice';
 import type { AxiosError } from 'axios';
+import Loader from '../Loader';
 
 const Notification = () => {
   const [notificationList, setNotificationList] = useState<NotificationProps[]>([]);
+const [isLoading, setIsLoading] = useState<boolean>(true)
 
   const dispatch = useDispatch<AppDispatch>()
   const {notificationCount} = useSelector((state: RootState) => state.sidebar)
@@ -27,7 +29,6 @@ const Notification = () => {
 
   const handleMarkAllAsRead = async  () => {
     try {
-      
       const response = await axiosInstance.patch<ApiResponse>('/notification/mark-all-seen')
       
       if(response.data.success){
@@ -36,7 +37,7 @@ dispatch(setNotificationCount(0)) ;
 
     } catch (error) {
     toast.error("Something went wrong while marking all unread notifications as read.");
-}
+    } 
   };
 
   const fetchAllNotifications = async () => {
@@ -55,6 +56,8 @@ const errorMessage = axiosError.response?.data?.message || "Something went wrong
 console.error('Error fetching notifications:', error);
 toast.error(errorMessage);
 
+    }  finally{
+      setIsLoading(false)
     }
   };
 
@@ -98,10 +101,11 @@ toast.error(errorMessage);
 
   const markAsRead = async (id: string) => {
     try { 
-      const response = await axiosInstance.get(`/notification/${id}`);
-      console.log(' response via marl : ', response);
+ await axiosInstance.get(`/notification/${id}`);
+   
     } catch (error) {
       console.error(error);
+      toast.error("Something went wrong while reading all unread messages")
     }
   };
 
@@ -111,6 +115,7 @@ toast.error(errorMessage);
     notificationId: string,
   ) => {
     markAsRead(notificationId);
+    dispatch(setNotificationCount(notificationCount- 1))
     if (entityType === 'PROJECT') {
       navigate(`/project/${enitityId}`);
     }
@@ -120,7 +125,8 @@ toast.error(errorMessage);
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      <div className="flex-1 flex flex-col">
+      {isLoading ? (<Loader />) : (
+        <div className="flex-1 flex flex-col">
         <div className="flex-1 p-6">
           <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -216,6 +222,7 @@ toast.error(errorMessage);
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 };

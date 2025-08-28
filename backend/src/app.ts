@@ -8,9 +8,8 @@ import tenantRouter from './routes/tenant-route';
 import employeeRouter from './routes/employee-route';
 import projectRouter from './routes/project-route';
 import notificationRouter from './routes/notification-route';
-import taskRouter from './routes/task-route'
+import taskRouter from './routes/task-route';
 import AWS from 'aws-sdk';
-
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
@@ -43,6 +42,6 @@ app.use('/api/v1/tenant', tenantRouter);
 app.use('/api/v1', employeeRouter);
 app.use('/api/v1', projectRouter);
 app.use('/api/v1/notification', notificationRouter);
-app.use('/api/v1', taskRouter)
+app.use('/api/v1', taskRouter);
 
 export default app;

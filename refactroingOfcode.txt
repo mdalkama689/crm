@@ -1,0 +1,12 @@
+What improvement needed 
+
+Last update (28 Aug 2025) -> 14:14
+
+1. Make smalller function of the controller or big business logic (in all the controller)
+2. Remove duplicate and bad code 
+
+a.
+For validation of attachemt file 
+
+
+

@@ -6,7 +6,7 @@ import {
   deleteProject,
   getAdminCreatedProjects,
   getAllProjectsOfCompany,
-getProjectForAdminAndAssignee
+  getProjectForAdminAndAssignee,
 } from '../controller/project-controller';
 import upload from '../middlewares/multer.middleware';
 

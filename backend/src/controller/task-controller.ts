@@ -1,27 +1,27 @@
-import {taskInput, taskSchema} from 'shared/src/schema/task-schema'
-import { Response } from "express";
-import AWS from 'aws-sdk'
-import { AuthenticatedRequest } from "../middlewares/auth-middleware";
-import prisma from "backend/db";
+import { taskInput, taskSchema } from 'shared/src/schema/task-schema';
+import { Response } from 'express';
+import AWS from 'aws-sdk';
+import { AuthenticatedRequest } from '../middlewares/auth-middleware';
+import prisma from 'backend/db';
 import { BUCKET_NAME, s3 } from '../app';
 import { allowedAttachmentTypes } from './project-controller';
+import { generateNotificationForTask } from '../utils/generateNotification';
+import { validateDueDate } from '../utils/validateDueDate';
 
 export const addTask = async (req: AuthenticatedRequest, res: Response) => {
   try {
-
-    
     const projectId = req.params.id;
-  const body: taskInput = req.body
+    const body: taskInput = req.body;
 
-  if(!body){
-    return res.status(400).json({
-      success: false,
-      message: "Please provide input!"
-    })
-  }
+    if (!body) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide input!',
+      });
+    }
 
-  const parseResult = taskSchema.safeParse(body)
- if (!parseResult.success) {
+    const parseResult = taskSchema.safeParse(body);
+    if (!parseResult.success) {
       const validationErrors = parseResult.error.issues.map((issue) => ({
         field: issue.path.join('.'),
         message: issue.message,
@@ -33,32 +33,18 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
       });
     }
 
-    const {dueDate} = parseResult.data
-
-     const yearFormatRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+    const { dueDate, assignedEmployee, name, description } = parseResult.data;
 
     if (dueDate?.trim()) {
-      if (!yearFormatRegex.test(dueDate)) {
+       const isvalidDueDate = validateDueDate(dueDate)
+
+       if(!isvalidDueDate.success){
         return res.status(400).json({
           success: false,
-          message: 'Due date format is invalid!',
-        });
-      }
-
-      const currentDate = new Date();
-      const dueDateInFormat = new Date(dueDate);
-      currentDate.setHours(0, 0, 0, 0);
-
-      if (currentDate > dueDateInFormat) {
-        return res.status(400).json({
-          success: false,
-          message: 'Due date cannot be in past!',
-        });
-      }
+          message: isvalidDueDate.message 
+         })
+       }
     }
-
-
-
 
     if (!projectId) {
       return res
@@ -106,8 +92,7 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
       return res.status(403).json({
         success: false,
         message:
-         'You are not associated with any tenant and cannot add tasks to this project.'
-
+          'You are not associated with any tenant and cannot add tasks to this project.',
       });
     }
 
@@ -133,55 +118,56 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
       });
     }
 
- 
-    const assingedEmployee = project.assignToEmployee
+    const assingedToEmployee = project.assignToEmployee;
 
-    if(assingedEmployee.length === 0 && loggedInUser.role.trim().toLowerCase() !== "admin"){
-     return res.status(400).json({
-  success: false,
-  message: "No employees are assigned to this project, and since you are not an admin, you cannot access it."
-})
-
+    if (
+      assingedToEmployee.length === 0 &&
+      loggedInUser.role.trim().toLowerCase() !== 'admin'
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          'No employees are assigned to this project, and since you are not an admin, you cannot access it.',
+      });
     }
 
-    if(assingedEmployee.length> 0) {
- const isAssignedEmployee = assingedEmployee.some((empl) => empl.id === loggedInUserId)
-
- if(!isAssignedEmployee && loggedInUser.role.trim().toLowerCase() !== "admin"){
-  return res.status(403).json({
-      success: false,
-      message: "You are not assigned to this project, so you are not authorized to access it."
-    });
-  
- }
-    }
-
-    let  { name,description,attachmentUrl} = parseResult.data
-
-    if(req.file){
-      
-      const attachment = req.file
-
-      if(!attachment){
-return res.status(400).json({
-  success: false,
-  message: "Attachment not found!"
-})
-      }
+    if (assingedToEmployee.length > 0) {
+      const isAssignedEmployee = assingedToEmployee.some(
+        (empl) => empl.id === loggedInUserId,
+      );
 
       if (
-        attachment&&
-        !allowedAttachmentTypes.includes(attachment.mimetype)
+        !isAssignedEmployee &&
+        loggedInUser.role.trim().toLowerCase() !== 'admin'
       ) {
+        return res.status(403).json({
+          success: false,
+          message:
+            'You are not assigned to this project, so you are not authorized to access it.',
+        });
+      }
+    }
+
+    let { attachmentUrl } = parseResult.data;
+
+    if (req.file) {
+      const attachment = req.file;
+
+      if (!attachment) {
+        return res.status(400).json({
+          success: false,
+          message: 'Attachment not found!',
+        });
+      }
+
+      if (attachment && !allowedAttachmentTypes.includes(attachment.mimetype)) {
         return res.status(400).json({
           success: false,
           message: 'Attachment type not allowed',
         });
       }
- 
 
       const maxSizeOFAttachmeFile = 25 * 1024 * 1024;
-
 
       if (attachment && attachment.size > maxSizeOFAttachmeFile) {
         return res.status(400).json({
@@ -190,57 +176,108 @@ return res.status(400).json({
         });
       }
 
-
-      const params:  AWS.S3.PutObjectRequest = {
+      const params: AWS.S3.PutObjectRequest = {
         Bucket: BUCKET_NAME!,
         Key: `uploads/${Date.now()}-${attachment.originalname}`,
         Body: req.file.buffer,
-        ACL: "private",
-        ContentType: attachment.mimetype
+        ACL: 'private',
+        ContentType: attachment.mimetype,
+      };
+
+      const attachmentResponse = await s3.upload(params).promise();
+      attachmentUrl = attachmentResponse.Location;
+    }
+
+    const uniqueEmployeeIds = new Set<string>();
+
+    if (typeof assignedEmployee === 'string') {
+      const employeeIds = JSON.parse(assignedEmployee);
+
+      for (let i = 0; i < employeeIds.length; i++) {
+        if (uniqueEmployeeIds.has(employeeIds[i])) {
+          return res.status(400).json({
+            success: false,
+            message: `Please dont add duplicate id that is ${employeeIds[i]}`,
+          });
+        } else {
+          uniqueEmployeeIds.add(employeeIds[i]);
+        }
       }
 
-      const attachmentResponse = await s3.upload(params).promise()
-       attachmentUrl = attachmentResponse.Location
+      const employeeIdsInArray = [...new Set(uniqueEmployeeIds)] as string[];
 
+      const assingedToEmployeeIds = assingedToEmployee
+        .filter((empl) => empl.id !== undefined)
+        .map((em) => em.id);
+      const assingedToEmployeeIdsInSet = new Set(assingedToEmployeeIds);
 
+      for (let i = 0; i < employeeIdsInArray.length; i++) {
+        if (!assingedToEmployeeIdsInSet.has(employeeIdsInArray[i])) {
+          const existingEmployee = await prisma.employee.findUnique({
+            where: { id: employeeIdsInArray[i] },
+          });
+
+          if (!existingEmployee) {
+            return res.status(400).json({
+              success: false,
+              message: `The selected employee account could not be found (ID: ${employeeIdsInArray[i]}).`,
+            });
+          }
+
+          return res.status(400).json({
+            success: false,
+            message: `Employee ${existingEmployee.fullname} is not associated with this project.`,
+          });
+        }
+      }
     }
-    
-// only edge cases i need to handle  
-// if there will be ayny assigned user then i will send them notification
-
-
 
     const task = await prisma.task.create({
       data: {
-       name,
-       dueDate,
-       description,
-       attachmentUrl,
-createdBy: loggedInUserId,
-projectId,
-tenantId: project.tenantId 
+        name,
+        dueDate,
+        description,
+        attachmentUrl,
+        createdBy: loggedInUserId,
+        projectId,
+        tenantId: project.tenantId,
+      },
+    });
 
+    if (uniqueEmployeeIds.size > 0) {
+      const notification = generateNotificationForTask({
+        taskCreatorName: loggedInUser.fullname,
+        taskName: task.name,
+      });
+
+      for (const id of uniqueEmployeeIds) {
+        await prisma.notification.create({
+          data: {
+            text: notification,
+            enitityId: task.id,
+            entityType: 'TASK',
+            employeeId: id,
+          },
+        });
       }
-    })
+    }
 
-return res.status(201).json({
-  success: true,
-  message: "Task created successfully.",
-  task
-});
-
+    return res.status(201).json({
+      success: true,
+      message: 'Task created successfully.',
+      task,
+    });
   } catch (error) {
-const errorMessage = error instanceof Error 
-  ? error.message 
-  : "An unexpected error occurred while creating the task.";
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : 'An unexpected error occurred while creating the task.';
 
-console.error("Error while creating task:", error);
+    console.error('Error while creating task:', error);
 
-return res.status(500).json({
-  success: false,
-  message: errorMessage
-});
-
-  } 
+    return res.status(500).json({
+      success: false,
+      message: errorMessage,
+    });
+  }
 };
- 

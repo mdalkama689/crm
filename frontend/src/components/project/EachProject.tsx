@@ -30,7 +30,7 @@ const EachProject = () => {
 
   const [currentTab, setCurrentTab] = useState('overview');
   const [project, setProject] = useState<IProject | null>(null);
-const [isLoading, setIsLoading] = useState<boolean>(false)
+const [isLoading, setIsLoading] = useState<boolean>(true)
 
   const handleCurrentTab = (tabName: string) => {
     setCurrentTab(tabName.toLowerCase());
@@ -41,7 +41,7 @@ const [isLoading, setIsLoading] = useState<boolean>(false)
   const navigate = useNavigate();
 
   const fetchProjectDetails = async () => {
-    try {
+    try { 
       setIsLoading(true)
       const response = await axiosInstance.get<ProjectResponse>(
         `/project/${projectId}`,
@@ -69,21 +69,20 @@ const [isLoading, setIsLoading] = useState<boolean>(false)
     fetchProjectDetails();
   }, []);
 
-  if (!project) return;
+  
 
   return (
-    <>
-      {isLoading ? (
-      <Loader /> 
-      ) : (
         
     <DashboardLayout>
       <div className="flex gap-1 mt-8 ml-[300px]">
-        <div className="mt-12 ml-12 w-[calc(100%-300px)]">
+     {isLoading ? (
+      <Loader /> 
+     ) : (
+         <div className="mt-12 ml-12 w-[calc(100%-300px)]">
           <div className="flex items-center justify-start">
             <span className="font-normal text-gray-600">Project </span>
             <ChevronRight size={18} />{' '}
-            <span className="font-semibold">{project.name}</span>
+        {project &&     <span className="font-semibold">{project.name}</span> } 
           </div>
 
           <div className="mt-5 w-full">
@@ -97,7 +96,7 @@ const [isLoading, setIsLoading] = useState<boolean>(false)
               </Button>
             ))}
           </div>
-          {currentTab === 'overview' && (
+          {currentTab === 'overview' && project  && (
             <Overview
               description={project.description}
               dueDate={project.dueDate}
@@ -111,11 +110,10 @@ const [isLoading, setIsLoading] = useState<boolean>(false)
           {currentTab === 'files' && <File />}
           {currentTab === 'reports' && <Report />}
           {currentTab === 'settings' && <Setting />}
-        </div>
+        </div> 
+     )}
       </div>
     </DashboardLayout> 
-      )}
-    </>
   );
 };
 

@@ -119,13 +119,11 @@ export const markNotificationAsRead = async (
   }
 };
 
-
 export const markAllNotificationAsRead = async (
   req: AuthenticatedRequest,
   res: Response,
 ) => {
-  try { 
-
+  try {
     const userId = req.user?.id;
 
     if (!userId) {
@@ -135,38 +133,38 @@ export const markAllNotificationAsRead = async (
       });
     }
 
-
     const totalNotifications = await prisma.notification.count({
       where: {
-      employeeId: userId
+        employeeId: userId,
       },
     });
 
-    if(totalNotifications === 0){
+    if (totalNotifications === 0) {
       return res.status(200).json({
         success: true,
-    message: "You have no notifications.",
-      })
+        message: 'You have no notifications.',
+      });
     }
 
- const result = await prisma.notification.updateMany({
+    const result = await prisma.notification.updateMany({
       where: {
-        employeeId: userId, 
-        seen: false,  
+        employeeId: userId,
+        seen: false,
       },
       data: {
-        seen: true   
-      }
-    })
+        seen: true,
+      },
+    });
 
     return res.status(200).json({
       success: true,
-      message:   result.count > 0
+      message:
+        result.count > 0
           ? `${result.count} notification(s) marked as read.`
-          : "All notifications were already read.",
+          : 'All notifications were already read.',
     });
   } catch (error) {
-    const errorMessage = 
+    const errorMessage =
       error instanceof Error
         ? error.message
         : 'Something went wrong while read all  the notification.';
@@ -179,5 +177,3 @@ export const markAllNotificationAsRead = async (
     });
   }
 };
-
-

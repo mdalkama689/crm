@@ -5,8 +5,7 @@ import { createProjectSchema } from 'shared/src/schema/create-project-schema';
 import { AuthenticatedRequest } from '../middlewares/auth-middleware';
 import { generateNotificationForProject } from '../utils/generateNotification';
 import { BUCKET_NAME, s3 } from '../app';
-
-
+import { validateDueDate } from '../utils/validateDueDate';
 
 interface MulterFile {
   fieldname: string;
@@ -19,14 +18,14 @@ interface MulterFile {
 
 // add auth and admin middleware
 
-export  const allowedAttachmentTypes = [
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'image/png',
-        'image/jpeg',
-        'image/jpg'
-      ];
+export const allowedAttachmentTypes = [
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+];
 
 export const createProject = async (
   req: AuthenticatedRequest,
@@ -36,7 +35,7 @@ export const createProject = async (
     const body = req.body;
 
     console.log(body);
- 
+
     if (!body) {
       return res.status(400).json({
         success: false,
@@ -84,7 +83,6 @@ export const createProject = async (
         });
       }
 
-     
       if (
         attachmentFile &&
         !allowedAttachmentTypes.includes(attachmentFile.mimetype)
@@ -138,27 +136,19 @@ export const createProject = async (
       }
     }
 
-    const yearFormatRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
-
-    if (dueDate?.trim()) {
-      if (!yearFormatRegex.test(dueDate)) {
-        return res.status(400).json({
-          success: false,
-          message: 'Due date format is invalid!',
-        });
-      }
-
-      const currentDate = new Date();
-      const dueDateInFormat = new Date(dueDate);
-      currentDate.setHours(0, 0, 0, 0);
-
-      if (currentDate > dueDateInFormat) {
-        return res.status(400).json({
-          success: false,
-          message: 'Due date cannot be in past!',
-        });
-      }
-    }
+   
+     
+         if (dueDate?.trim()) {
+            const isvalidDueDate = validateDueDate(dueDate)
+     
+            if(!isvalidDueDate.success){
+             return res.status(400).json({
+               success: false,
+               message: isvalidDueDate.message 
+              })
+            }
+         } 
+    
 
     const currentUserId = req.user?.id;
 
@@ -225,7 +215,7 @@ export const createProject = async (
           if (!duplicateEmployee) {
             return res.status(400).json({
               success: false,
-              message: 'This employee does not exist',
+              message: `${employeeIds[i]} employee does not exist`,
             });
           }
 
@@ -257,7 +247,7 @@ export const createProject = async (
       }
     }
 
-    const employeeIds = [...new Set(uniqueEmployeeIds)] as string[];
+    const employeeIdsInArray = [...new Set(uniqueEmployeeIds)] as string[];
 
     const newProject = await prisma.project.create({
       data: {
@@ -269,8 +259,8 @@ export const createProject = async (
         tenantId,
         createdBy: currentUserId,
         assignToEmployee:
-          employeeIds && employeeIds.length > 0
-            ? { connect: employeeIds.map((id) => ({ id })) }
+          employeeIdsInArray && employeeIdsInArray.length > 0
+            ? { connect: employeeIdsInArray.map((id) => ({ id })) }
             : undefined,
       },
       include: {
@@ -283,13 +273,13 @@ export const createProject = async (
       projectName: name,
     });
 
-    for (let i = 0; i < employeeIds.length; i++) {
+    for (let i = 0; i < employeeIdsInArray.length; i++) {
       await prisma.notification.create({
         data: {
           text: notification,
           enitityId: newProject.id,
           entityType: 'PROJECT',
-          employeeId: employeeIds[i],
+          employeeId: employeeIdsInArray[i],
         },
       });
     }
@@ -513,39 +503,36 @@ export const getProjectForAdminAndAssignee = async (
         message: 'You are not authorized to view this project.',
       });
     }
- 
-  const assignedEmployee = project.assignToEmployee
 
-    if(assignedEmployee.length === 0 && loggedInUser.role !== "admin"){
-return res.status(400).json({
- success: false,
-  message : "No employee is assigned to this project, and you are not an admin, so you cannot view it."
+    const assignedEmployee = project.assignToEmployee;
 
-})
+    if (assignedEmployee.length === 0 && loggedInUser.role !== 'admin') {
+      return res.status(400).json({
+        success: false,
+        message:
+          'No employee is assigned to this project, and you are not an admin, so you cannot view it.',
+      });
     }
 
-  
-if(assignedEmployee.length > 0){ 
-  const isAssignedEmployee = assignedEmployee.some((emp) => emp.id === loggedInUserId)
+    if (assignedEmployee.length > 0) {
+      const isAssignedEmployee = assignedEmployee.some(
+        (emp) => emp.id === loggedInUserId,
+      );
 
-if(!isAssignedEmployee){
-  return res.status(400).json({
-  success: false,
-  message: "You are not assigned to this project or an admin, so you are not authorized to access it."
-
-  })
-}
-  
-}
-
-
-
+      if (!isAssignedEmployee) {
+        return res.status(400).json({
+          success: false,
+          message:
+            'You are not assigned to this project or an admin, so you are not authorized to access it.',
+        });
+      }
+    }
 
     return res.status(200).json({
       success: true,
       message: 'Project fetched successfully.',
       project,
-      assignedEmployee 
+      assignedEmployee,
     });
   } catch (error) {
     const errorMessage =
@@ -712,4 +699,4 @@ export const getAllProjectsOfCompany = async (
       message: `An unexpected error occurred: ${errorMessage}`,
     });
   }
-}; 
+};
