@@ -44,7 +44,10 @@ router.get(
   getAllProjectsOfCompany,
 );
 
-router.post('/projects/:id/assigned-employees', authMiddleware, getAssignedEmployeesForProject)
-
+router.get(
+  '/project/:id/assigned-employees',
+  authMiddleware,
+  getAssignedEmployeesForProject,
+);
 
 export default router;

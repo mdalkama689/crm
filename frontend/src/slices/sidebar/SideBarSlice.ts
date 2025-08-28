@@ -1,7 +1,5 @@
-import {   createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-
- 
 const initialState = {
   isSideBarOpen: false,
   currentSideBarTab: 'dashboard',
@@ -24,7 +22,7 @@ const sideBarSlice = createSlice({
   },
 });
 
-export const { toggleSidebar, setCurrentSideBarTab, setNotificationCount  } =
+export const { toggleSidebar, setCurrentSideBarTab, setNotificationCount } =
   sideBarSlice.actions;
 
 export default sideBarSlice.reducer;

@@ -11,11 +11,11 @@ const AllProjects = () => {
         </div>
 
         <div className="absolute top-[80px] left-[450px]">
-          <ProjectToolbar/>
+          <ProjectToolbar />
         </div>
       </DashboardLayout>
     </div>
   );
 };
 
-export default AllProjects 
+export default AllProjects;

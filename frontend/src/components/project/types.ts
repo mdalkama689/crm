@@ -1,3 +1,5 @@
+import type { ApiResponse } from '../../types/ApiResponse';
+
 export interface IProject {
   id: string;
   name: string;
@@ -9,4 +11,14 @@ export interface IProject {
   createdBy: string;
   tenantId: string;
   assignToEmployee: { id: string; fullname: string }[];
+}
+
+export interface Employee {
+  email: string;
+  fullname: string;
+  id: string;
+}
+
+export interface AssignedEmployeeResponse extends ApiResponse {
+  employees: Employee[];
 }

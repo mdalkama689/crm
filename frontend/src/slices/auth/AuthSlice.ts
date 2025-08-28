@@ -2,11 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosInstance } from '../../api/axios';
 import type { ApiResponse } from '../../types/ApiResponse';
 
-
-
-
 interface AvatarUrlReponse extends ApiResponse {
-  avatarUrl: string  ;
+  avatarUrl: string;
 }
 
 export const fetchCurrentUser = createAsyncThunk(
@@ -21,27 +18,31 @@ export const fetchCurrentUser = createAsyncThunk(
   },
 );
 
-
-export const fetchGravatarUrl = createAsyncThunk('auth/gravatarurl', 
-  async(_, thunkAPI) => {
+export const fetchGravatarUrl = createAsyncThunk(
+  'auth/gravatarurl',
+  async (_, thunkAPI) => {
     try {
-      const response = await axiosInstance.get<AvatarUrlReponse>("/get-avatar-url-from-gravatar")
-      
-      if (response.data.success && response.data.avatarUrl) {
-        if(response.data.avatarUrl.trim() ||
-      response.data.avatarUrl.trim() !== ""){
+      const response = await axiosInstance.get<AvatarUrlReponse>(
+        '/get-avatar-url-from-gravatar',
+      );
 
-         return response.data.avatarUrl 
+      if (response.data.success && response.data.avatarUrl) {
+        if (
+          response.data.avatarUrl.trim() ||
+          response.data.avatarUrl.trim() !== ''
+        ) {
+          return response.data.avatarUrl;
+        }
       }
 
-      } 
-
-      return ""
+      return '';
     } catch (error) {
-            return thunkAPI.rejectWithValue('Something went wrong while fetching gravatar url!');
+      return thunkAPI.rejectWithValue(
+        'Something went wrong while fetching gravatar url!',
+      );
     }
-  }
-)
+  },
+);
 
 interface UserProps {
   fullname: string;
@@ -55,14 +56,14 @@ interface AuthProps {
   isLoading: boolean;
   isLoggedIn: boolean;
   error: null;
-  avatarUrl : string
+  avatarUrl: string;
 }
 const initialState: AuthProps = {
   user: null,
   isLoading: true,
   isLoggedIn: false,
   error: null,
-  avatarUrl: ""
+  avatarUrl: '',
 };
 
 const authSlice = createSlice({
@@ -82,13 +83,11 @@ const authSlice = createSlice({
         ((state.isLoading = false), (state.user = null));
         state.isLoggedIn = false;
       })
-   
-    .addCase(fetchGravatarUrl.fulfilled, (state, action) => {
-      state.avatarUrl =  action.payload || ""
-    })
-    
+
+      .addCase(fetchGravatarUrl.fulfilled, (state, action) => {
+        state.avatarUrl = action.payload || '';
+      });
   },
-  
 });
 
 export default authSlice.reducer;

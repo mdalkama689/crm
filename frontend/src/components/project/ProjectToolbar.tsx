@@ -1,13 +1,11 @@
-import { useState } from "react";
-import { Button } from "../ui/button";
-import { ChevronDown, Filter, Grid2X2, List } from "lucide-react";
-import ProjectList from "./ProjectList";
-import ProjectGrid from "./ProjectGrid";
+import { useState } from 'react';
+import { Button } from '../ui/button';
+import { ChevronDown, Filter, Grid2X2, List } from 'lucide-react';
+import ProjectList from './ProjectList';
+import ProjectGrid from './ProjectGrid';
 
 const ProjectToolbar = () => {
   const [showProjectList, setShowProjectList] = useState<boolean>(false);
-
-  
 
   return (
     <div>
@@ -48,5 +46,4 @@ const ProjectToolbar = () => {
   );
 };
 
-
-export default ProjectToolbar
+export default ProjectToolbar;

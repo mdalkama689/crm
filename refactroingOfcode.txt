@@ -7,6 +7,7 @@ Last update (28 Aug 2025) -> 14:14
 
 a.
 For validation of attachemt file 
+b. whenerver we fetc details we should not slect passowrd(sensitive info)
 
 
 

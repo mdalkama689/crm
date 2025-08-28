@@ -30,26 +30,24 @@ const EachProject = () => {
 
   const [currentTab, setCurrentTab] = useState('overview');
   const [project, setProject] = useState<IProject | null>(null);
-const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const handleCurrentTab = (tabName: string) => {
     setCurrentTab(tabName.toLowerCase());
   };
 
-
-
   const navigate = useNavigate();
 
   const fetchProjectDetails = async () => {
-    try { 
-      setIsLoading(true)
+    try {
+      setIsLoading(true);
       const response = await axiosInstance.get<ProjectResponse>(
         `/project/${projectId}`,
       );
       if (response.data.success) {
-        setProject(response.data.project); 
-      }else{
-         navigate('/');
+        setProject(response.data.project);
+      } else {
+        navigate('/');
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -59,9 +57,8 @@ const [isLoading, setIsLoading] = useState<boolean>(true)
       toast.error(errorMessage);
       navigate('/');
       console.log(error);
-    }finally{
-      setIsLoading(false)
-  
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -69,51 +66,48 @@ const [isLoading, setIsLoading] = useState<boolean>(true)
     fetchProjectDetails();
   }, []);
 
-  
-
   return (
-        
     <DashboardLayout>
       <div className="flex gap-1 mt-8 ml-[300px]">
-     {isLoading ? (
-      <Loader /> 
-     ) : (
-         <div className="mt-12 ml-12 w-[calc(100%-300px)]">
-          <div className="flex items-center justify-start">
-            <span className="font-normal text-gray-600">Project </span>
-            <ChevronRight size={18} />{' '}
-        {project &&     <span className="font-semibold">{project.name}</span> } 
-          </div>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <div className="mt-12 ml-12 w-[calc(100%-300px)]">
+            <div className="flex items-center justify-start">
+              <span className="font-normal text-gray-600">Project </span>
+              <ChevronRight size={18} />{' '}
+              {project && <span className="font-semibold">{project.name}</span>}
+            </div>
 
-          <div className="mt-5 w-full">
-            {menuItems.map((menu) => (
-              <Button
-                className={`rounded-full mr-3  text-slate-900 cursor-pointer hover:bg-purple-500 hover:text-white ${currentTab.toLowerCase() === menu.name.toLowerCase() ? 'bg-purple-500 text-white' : 'bg-[#E2E8F0]'}`}
-                key={menu.id}
-                onClick={() => handleCurrentTab(menu.name)}
-              >
-                {menu.name}{' '}
-              </Button>
-            ))}
-          </div>
-          {currentTab === 'overview' && project  && (
-            <Overview
-              description={project.description}
-              dueDate={project.dueDate}
-              assignEmployee={project.assignToEmployee}
-            />
-          )}
+            <div className="mt-5 w-full">
+              {menuItems.map((menu) => (
+                <Button
+                  className={`rounded-full mr-3  text-slate-900 cursor-pointer hover:bg-purple-500 hover:text-white ${currentTab.toLowerCase() === menu.name.toLowerCase() ? 'bg-purple-500 text-white' : 'bg-[#E2E8F0]'}`}
+                  key={menu.id}
+                  onClick={() => handleCurrentTab(menu.name)}
+                >
+                  {menu.name}{' '}
+                </Button>
+              ))}
+            </div>
+            {currentTab === 'overview' && project && (
+              <Overview
+                description={project.description}
+                dueDate={project.dueDate}
+                assignEmployee={project.assignToEmployee}
+              />
+            )}
 
-          {currentTab === 'task' && <Task />}
-          {currentTab === 'desk' && <Desk />}
-          {currentTab === 'activity' && <Activity />}
-          {currentTab === 'files' && <File />}
-          {currentTab === 'reports' && <Report />}
-          {currentTab === 'settings' && <Setting />}
-        </div> 
-     )}
+            {currentTab === 'task' && <Task />}
+            {currentTab === 'desk' && <Desk />}
+            {currentTab === 'activity' && <Activity />}
+            {currentTab === 'files' && <File />}
+            {currentTab === 'reports' && <Report />}
+            {currentTab === 'settings' && <Setting />}
+          </div>
+        )}
       </div>
-    </DashboardLayout> 
+    </DashboardLayout>
   );
 };
 

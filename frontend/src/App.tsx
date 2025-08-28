@@ -36,7 +36,7 @@ function App() {
           <Route path="/send-invitation" element={<SendInvitation />} />
           <Route path="/add-project" element={<CreateProject />} />
           <Route path="/employees" element={<Employee />} />
-              <Route path="/projects" element={<AllProjects/>} />
+          <Route path="/projects" element={<AllProjects />} />
         </Route>
 
         <Route element={<AuthWrapper />}>

@@ -19,11 +19,11 @@ import SocialHandle from './SocialHandle';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../slices/store';
 import {
-  setCurrentSideBarTab, 
-  setNotificationCount, 
+  setCurrentSideBarTab,
+  setNotificationCount,
   toggleSidebar,
 } from '../slices/sidebar/SideBarSlice';
-import { useNavigate } from 'react-router-dom' 
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { axiosInstance } from '../api/axios';
 import type { NotificationResponse } from '../components/notification/type';
@@ -47,7 +47,7 @@ const menuItems = [
 
 const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { isSideBarOpen, currentSideBarTab,notificationCount } = useSelector(
+  const { isSideBarOpen, currentSideBarTab, notificationCount } = useSelector(
     (state: RootState) => state.sidebar,
   );
 
@@ -67,27 +67,25 @@ const Sidebar = () => {
     navigateTo(url);
   };
 
- 
+  useEffect(() => {
+    const getNotificationCount = async () => {
+      try {
+        const response =
+          await axiosInstance.get<NotificationResponse>('/notification/all');
+        if (response.data.success) {
+          const unseenNotificationCount = response.data.notifications.filter(
+            (notify) => !notify.seen,
+          ).length;
+          dispatch(setNotificationCount(unseenNotificationCount));
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error('Failed to fetch notification count!');
+      }
+    };
 
-useEffect(() => {
-
-  const getNotificationCount =  async () => {
-    try { 
-      const response = await axiosInstance.get<NotificationResponse>("/notification/all")
-    if(response.data.success){
-  const unseenNotificationCount = response.data.notifications.filter((notify) => !notify.seen).length
-dispatch(setNotificationCount(unseenNotificationCount))
-
-}
-    } catch (error) {
-      console.error(error)
-      toast.error("Failed to fetch notification count!")
-    }
-  }
-
-
-  getNotificationCount() 
-}, [])
+    getNotificationCount();
+  }, []);
 
   return (
     <div

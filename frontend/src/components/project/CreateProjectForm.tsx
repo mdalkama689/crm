@@ -7,7 +7,6 @@ import z from 'zod';
 import type { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import type { ApiResponse } from '../../types/ApiResponse';
-import type { Employee, EmployeesApiResponse } from '../AllEmployee';
 import { axiosInstance } from '../../api/axios';
 import { Button } from '../ui/button';
 import { Calendar } from '../ui/calendar';
@@ -15,6 +14,8 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { allBgGradient } from './constant';
+import type { Employee } from './types';
+import type { EmployeesApiResponse } from '../AllEmployee';
 
 interface CreateProjectResponse extends ApiResponse {
   projectId: string;
@@ -54,8 +55,7 @@ const CreateProjectForm = () => {
   };
 
   const handleAttachment = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const target = e.target;
-    const files = target.files;
+    const files = e.target.files;
     if (!files) return;
     const file = files[0];
     const fileSize = file.size;
@@ -92,9 +92,8 @@ const CreateProjectForm = () => {
   });
 
   const onSubmit = async (data: createProjectInput) => {
-    const allAssignedId = [];
-
     try {
+      const allAssignedId = [];
       if (assignedEmpoloyee.length > 0) {
         for (let i = 0; i < assignedEmpoloyee.length; i++) {
           allAssignedId.push(assignedEmpoloyee[i].id);
@@ -104,9 +103,7 @@ const CreateProjectForm = () => {
 
       if (dueDate) {
         const splitDate = dueDate.split('/');
-        const year = splitDate[2];
-        const month = splitDate[1];
-        const day = splitDate[0];
+        const [day, month, year] = splitDate;
         formatInYYYYMMDDDueDate = `${year}-${month}-${day}`;
       }
 
@@ -118,11 +115,8 @@ const CreateProjectForm = () => {
       formData.append('assignToEmployee', JSON.stringify(allAssignedId));
       formData.append('description', data.description ? data.description : '');
 
-      console.log(" for : ", formData.get('assignToEmployee')) 
-
       setIsSubmitting(true);
 
-      toast.info(" project is creaeting")
       const response = await axiosInstance.post<CreateProjectResponse>(
         '/create-project',
         formData,
@@ -297,10 +291,9 @@ const CreateProjectForm = () => {
                 <div className="flex -space-x-2">
                   {assignedEmpoloyee.length > 0 &&
                     assignedEmpoloyee.map((emp, ind) => (
-                      <div className="relative"     key={emp.id}>
+                      <div className="relative" key={emp.id}>
                         <div
                           className={`w-9 h-9 ${bgGradient[ind]} group flex items-center justify-center rounded-full border-2 border-white shadow-sm`}
-                      
                         >
                           {emp.fullname.charAt(0).toUpperCase()}
 

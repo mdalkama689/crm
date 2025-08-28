@@ -36,14 +36,14 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
     const { dueDate, assignedEmployee, name, description } = parseResult.data;
 
     if (dueDate?.trim()) {
-       const isvalidDueDate = validateDueDate(dueDate)
+      const isvalidDueDate = validateDueDate(dueDate);
 
-       if(!isvalidDueDate.success){
+      if (!isvalidDueDate.success) {
         return res.status(400).json({
           success: false,
-          message: isvalidDueDate.message 
-         })
-       }
+          message: isvalidDueDate.message,
+        });
+      }
     }
 
     if (!projectId) {
@@ -148,7 +148,7 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
       }
     }
 
-    let { attachmentUrl } = parseResult.data;
+    let attachmentUrl = '';
 
     if (req.file) {
       const attachment = req.file;
@@ -265,7 +265,6 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
     return res.status(201).json({
       success: true,
       message: 'Task created successfully.',
-      task,
     });
   } catch (error) {
     const errorMessage =

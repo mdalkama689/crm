@@ -3,12 +3,10 @@ import { axiosInstance } from '../api/axios';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../slices/store';
 
-const Profile = () => { 
+const Profile = () => {
+  const { user, avatarUrl } = useSelector((state: RootState) => state.auth);
 
-const {user,avatarUrl} = useSelector((state: RootState) => state.auth)
-
-if(!user) return 
-
+  if (!user) return;
 
   const handleLogout = async () => {
     await axiosInstance.post('/log-out');
@@ -20,9 +18,9 @@ if(!user) return
         {avatarUrl ? (
           <img src={avatarUrl} alt="" className="h-7" />
         ) : (
-          <p className="text-[#F16334] text-[24px] font-medium">{
-            user.fullname.charAt(0).toUpperCase()
-          }</p>
+          <p className="text-[#F16334] text-[24px] font-medium">
+            {user.fullname.charAt(0).toUpperCase()}
+          </p>
         )}
       </div>
       <div>

@@ -9,35 +9,40 @@ import {
 } from 'lucide-react';
 import type { NotificationProps, NotificationResponse, TypeIcon } from './type';
 import { formatDistanceToNow } from 'date-fns';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import type { ApiResponse } from '../../types/ApiResponse';
 import { toast } from 'sonner';
-import {  useDispatch, useSelector } from 'react-redux';
-import type {  AppDispatch, RootState } from '../../slices/store';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../../slices/store';
 import { setNotificationCount } from '../../slices/sidebar/SideBarSlice';
 import type { AxiosError } from 'axios';
 import Loader from '../Loader';
 
 const Notification = () => {
-  const [notificationList, setNotificationList] = useState<NotificationProps[]>([]);
-const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [notificationList, setNotificationList] = useState<NotificationProps[]>(
+    [],
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const dispatch = useDispatch<AppDispatch>()
-  const {notificationCount} = useSelector((state: RootState) => state.sidebar)
+  const dispatch = useDispatch<AppDispatch>();
+  const { notificationCount } = useSelector(
+    (state: RootState) => state.sidebar,
+  );
 
- 
-
-  const handleMarkAllAsRead = async  () => {
+  const handleMarkAllAsRead = async () => {
     try {
-      const response = await axiosInstance.patch<ApiResponse>('/notification/mark-all-seen')
-      
-      if(response.data.success){
-dispatch(setNotificationCount(0)) ;
-      }
+      const response = await axiosInstance.patch<ApiResponse>(
+        '/notification/mark-all-seen',
+      );
 
+      if (response.data.success) {
+        dispatch(setNotificationCount(0));
+      }
     } catch (error) {
-    toast.error("Something went wrong while marking all unread notifications as read.");
-    } 
+      toast.error(
+        'Something went wrong while marking all unread notifications as read.',
+      );
+    }
   };
 
   const fetchAllNotifications = async () => {
@@ -47,17 +52,16 @@ dispatch(setNotificationCount(0)) ;
 
       if (response.data.success) {
         setNotificationList(response.data.notifications);
-
-
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
-const errorMessage = axiosError.response?.data?.message || "Something went wrong while fetching notifications.";
-console.error('Error fetching notifications:', error);
-toast.error(errorMessage);
-
-    }  finally{
-      setIsLoading(false)
+      const errorMessage =
+        axiosError.response?.data?.message ||
+        'Something went wrong while fetching notifications.';
+      console.error('Error fetching notifications:', error);
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -95,17 +99,14 @@ toast.error(errorMessage);
     return relativeTime;
   };
 
-
-
   const navigate = useNavigate();
 
   const markAsRead = async (id: string) => {
-    try { 
- await axiosInstance.get(`/notification/${id}`);
-   
+    try {
+      await axiosInstance.get(`/notification/${id}`);
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong while reading all unread messages")
+      toast.error('Something went wrong while reading all unread messages');
     }
   };
 
@@ -115,113 +116,114 @@ toast.error(errorMessage);
     notificationId: string,
   ) => {
     markAsRead(notificationId);
-    dispatch(setNotificationCount(notificationCount- 1))
+    dispatch(setNotificationCount(notificationCount - 1));
     if (entityType === 'PROJECT') {
       navigate(`/project/${enitityId}`);
     }
   };
 
-
-
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      {isLoading ? (<Loader />) : (
+      {isLoading ? (
+        <Loader />
+      ) : (
         <div className="flex-1 flex flex-col">
-        <div className="flex-1 p-6">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-900">
-                      Recent Activity
-                      {notificationCount > 0 && (
-                        <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          {notificationCount} unread
-                        </span>
-                      )}
-                    </h2>
-                    <p className="text-sm text-gray-600">
-                      Stay updated with your latest notifications
-                    </p>
-                  </div>
-                  {notificationCount > 0 && (
-                    <button
-                      onClick={handleMarkAllAsRead}
-                      className="text-blue-600 cursor-pointer hover:text-blue-700 text-sm font-medium transition-colors"
-                    >
-                      Mark all as read
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="divide-y divide-gray-200">
-                {notificationList.map((notification) => (
-                  <div
-                    key={notification.id}
-                    className={`flex items-center space-x-4 p-6 hover:bg-gray-50 transition-colors cursor-pointer ${
-                      !notification.seen
-                        ? 'bg-gradient-to-r from-blue-50 to-indigo-50'
-                        : 'bg-white'
-                    }`}
-                    onClick={() =>
-                      navigateToEntity(
-                        notification.entityType,
-                        notification.enitityId,
-                        notification.id,
-                      )
-                    }
-                  >
-                    <div className="flex-shrink-0">
-                      <div
-                        className={`w-9 h-9 rounded-full flex items-center justify-center ${getIconBackgroundColor(notification.entityType)}`}
-                      >
-                        {getNotificationIcon(notification.entityType)}
-                      </div>
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <p
-                        className={`text-sm leading-5 ${
-                          !notification.seen
-                            ? 'text-gray-900 font-medium'
-                            : 'text-gray-700'
-                        }`}
-                      >
-                        {notification.text}
+          <div className="flex-1 p-6">
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        Recent Activity
+                        {notificationCount > 0 && (
+                          <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {notificationCount} unread
+                          </span>
+                        )}
+                      </h2>
+                      <p className="text-sm text-gray-600">
+                        Stay updated with your latest notifications
                       </p>
-                      <div className="mt-1 flex items-center text-xs text-gray-500">
-                        <Clock className="w-3 h-3 mr-1" />
-
-                        <span className="text-gray-500 text-sm italic">
-                          {getInAgo(notification.createdAt)}
-                        </span>
-                      </div>
                     </div>
-
-                    {!notification.seen && (
-                      <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
+                    {notificationCount > 0 && (
+                      <button
+                        onClick={handleMarkAllAsRead}
+                        className="text-blue-600 cursor-pointer hover:text-blue-700 text-sm font-medium transition-colors"
+                      >
+                        Mark all as read
+                      </button>
                     )}
                   </div>
-                ))}
+                </div>
 
-                {notificationList.length === 0 && (
-                  <div className="p-12 text-center">
-                    <Bell className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
-                      No notifications
-                    </h3>
-                    <p className="text-gray-600">
-                      You're all caught up! No new notifications at the moment.
-                    </p>
-                  </div>
-                )}
+                <div className="divide-y divide-gray-200">
+                  {notificationList.map((notification) => (
+                    <div
+                      key={notification.id}
+                      className={`flex items-center space-x-4 p-6 hover:bg-gray-50 transition-colors cursor-pointer ${
+                        !notification.seen
+                          ? 'bg-gradient-to-r from-blue-50 to-indigo-50'
+                          : 'bg-white'
+                      }`}
+                      onClick={() =>
+                        navigateToEntity(
+                          notification.entityType,
+                          notification.enitityId,
+                          notification.id,
+                        )
+                      }
+                    >
+                      <div className="flex-shrink-0">
+                        <div
+                          className={`w-9 h-9 rounded-full flex items-center justify-center ${getIconBackgroundColor(notification.entityType)}`}
+                        >
+                          {getNotificationIcon(notification.entityType)}
+                        </div>
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <p
+                          className={`text-sm leading-5 ${
+                            !notification.seen
+                              ? 'text-gray-900 font-medium'
+                              : 'text-gray-700'
+                          }`}
+                        >
+                          {notification.text}
+                        </p>
+                        <div className="mt-1 flex items-center text-xs text-gray-500">
+                          <Clock className="w-3 h-3 mr-1" />
+
+                          <span className="text-gray-500 text-sm italic">
+                            {getInAgo(notification.createdAt)}
+                          </span>
+                        </div>
+                      </div>
+
+                      {!notification.seen && (
+                        <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
+                      )}
+                    </div>
+                  ))}
+
+                  {notificationList.length === 0 && (
+                    <div className="p-12 text-center">
+                      <Bell className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        No notifications
+                      </h3>
+                      <p className="text-gray-600">
+                        You're all caught up! No new notifications at the
+                        moment.
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
       )}
     </div>
   );
