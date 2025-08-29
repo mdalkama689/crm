@@ -330,3 +330,96 @@ const employeeId = employee.id
   }
 };
 
+
+export const fetchAllProjectTasks = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const loggedInUserId = req.user?.id
+    if (!loggedInUserId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized: user not found in request"
+      })
+    }
+
+    const projectId = req.params.id
+    if (!projectId) {
+      return res.status(400).json({
+        success: false,
+        message: "Project id is required!"
+      })
+    }
+
+    const loggedInUser = await prisma.employee.findUnique({
+      where: { id: loggedInUserId }
+    })
+    if (!loggedInUser) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized: user does not exist"
+      })
+    }
+
+    if (!loggedInUser.tenantId) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: tenant id missing for logged in user"
+      })
+    }
+
+    const project = await prisma.project.findFirst({
+      where: {
+        id: projectId,
+        tenantId: loggedInUser.tenantId
+      }
+    })
+
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: "Project not found or you do not have access"
+      })
+    }
+
+    let isAuthorized = false
+
+    if (loggedInUser.role.trim().toLowerCase() === "admin") {
+      isAuthorized = true
+    } else {
+      const isAssigned = await prisma.project.findFirst({
+        where: {
+          id: projectId,
+          assignToEmployee: { some: { id: loggedInUserId } }
+        }
+      })
+      isAuthorized = !!isAssigned
+    }
+
+    if (!isAuthorized) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: you are not authorized to access tasks of this project"
+      })
+    }
+
+    const tasks = await prisma.task.findMany({
+      where: {
+        projectId
+      }
+    })
+
+    return res.status(200).json({
+      success: true,
+      message: tasks.length > 0 ? "Successfully fetched all assigned tasks" : "No tasks found for this project",
+      tasks
+    })
+
+  } catch (error) {
+    console.error("Error : ", error)
+    const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred"
+    return res.status(500).json({
+      success: false,
+      message: errorMessage
+    })
+  }
+}
+

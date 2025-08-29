@@ -1,4 +1,4 @@
-import { CalendarDays, ChevronDown, Plus, Upload, X } from 'lucide-react';
+import { CalendarDays, ChevronDown, CircleUserRound, Link2, ListChecks, MessageCircle, Plus, Upload, X } from 'lucide-react';
 import { Button } from '../../ui/button';
 import React, { useEffect, useState } from 'react';
 import { Label } from '../../ui/label';
@@ -15,6 +15,22 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { AssignedEmployeeResponse, Employee } from '../types';
 import type { ApiResponse } from '../../../types/ApiResponse';
 import type { AxiosError } from 'axios';
+import { Checkbox } from '../../ui/checkbox';
+
+
+  interface Task {
+    id: string 
+    attachmentUrl:  string, 
+createdBy : string
+description: string |null
+dueDate: string | null
+name: string, 
+projectId: string, 
+status:  "PENDING" | "ON_HOLDING" | "DONE", 
+tenantId: string 
+  }
+
+
 
 const Task = () => {
   const params = useParams();
@@ -73,6 +89,7 @@ const Task = () => {
     if (!projectId) return;
 
     fetchAllAssignedUserForProject();
+    fetchProjectTasks()
   }, [projectId]);
 
   const toggleAssigedEmployeeTab = () => {
@@ -185,6 +202,35 @@ const Task = () => {
   const toggleTaskForm = () => {
     setOpenTaskForm(!openTaskForm);
   };
+
+
+
+  interface TaskResponse  extends ApiResponse{
+    tasks: Task[]
+  }
+  const [allTasks, setAllTasks] = useState<Task[]>([])
+
+  const fetchProjectTasks = async  () => {
+    try {
+      
+      const response = await axiosInstance.get<TaskResponse>(`project/${projectId}/tasks`)
+      
+      if(response.data.success){
+        console.log(response.data.tasks)
+setAllTasks(response.data.tasks)
+}
+ 
+
+
+
+    } catch (error) {
+
+  console.error("Error : ", error)
+      const axiosError = error as AxiosError<ApiResponse>
+      const errorMessage = axiosError.response?.data.message || "SOmething went wrong while fething the tasks"
+      toast.error(errorMessage)
+    }
+  }
   return (
     <>
       <div className="mt-3 relative">
@@ -199,6 +245,13 @@ const Task = () => {
             Add Task{' '}
           </Button>
         </div>
+    
+    <div className='mt-6'>
+{allTasks.map((task) => (
+        <EachTask task={task} />
+))}
+    </div>
+    
       </div>
 
       {openTaskForm && (
@@ -414,3 +467,48 @@ const createTaskSchema = z.object({
 });
 
 type createTaskInput = z.infer<typeof createTaskSchema>;
+
+
+const EachTask = ({task}: {task: Task}) => {
+
+
+
+  return ( 
+    
+    <div className='flex items-center justify-between border border-gray-400 rounded-xl px-2 py-2'>
+    <div className='flex items-center gap-2'>
+        <Checkbox />
+        
+        <span className='text-base font-medium'>{task.name}</span>
+    </div>
+
+<div className='flex items-center gap-3'>
+ 
+ <div className='flex items-center gap-1'>
+   <ListChecks />
+   <span>1/2</span>
+ </div>
+
+ <div className='flex items-center gap-1'>
+  <Link2 />
+   <span>7</span>
+ </div>
+
+  <div className='flex items-center gap-1'>
+  <MessageCircle />
+   <span>9</span>
+ </div>
+
+<Button className='bg-gray-200 hover:bg-gray-300 text-slate-900 font-bold'>Done</Button>
+
+<div
+className='bg-gray-200 hover:bg-gray-300 h-10 w-10 rounded-full flex items-center justify-center'
+>
+  <CircleUserRound />
+</div>
+</div>
+    
+    </div>
+ 
+  )
+}

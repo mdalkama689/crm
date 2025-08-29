@@ -10,4 +10,116 @@ For validation of attachemt file
 b. whenerver we fetc details we should not slect passowrd(sensitive info)
 
 
+// use 1024 px
+
+1.
+old 
+.hero-image{
+    width: 60% !important;
+}
+
+.hero-image{
+    width: 50% !important; // may be less 
+}
+
+// increase font size for dscktop meams 1024 px
+// old one is 
+.section p 
+    font-size: 36px;
+
+// increase the size 
+
+
+complete  WhyLookWest
+a. About us 
+1,2,4 (complete)
+3. Image quality is bad so change them
+
+b. Home Page
+1. Both figma and website has same fons family . i dont undestand the porblem.
+2. color of the navbar Home, About etc and price change. 
+.menu-lv-item .text{
+    color: #DFE8C3 !important;
+}
+
+.price.price--large .price-item{
+     color: #DFE8C3 !important; 
+}
+
+.lb-price{
+      color: #DFE8C3 !important; 
+}
+
+
+3. Home tab is not required 
+in figma, Home is not visible and also need to add a navbar 
+
+4. change the logo of header with full WhyLookWest logo with white 
+
+5. Demo-fonts appearance in the desktop version of the website (i dont see this problem)
+
+
+//
+
+-->About Us
+✔1. In the website, can we have the general visuals and the silver editorial font smaller, which makes it look neater(example - figma) - currently it looks very scattered, need to make it more concise in visuals.
+✔2.The main text written - "Fair question, Here's our answer....." - increase font size, but not have it spread across the width of the website. The attention to remain concise, mainly in the centre of the screen for our customers/viewers.
+(image needed from client)3.Check on the final quality of the images used in this slide, the image seems to be pretty pixelated.
+✔4.Same as for the written text before, have it concise at the centre, increase font size, and convert to bold font, (as in figma ref.)
+
+
+(I dont see this issue.)1.Shop Collection Creative - font and design change
+✔2.Colour of the Prices showed and the top headers ( home, tops, shirts, etc) - will be Ivory Fern - #DFE8C3
+✔3.The Home tab is not required at the top panel.
+✔(but logo is not looking good)4.Logo displayed at the left top corner- will be the entire name logo as seen in the figma example, in Ivory Fern (#DFE8C3) shade.
+(i dont see this issue)5.Demo-fonts appearance in the desktop version of the website
+✘6.Inclusion of creative images in between these garment images.
+✘7.Menu Section to be added.
+✘8.Pop-up and logo animation missing.
+✘9.Filters Shortcut to be added in the website.
+✘10.Color filter ---> sorting out of collection for the same.
+✘11. Use same for search bar 
+✘12. Window missing as of now [pop-up-x]
+
+
+Procduct Changes(images/price)
+✘1.WLW21D - images to be changed (will be sent via whatsapp.)
+✘2.WLW3CS - incorrect images
+✘3.WLW3T - images missing
+✘4.WLW3B- incorrect images
+✘5.WLW4CS - Name incorrect spelling
+✘6.WLW4T - Name incorrect spelling
+✘7.WLW4B - Name incorrect spelling
+✘8.WLW28CS - image errors occuring
+
+Product Page
+(I dont see this problem)1.Product Name font- to use The Silver Editorial-Regular (to be changed)
+✔2.Colour of the price mentioned- Ivory Fern
+✘3.Size panel - they are: XS , S , M , L ,  XL ; And a custom size option to be mentioned.
+✘4.Product details to be added- as in the figma design,; From Airtable sheet, the Description will come under the Outfit name, Product Details, Care and Composition, and Shipping, Exchange & Replacement, come under drop-downs as shown from the reference here.
+✘5.Colour variations options- can we mention on airtable from our side, and the same can be shown on the website, as in figma?- linking the colour variation to the specific SKU, of the colour variation.
+✘6.More like this options appearing at the end of the product page, seem a little messy- with numbers and the wishlist button getting overlapped- to be fix.
+✘7.Size Chart- mention Bust, Waist and Hips at the lines on the body form drawing, as in figma.
+✘8.Footer is totally different from figma design
+
+TERMS AND CONDITIONS/ VARIOUS POLICIES- DISCUSSION PENDING
+>Links for example of privacy policy and terms and condition - for review:
+https://www.barse.in/pages/terms-conditions
+https://www.barse.in/pages/privacy-policy
+https://www.barse.in/pages/cancellation-policy
+https://www.barse.in/pages/refund-return-policy
+https://www.barse.in/pages/shipping-exchange-returns
+
+// For Mobile
+
+1.Logo animation addition - to both desktop and mobile versions.
+✔2.Colour of the Prices showed and the top headers ( home, tops, shirts, etc) - will be Ivory Fern - #DFE8C3
+✔3.The Home tab is not required at the top panel.
+✔4.Logo displayed at the left top corner- will be the entire name logo as seen in the figma example, in Ivory Fern (#DFE8C3) shade.
+5.Shop Collection Creative - font and design change
+6.Providing input data for headers and information being displayed accordingly.
+✔7. Number and creative overlap.
+8. Add most loved tag in an image 
+
+
 
