@@ -1,11 +1,11 @@
 import { taskInput, taskSchema } from 'shared/src/schema/task-schema';
-import { Response } from 'express';
+import  { Response } from 'express';
 import AWS  from 'aws-sdk';
 import { AuthenticatedRequest } from '../middlewares/auth-middleware';
 import prisma from 'backend/db';
 import { BUCKET_NAME, s3 } from '../app';
 import { allowedAttachmentTypes } from './project-controller';
-import { generateNotificationForTask } from '../utils/generateNotification';
+import { generateNotificationForAddTask,  generateNotificationForTask } from '../utils/generateNotification';
 import { validateDueDate } from '../utils/validateDueDate';
 
 export const addTask = async (req: AuthenticatedRequest, res: Response) => {
@@ -244,11 +244,12 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
       },
     });
 
-     const notification = generateNotificationForTask({
+     const notificationForTaskAssinged  = generateNotificationForTask({
         taskCreatorName: loggedInUser.fullname,
         taskName: task.name,
       });
 
+// here we are sending notification to assigned employee for task 
 
     if (uniqueEmployeeIds.size > 0) {
      
@@ -257,7 +258,7 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
         if(id !== loggedInUserId){
         await prisma.notification.create({
           data: {
-            text: notification,
+            text: notificationForTaskAssinged,
             enitityId: task.id,
             entityType: 'TASK',
             employeeId: id,
@@ -265,24 +266,41 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
         });
       }
     } 
-
-   
     }
 
+    const notificationForTaskCreated = generateNotificationForAddTask({
+        taskCreatorName: loggedInUser.fullname,
+        taskName: task.name,
+      });
 
-     // also send to admin if you are not
-
- 
-    const projectCreatorId = project.createdBy
 
 
- 
+const assignedEmployees = project.assignToEmployee 
+
+for(const employee of assignedEmployees){
+const employeeId = employee.id 
+  if(!uniqueEmployeeIds.has(employeeId)){
+  await prisma.notification.create({
+          data: {
+            text: notificationForTaskCreated,
+            enitityId: task.id,
+            entityType: 'TASK',
+            employeeId: employeeId,
+          },
+        });
+
+  }  
+
+}
+
+
+  const projectCreatorId = project.createdBy
 
     if(projectCreatorId !== loggedInUserId){
  
      await prisma.notification.create({
           data: {
-            text: notification,
+            text: notificationForTaskCreated,
             enitityId: task.id,
             entityType: 'TASK',
             employeeId: projectCreatorId,
@@ -311,3 +329,4 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
     });
   }
 };
+
