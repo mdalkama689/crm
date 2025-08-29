@@ -20,6 +20,6 @@ export function generateNotificationForTask({
   taskCreatorName,
   taskName,
 }: IGenerateNotificationForTask) {
-  const message = `${taskCreatorName.charAt(0).toUpperCase() + taskCreatorName.slice(1)} has created a project: ${taskName}`;
+  const message = `${taskCreatorName.charAt(0).toUpperCase() + taskCreatorName.slice(1)} has created a task: ${taskName}`;
   return message;
 }

@@ -1,6 +1,6 @@
 import { taskInput, taskSchema } from 'shared/src/schema/task-schema';
 import { Response } from 'express';
-import AWS from 'aws-sdk';
+import AWS  from 'aws-sdk';
 import { AuthenticatedRequest } from '../middlewares/auth-middleware';
 import prisma from 'backend/db';
 import { BUCKET_NAME, s3 } from '../app';
@@ -244,13 +244,17 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
       },
     });
 
-    if (uniqueEmployeeIds.size > 0) {
-      const notification = generateNotificationForTask({
+     const notification = generateNotificationForTask({
         taskCreatorName: loggedInUser.fullname,
         taskName: task.name,
       });
 
+
+    if (uniqueEmployeeIds.size > 0) {
+     
+
       for (const id of uniqueEmployeeIds) {
+        if(id !== loggedInUserId){
         await prisma.notification.create({
           data: {
             text: notification,
@@ -260,7 +264,34 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
           },
         });
       }
+    } 
+
+   
     }
+
+
+     // also send to admin if you are not
+
+ 
+    const projectCreatorId = project.createdBy
+
+
+ 
+
+    if(projectCreatorId !== loggedInUserId){
+ 
+     await prisma.notification.create({
+          data: {
+            text: notification,
+            enitityId: task.id,
+            entityType: 'TASK',
+            employeeId: projectCreatorId,
+          },
+        });
+
+      } 
+    
+
 
     return res.status(201).json({
       success: true,
