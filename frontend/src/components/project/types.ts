@@ -22,3 +22,27 @@ export interface Employee {
 export interface AssignedEmployeeResponse extends ApiResponse {
   employees: Employee[];
 }
+
+
+
+  export interface Task {
+    id: string 
+    attachmentUrl:  string, 
+createdBy : string
+description: string |null
+dueDate: string | null
+name: string, 
+projectId: string, 
+status:  "PENDING" | "ON_HOLDING" | "DONE", 
+tenantId: string 
+  }
+
+  
+  export interface TaskResponse  extends ApiResponse{
+    tasks: Task[]
+  }
+    
+
+  export interface AddTaskResponse extends ApiResponse {
+    task : Task 
+  }

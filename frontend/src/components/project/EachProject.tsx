@@ -9,14 +9,14 @@ import type { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { menuItems } from './constant';
 import type { IProject } from './types';
-import Overview from './tabs/Overview';
-import Task from './tabs/Task';
+import Overview from './tabs/Overview'; 
 import Desk from './tabs/Desk';
 import Activity from './tabs/Activity';
 import File from './tabs/File';
 import Report from './tabs/Report';
 import Setting from './tabs/Setting';
 import Loader from '../Loader';
+import Task from './tabs/Task';
 
 interface ProjectResponse extends ApiResponse {
   project: IProject;

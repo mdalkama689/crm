@@ -12,23 +12,12 @@ import z from 'zod';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { AssignedEmployeeResponse, Employee } from '../types';
+import type { AddTaskResponse, AssignedEmployeeResponse, Employee, Task, TaskResponse } from '../types';
 import type { ApiResponse } from '../../../types/ApiResponse';
 import type { AxiosError } from 'axios';
 import { Checkbox } from '../../ui/checkbox';
+import Loader from '../../Loader';
 
-
-  interface Task {
-    id: string 
-    attachmentUrl:  string, 
-createdBy : string
-description: string |null
-dueDate: string | null
-name: string, 
-projectId: string, 
-status:  "PENDING" | "ON_HOLDING" | "DONE", 
-tenantId: string 
-  }
 
 
 
@@ -47,6 +36,7 @@ const Task = () => {
   const [dueDate, setDueDate] = useState<string>('');
   const [attachment, setAttachment] = useState<File | string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+const [isTaksLoading, setIsTaskLoading] = useState<boolean>(true)
 
   const getRandomBgColor = () => {
     const randomNumber = Math.floor(Math.random() * allBgGradient.length);
@@ -164,7 +154,7 @@ const Task = () => {
       formData.append('attachment', attachment);
       formData.append('assignedEmployee', JSON.stringify(allAssignedId));
 
-      const response = await axiosInstance.post<ApiResponse>(
+      const response = await axiosInstance.post<AddTaskResponse>(
         `/add-task/${projectId}`,
         formData,
       );
@@ -175,7 +165,8 @@ const Task = () => {
         setAssignedEmployee([]);
         reset();
         toast.success('Task added successfully!');
-        setOpenTaskForm(false);
+        setOpenTaskForm(false); 
+        setAllTasks([...allTasks, response.data.task])
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -205,30 +196,27 @@ const Task = () => {
 
 
 
-  interface TaskResponse  extends ApiResponse{
-    tasks: Task[]
-  }
+
   const [allTasks, setAllTasks] = useState<Task[]>([])
 
   const fetchProjectTasks = async  () => {
     try {
       
+    setIsTaskLoading(true)
       const response = await axiosInstance.get<TaskResponse>(`project/${projectId}/tasks`)
       
       if(response.data.success){
         console.log(response.data.tasks)
 setAllTasks(response.data.tasks)
 }
- 
-
-
-
     } catch (error) {
 
   console.error("Error : ", error)
       const axiosError = error as AxiosError<ApiResponse>
       const errorMessage = axiosError.response?.data.message || "SOmething went wrong while fething the tasks"
       toast.error(errorMessage)
+    } finally{
+      setIsTaskLoading(false)
     }
   }
   return (
@@ -246,11 +234,16 @@ setAllTasks(response.data.tasks)
           </Button>
         </div>
     
-    <div className='mt-6'>
-{allTasks.map((task) => (
-        <EachTask task={task} />
-))}
-    </div>
+{isTaksLoading ? (
+  <Loader />
+) : (
+    <div className="mt-6 overflow-y-auto h-[450px] p-3 pb-10 border border-gray-300 rounded-lg shadow-sm">
+  {allTasks.map((task) => (
+    <EachTask task={task} key={task.id} />
+  ))}
+</div>
+ 
+)}
     
       </div>
 
@@ -475,7 +468,7 @@ const EachTask = ({task}: {task: Task}) => {
 
   return ( 
     
-    <div className='flex items-center justify-between border border-gray-400 rounded-xl px-2 py-2'>
+    <div className='flex items-center mt-3 justify-between border border-gray-400 rounded-xl px-2 py-2'>
     <div className='flex items-center gap-2'>
         <Checkbox />
         

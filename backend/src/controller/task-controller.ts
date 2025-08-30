@@ -248,13 +248,10 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
         taskCreatorName: loggedInUser.fullname,
         taskName: task.name,
       });
-
-// here we are sending notification to assigned employee for task 
+ 
 
     if (uniqueEmployeeIds.size > 0) {
-     
-
-      for (const id of uniqueEmployeeIds) {
+         for (const id of uniqueEmployeeIds) {
         if(id !== loggedInUserId){
         await prisma.notification.create({
           data: {
@@ -314,6 +311,7 @@ const employeeId = employee.id
     return res.status(201).json({
       success: true,
       message: 'Task created successfully.',
+      task 
     });
   } catch (error) {
     const errorMessage =

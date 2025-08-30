@@ -34,3 +34,23 @@ export function generateNotificationForAddTask({
 
 
 
+
+
+
+// const schema = {
+//   id: "234",
+//   name: "Sub Task",
+//   task: 
+//       name String
+//       dueDate String?
+//       description String?
+//       attachmentUrl String?  
+//       status  TaskStatus @default(PENDING)
+//       assigedEmployees Employee[] @relation("TaskAssignment")
+//       createdBy String
+//       employee Employee @relation(fields: [createdBy], references: [id])
+//       projectId String
+//       project Project @relation(fields: [projectId],references: [id])
+//       tenantId String
+//       tenant Tenant @relation(fields: [tenantId], references: [id])
+// } 
