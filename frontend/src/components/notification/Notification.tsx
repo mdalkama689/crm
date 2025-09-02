@@ -13,8 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import type { ApiResponse } from '../../types/ApiResponse';
 import { toast } from 'sonner';
 import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch, RootState } from '../../slices/store';
-import { setNotificationCount } from '../../slices/sidebar/SideBarSlice';
+import type { AppDispatch, RootState } from '../../slices/store/store';
+import { setNotificationCount } from '../../slices/SideBarSlice';
 import type { AxiosError } from 'axios';
 import Loader from '../Loader';
 

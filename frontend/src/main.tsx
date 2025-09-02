@@ -5,7 +5,7 @@ import App from './App.tsx';
 import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { Provider } from 'react-redux';
-import { store } from './slices/store.ts';
+import { store } from './slices/store/store.ts';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

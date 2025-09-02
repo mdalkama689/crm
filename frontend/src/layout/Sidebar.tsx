@@ -17,12 +17,12 @@ import {
 } from 'lucide-react';
 import SocialHandle from './SocialHandle';
 import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch, RootState } from '../slices/store';
+import type { AppDispatch, RootState } from '.././slices/store/store';
 import {
   setCurrentSideBarTab,
   setNotificationCount,
   toggleSidebar,
-} from '../slices/sidebar/SideBarSlice';
+} from '../slices/SideBarSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { axiosInstance } from '../api/axios';

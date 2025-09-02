@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch, RootState } from '../slices/store';
+import type { AppDispatch, RootState } from '.././slices/store/store';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import Loader from './Loader';
-import { fetchCurrentUser } from '../slices/auth/AuthSlice';
+import { fetchCurrentUser } from '../slices/AuthSlice';
 
 interface RoleProtectedRouteProps {
   allowedRole: string[];

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { axiosInstance } from '../../api/axios';
-import type { ApiResponse } from '../../types/ApiResponse';
+import { axiosInstance } from '../api/axios';
+import type { ApiResponse } from '../types/ApiResponse';
 
 interface AvatarUrlReponse extends ApiResponse {
   avatarUrl: string;

@@ -9,16 +9,19 @@ import type { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { menuItems } from './constant';
 import type { IProject } from './types';
-import Overview from './tabs/Overview'; 
+import Overview from './tabs/Overview';
 import Desk from './tabs/Desk';
 import Activity from './tabs/Activity';
 import File from './tabs/File';
 import Report from './tabs/Report';
 import Setting from './tabs/Setting';
 import Loader from '../Loader';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../../slices/store/store';
+import { setProject } from '../../slices/ProjectSlice';
 import Task from './tabs/Task';
 
-interface ProjectResponse extends ApiResponse {
+export interface ProjectResponse extends ApiResponse {
   project: IProject;
 }
 
@@ -27,9 +30,11 @@ const EachProject = () => {
   const projectId = params.id;
 
   if (!projectId) return;
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { project } = useSelector((state: RootState) => state.project);
 
   const [currentTab, setCurrentTab] = useState('overview');
-  const [project, setProject] = useState<IProject | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const handleCurrentTab = (tabName: string) => {
@@ -45,7 +50,7 @@ const EachProject = () => {
         `/project/${projectId}`,
       );
       if (response.data.success) {
-        setProject(response.data.project);
+        dispatch(setProject(response.data.project));
       } else {
         navigate('/');
       }
@@ -56,7 +61,7 @@ const EachProject = () => {
         : 'Something went wrong';
       toast.error(errorMessage);
       navigate('/');
-      console.log(error);
+      console.error(error);
     } finally {
       setIsLoading(false);
     }

@@ -12,7 +12,7 @@ import type { AxiosError } from 'axios';
 import type { ApiResponse } from '../types/ApiResponse';
 import HomeLayout from '../layout/HomeLayout';
 import { useSelector } from 'react-redux';
-import { type RootState } from '../slices/store';
+import { type RootState } from '.././slices/store/store';
 
 const SendInvitation = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -47,8 +47,7 @@ const SendInvitation = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      setIsSubmitting(true);
-      console.log(' data : ', data);
+      setIsSubmitting(true); 
       const payload = {
         ...data,
         tenantId: user?.tenantId,
@@ -58,7 +57,6 @@ const SendInvitation = () => {
         payload,
       );
 
-      console.log(response.data);
       if (response.data.success) {
         return toast.info(response.data.message);
       } else {

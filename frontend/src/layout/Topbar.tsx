@@ -23,7 +23,7 @@ import Profile from '../components/Profile';
 import { useState } from 'react';
 import CreateMenu from '../components/CreateMenu';
 import { useSelector } from 'react-redux';
-import type { RootState } from '../slices/store';
+import type { RootState } from '.././slices/store/store';
 
 const iconList = [
   { label: 'dashboard', icon: <Grid className="h-5 w-5 hover:text-black" /> },

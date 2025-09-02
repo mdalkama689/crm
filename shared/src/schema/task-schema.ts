@@ -1,12 +1,10 @@
-import {z} from 'zod'
+import { z } from 'zod';
 
 export const taskSchema = z.object({
-    name: z.string({error: "Task name is required!"}),
-    dueDate: z.string().optional(),
-    description: z.string().optional(),
-    assignedEmployee: z.string().optional(), 
-})
+  name: z.string({ error: 'Task name is required!' }),
+  dueDate: z.string().optional(),
+  description: z.string().optional(),
+  assignedEmployee: z.string().optional(),
+});
 
-
-export type taskInput = z.infer<typeof taskSchema>
- 
+export type taskInput = z.infer<typeof taskSchema>;

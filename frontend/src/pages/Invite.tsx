@@ -36,8 +36,6 @@ const Invite = () => {
 
   const onSubmit = async (data: employeeSignUpInput) => {
     try {
-      console.log(' tenandt Id L : ', tenantId);
-      console.log(' adta : ', data);
       setIsSubmitting(true);
       const response = await axiosInstance.post<ApiResponse>('/sign-up', data);
 

@@ -1,0 +1,323 @@
+import { Calendar, Upload, X, MoreHorizontal, Download, Paperclip } from 'lucide-react';
+import { Label } from '../../ui/label';
+import { Progress } from '../../ui/progress';
+import { Checkbox } from '../../ui/checkbox';
+import { Input } from '../../ui/input';
+import { Button } from '../../ui/button';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../../slices/store/store';
+import React, { useEffect, useState } from 'react';
+import { allBgGradient, months } from '../constant';
+import { axiosInstance } from '../../../api/axios';
+import type {
+  AssignedEmployeeProps,
+  DateProps,
+  Task,
+  TaskApiResponseProps,
+  TaskItemProps,
+} from '../types';
+import { toast } from 'sonner';
+import type { ApiResponse } from '../../../types/ApiResponse';
+import type { AxiosError } from 'axios';
+
+
+const TaskItem = ({ task }: { task: Task }) => {
+  const { project } = useSelector((state: RootState) => state.project);
+
+  const [parsedDate, setParsedDate] = useState<DateProps>();
+  const [taskName, setTaskName] = useState<string>('');
+  const [allTaskItem, setAllTaskItem] = useState<TaskItemProps[]>([]);
+  const [assignedEmployee, setAssignedEmployee] = useState<
+    AssignedEmployeeProps[]
+  >([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  
+  const getDateComponents = (date: Date) => ({
+    day: date.getDate(),
+    month: date.getMonth(),
+    year: date.getFullYear(),
+    hour: date.getHours(),
+    minute: date.getMinutes(),
+  });
+
+  useEffect(() => {
+    if (!project) return;
+    const response = getDateComponents(new Date(project.createdAt));
+    setParsedDate(response);
+  }, [project]);
+
+  useEffect(() => {
+    if (!task.id || !project?.id) return;
+
+    const fetchAllTaskItem = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axiosInstance.get<TaskApiResponseProps>(
+          `/project/${project.id}/task/${task.id}/items`,
+        );
+
+        if (response.data.success) {
+          setAllTaskItem(response.data.task.taskItems);
+          setAssignedEmployee(response.data.task.assigedEmployees);
+        }
+
+      } catch (error) {
+        console.error(' Error : ', error);
+const axiosError= error as AxiosError<ApiResponse>
+
+const errorMessage = axiosError ? axiosError.response?.data.message : "Something went wrong while fetching task items!"
+toast.error(errorMessage)
+
+
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAllTaskItem();
+  }, [task.id, project?.id]);
+
+  interface AddTaskItemResponse extends ApiResponse {
+    taskItem: TaskItemProps;
+  }
+
+
+
+  const handleAddTaskItem = async (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (e.key === 'Enter') {
+      try {
+        setIsSubmitting(true);
+        const response = await axiosInstance.post<AddTaskItemResponse>(
+          `/project/${project?.id}/task/${task.id}/items`,
+          { taskItemName: taskName },
+        );
+
+        if (response.data.success) {
+          toast.success('Task item added successfully!');
+          setAllTaskItem([...allTaskItem, response.data.taskItem]);
+          setTaskName('');
+        }
+      } catch (error) {
+        console.error('Error : ', error);
+        const axiosError  = error as AxiosError<ApiResponse>
+    const errorMessage = axiosError.response?.data.message || "Error while adding task item!"
+    toast.error(errorMessage)
+
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-3xl mx-auto relative">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2">
+          <Checkbox id="mark-complete" checked={task.status === 'DONE'} />
+          <Label
+            htmlFor="mark-complete"
+            className="text-sm font-medium text-gray-700"
+          >
+            Mark as Completed
+          </Label>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-2">
+          {task?.name}
+        </h2>
+        {parsedDate && (
+          <p className="text-sm text-gray-500">
+            Task created on {months[parsedDate.month]} {parsedDate.day},{' '}
+            {parsedDate.year} -{' '}
+            {parsedDate.hour > 12
+              ? (parsedDate.hour - 12).toString().padStart(2, '0')
+              : parsedDate.hour}
+            :{parsedDate.minute.toString().padStart(2, '0')}{' '}
+            {parsedDate.hour > 12 ? 'PM' : 'AM'}
+          </p>
+        )}
+      </div>
+
+      <div className="mb-6">
+        <Label className="font-semibold text-base text-gray-700 mb-2 block">
+          Description
+        </Label>
+        <p className="text-sm text-gray-600 leading-relaxed">
+          {project?.description}
+        </p>
+      </div>
+
+      <div className="mb-6">
+        <Label className="font-semibold text-base text-gray-700 mb-3 block">
+          Due Date
+        </Label>
+        <div className="flex items-center gap-3 border border-gray-300 rounded-2xl px-3 py-3 w-fit">
+          <Calendar className="h-4 w-4 text-gray-600" />
+          {parsedDate && (
+            <span className="text-sm text-gray-700">
+              {months[parsedDate.month]} 24, 2024
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="mb-6">
+        <Label className="font-semibold text-base text-gray-700 mb-3 block">
+          Assign to
+        </Label>
+        {isLoading ? (
+          <div className="flex gap-2">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-10 w-10 rounded-full bg-gray-200 animate-pulse"
+              ></div>
+            ))}
+          </div>
+        ) : assignedEmployee.length === 0 ? (
+          <p className="text-sm text-gray-500">No employee assigned</p>
+        ) : (
+          <div className="flex -space-x-2 items-center">
+            {assignedEmployee &&
+              assignedEmployee.slice(0, 5).map((empl, ind) => (
+                <div className="group" key={empl.id}>
+                  <p className="invisible group-hover:visible">
+                    {empl.fullname.charAt(0).toUpperCase() +
+                      empl.fullname.slice(1, empl.fullname.length)}
+                  </p>
+                  <div
+                    className={`w-9 h-9  text-white ${allBgGradient[ind]} group flex items-center justify-center rounded-full border-2 border-white shadow-sm`}
+                  >
+                    {empl.fullname.charAt(0).toUpperCase()}
+                  </div>
+                </div>
+              ))}
+
+            {assignedEmployee.length > 5 && (
+              <p className="ml-4 font-semibold text-base">
+                {' '}
+                +{assignedEmployee.length - 5}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-2">
+          <Label className="font-semibold text-base text-gray-700">
+            Overall Progress
+          </Label>
+          <span className="text-sm text-gray-600">3/5</span>
+        </div>
+        <Progress value={60} className="h-2" />
+      </div>
+
+      <div className="mb-6">
+        {isLoading ? (
+          <div className="space-y-2">
+            {[1, 2].map((i) => (
+              <div
+                key={i}
+                className="h-6 w-40 bg-gray-200 rounded-md animate-pulse"
+              ></div>
+            ))}
+          </div>
+        ) : allTaskItem.length === 0 ? (
+          <p className="text-sm text-gray-500">No task items available</p>
+        ) : (
+          allTaskItem.map((task) => (
+            <div className="flex items-center gap-3" key={task.id}>
+              <Checkbox id={task.id} />
+              <Label
+                htmlFor={task.id}
+                className="text-xl flex-1 font-normal cursor-pointer text-gray-700"
+              >
+                {task.name}
+              </Label>
+            </div>
+          ))
+        )}
+
+        <div className="mt-4 ">
+          <div className="flex items-center">
+            <Input
+              placeholder="Type to add more"
+              className="border-none shadow-none px-0 text-sm placeholder:text-gray-400 focus-visible:ring-0"
+              value={taskName}
+              onChange={(e) => setTaskName(e.target.value)}
+              onKeyDown={handleAddTaskItem}
+              disabled={isSubmitting}
+            />
+            {isSubmitting && (
+              <div className="flex items-center justify-center">
+                <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+
+      <div className="pt-4 border-t border-gray-100">
+        <h3 className="text-sm font-medium text-gray-700 mb-3">Attachment</h3>
+        
+        {task.attachmentUrl ? ( 
+          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                <Paperclip className="h-4 w-4 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">Attached file</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors">
+                <Download className="h-3 w-3" />
+                Download
+              </Button>
+              <Button className="inline-flex bg-transparent cursor-pointer items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors">
+                <Upload className="h-3 w-3" />
+                Change
+              </Button>
+            </div>
+          </div>
+        ) : ( 
+          <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center hover:border-gray-300 transition-colors">
+            <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <Upload className="h-5 w-5 text-gray-400" />
+            </div>
+            <p className="text-sm font-medium text-gray-900 mb-1">Upload attachment</p>
+            <p className="text-xs text-gray-500 mb-3">Drag and drop or click to browse</p>
+            <button className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+              <Upload className="h-4 w-4" />
+              Choose File
+            </button>
+          </div>
+        )}
+      </div> 
+      </div>
+
+ 
+ 
+ 
+    // </div>
+  );
+};
+
+export default TaskItem;

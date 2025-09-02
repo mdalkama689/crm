@@ -3,8 +3,6 @@ import { z } from 'zod';
 const fullnameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)*$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-
-
 export const signUpSchema = z.object({
   fullname: z
     .string()
@@ -21,6 +19,4 @@ export const signUpSchema = z.object({
     .min(6, 'Password must be at least 6 characters'),
 });
 
-
 export type SignUpInput = z.infer<typeof signUpSchema>;
-

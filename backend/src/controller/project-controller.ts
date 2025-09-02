@@ -34,8 +34,6 @@ export const createProject = async (
   try {
     const body = req.body;
 
-    console.log(body);
-
     if (!body) {
       return res.status(400).json({
         success: false,
@@ -377,13 +375,12 @@ export const deleteProject = async (
 
     if (project.iconUrl) {
       const iconKey = project.iconUrl.split('.com/')[1];
-      const response = await s3
+      await s3
         .deleteObject({
           Bucket: BUCKET_NAME!,
           Key: iconKey,
         })
         .promise();
-      console.log(' reposne l : ', response);
     }
     if (project.attachmentUrl) {
       const attachmentKey = project.attachmentUrl.split('.com/')[1];

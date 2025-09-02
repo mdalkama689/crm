@@ -8,12 +8,10 @@ const EmployeeRange = z.enum([
 ]);
 
 export const tenantSchema = z.object({
- name: z.string({error: "Compmany name is required!"}),
+  name: z.string({ error: 'Compmany name is required!' }),
   employeeRange: EmployeeRange.nullable().optional(),
   businessType: z.string().nullable().optional(),
   address: z.string().nullable().optional(),
 });
 
 export type TenantInput = z.infer<typeof tenantSchema>;
-
-

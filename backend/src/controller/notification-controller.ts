@@ -110,7 +110,7 @@ export const markNotificationAsRead = async (
         ? error.message
         : 'Something went wrong while updating the notification.';
 
-    console.log(errorMessage);
+    console.error(errorMessage);
 
     return res.status(500).json({
       success: false,
@@ -169,7 +169,7 @@ export const markAllNotificationAsRead = async (
         ? error.message
         : 'Something went wrong while read all  the notification.';
 
-    console.log(errorMessage);
+    console.error(errorMessage);
 
     return res.status(500).json({
       success: false,

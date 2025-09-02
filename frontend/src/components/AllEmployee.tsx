@@ -118,7 +118,7 @@ const AllEmployee = () => {
         );
       }
     } catch (error) {
-      console.log(' error : ', error);
+      console.error(' error : ', error);
       const axiosError = error as AxiosError<ApiResponse>;
       const errorMessage =
         axiosError.response?.data.message ||

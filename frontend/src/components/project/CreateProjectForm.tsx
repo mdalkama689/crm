@@ -79,6 +79,7 @@ const CreateProjectForm = () => {
 
       fetchAllEmployees();
     } catch (error) {
+      console.error("Error : ", error)
       toast.error('Failed to load employees. Please try again.');
     }
   }, []);

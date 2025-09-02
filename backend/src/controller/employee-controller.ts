@@ -150,7 +150,6 @@ export const sendInvitation = async (
   try {
     const body = req.body;
 
-    console.log(' body : ', body);
     if (!body) {
       return res.status(400).json({
         success: false,
@@ -367,8 +366,6 @@ export const validateTokenAndSignUp = async (req: Request, res: Response) => {
       },
     });
 
-    console.log(' body : ', req.body);
-    console.log(' tenand ', tenant);
     if (!tenant) {
       return res.status(400).json({
         success: false,

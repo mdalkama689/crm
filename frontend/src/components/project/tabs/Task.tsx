@@ -1,4 +1,4 @@
-import { CalendarDays, ChevronDown, CircleUserRound, Link2, ListChecks, MessageCircle, Plus, Upload, X } from 'lucide-react';
+import { CalendarDays, ChevronDown, Plus, Upload, X } from 'lucide-react';
 import { Button } from '../../ui/button';
 import React, { useEffect, useState } from 'react';
 import { Label } from '../../ui/label';
@@ -12,14 +12,18 @@ import z from 'zod';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { AddTaskResponse, AssignedEmployeeResponse, Employee, Task, TaskResponse } from '../types';
+import type {
+  AddTaskResponse,
+  AssignedEmployeeResponse,
+  Employee,
+  Task as TaskProps,
+  TaskResponse,
+} from '../types';
 import type { ApiResponse } from '../../../types/ApiResponse';
 import type { AxiosError } from 'axios';
-import { Checkbox } from '../../ui/checkbox';
 import Loader from '../../Loader';
-
-
-
+import EachTask from './EachTask';
+import TaskItem from './TaskItem';
 
 const Task = () => {
   const params = useParams();
@@ -36,7 +40,10 @@ const Task = () => {
   const [dueDate, setDueDate] = useState<string>('');
   const [attachment, setAttachment] = useState<File | string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-const [isTaksLoading, setIsTaskLoading] = useState<boolean>(true)
+  const [isTaksLoading, setIsTaskLoading] = useState<boolean>(true);
+  const [allTasks, setAllTasks] = useState<TaskProps[]>([]);
+  const [showTaskItemForm, setShowTaskItemForm] = useState<boolean>(false);
+  const [taskValue, setTaskValue] = useState<TaskProps>();
 
   const getRandomBgColor = () => {
     const randomNumber = Math.floor(Math.random() * allBgGradient.length);
@@ -50,12 +57,14 @@ const [isTaksLoading, setIsTaskLoading] = useState<boolean>(true)
         `/project/${projectId}/assigned-employees`,
       );
 
-      if (response.data.success) {
-        console.log(' data : ', response.data.employees);
+      if (response.data.success) { 
         setAllEmployee(response.data.employees);
       }
     } catch (error) {
-      console.log(error);
+console.error("Error : ", error)
+const axiosError = error as AxiosError<ApiResponse>
+const errorMessage = axiosError ? axiosError.response?.data.message : "Something went wrong while fetching assiged employee"
+toast.error(errorMessage)
     }
   };
 
@@ -79,7 +88,7 @@ const [isTaksLoading, setIsTaskLoading] = useState<boolean>(true)
     if (!projectId) return;
 
     fetchAllAssignedUserForProject();
-    fetchProjectTasks()
+    fetchProjectTasks();
   }, [projectId]);
 
   const toggleAssigedEmployeeTab = () => {
@@ -165,8 +174,8 @@ const [isTaksLoading, setIsTaskLoading] = useState<boolean>(true)
         setAssignedEmployee([]);
         reset();
         toast.success('Task added successfully!');
-        setOpenTaskForm(false); 
-        setAllTasks([...allTasks, response.data.task])
+        setOpenTaskForm(false);
+        setAllTasks([...allTasks, response.data.task]);
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -174,7 +183,7 @@ const [isTaksLoading, setIsTaskLoading] = useState<boolean>(true)
         axiosError.response?.data.message ||
         'Something went wrong while adding the task. Please try again.';
       toast.error(errorMessage);
-      console.log('Error while adding task: ', error);
+      console.error('Error while adding task: ', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -194,31 +203,37 @@ const [isTaksLoading, setIsTaskLoading] = useState<boolean>(true)
     setOpenTaskForm(!openTaskForm);
   };
 
-
-
-
-  const [allTasks, setAllTasks] = useState<Task[]>([])
-
-  const fetchProjectTasks = async  () => {
+  const fetchProjectTasks = async () => {
     try {
-      
-    setIsTaskLoading(true)
-      const response = await axiosInstance.get<TaskResponse>(`project/${projectId}/tasks`)
-      
-      if(response.data.success){
-        console.log(response.data.tasks)
-setAllTasks(response.data.tasks)
-}
-    } catch (error) {
+      setIsTaskLoading(true);
+      const response = await axiosInstance.get<TaskResponse>(
+        `project/${projectId}/tasks`,
+      );
 
-  console.error("Error : ", error)
-      const axiosError = error as AxiosError<ApiResponse>
-      const errorMessage = axiosError.response?.data.message || "SOmething went wrong while fething the tasks"
-      toast.error(errorMessage)
-    } finally{
-      setIsTaskLoading(false)
+      if (response.data.success) {
+        setAllTasks(response.data.tasks);
+        console.log(" reposem : ", response.data)
+      }
+    } catch (error) {
+      console.error('Error : ', error);
+      const axiosError = error as AxiosError<ApiResponse>;
+      const errorMessage =
+        axiosError.response?.data.message ||
+        'SOmething went wrong while fething the tasks';
+      toast.error(errorMessage);
+    } finally {
+      setIsTaskLoading(false);
     }
-  }
+  };
+
+  const toggleTaskItemForm = (task: TaskProps) => {
+    if (!showTaskItemForm) {
+      setShowTaskItemForm(!showTaskItemForm);
+    }
+    console.log(" setTaskValue : ", task)
+    setTaskValue(task);
+  };
+
   return (
     <>
       <div className="mt-3 relative">
@@ -233,19 +248,27 @@ setAllTasks(response.data.tasks)
             Add Task{' '}
           </Button>
         </div>
-    
-{isTaksLoading ? (
-  <Loader />
-) : (
-    <div className="mt-6 overflow-y-auto h-[450px] p-3 pb-10 border border-gray-300 rounded-lg shadow-sm">
-  {allTasks.map((task) => (
-    <EachTask task={task} key={task.id} />
-  ))}
-</div>
- 
-)}
-    
+
+        {isTaksLoading ? (
+          <Loader />
+        ) : (
+          <div className="mt-6 overflow-y-auto h-[450px] p-3 pb-10 border border-gray-300 rounded-lg shadow-sm">
+            {allTasks.map((task) => (
+              <EachTask
+                task={task}
+                key={task.id}
+                onClick={() => toggleTaskItemForm(task)}
+              />
+            ))}
+          </div>
+        )}
       </div>
+
+      {showTaskItemForm && (
+        <div className="absolute top-0 inset-0 flex items-center justify-center p-4 h-fit z-50 overflow-auto">
+          {taskValue && <TaskItem task={taskValue} />}
+        </div>
+      )}
 
       {openTaskForm && (
         <div className="absolute top-0 inset-0 flex items-center justify-center p-4 h-fit z-50 overflow-auto">
@@ -460,48 +483,3 @@ const createTaskSchema = z.object({
 });
 
 type createTaskInput = z.infer<typeof createTaskSchema>;
-
-
-const EachTask = ({task}: {task: Task}) => {
-
-
-
-  return ( 
-    
-    <div className='flex items-center mt-3 justify-between border border-gray-400 rounded-xl px-2 py-2'>
-    <div className='flex items-center gap-2'>
-        <Checkbox />
-        
-        <span className='text-base font-medium'>{task.name}</span>
-    </div>
-
-<div className='flex items-center gap-3'>
- 
- <div className='flex items-center gap-1'>
-   <ListChecks />
-   <span>1/2</span>
- </div>
-
- <div className='flex items-center gap-1'>
-  <Link2 />
-   <span>7</span>
- </div>
-
-  <div className='flex items-center gap-1'>
-  <MessageCircle />
-   <span>9</span>
- </div>
-
-<Button className='bg-gray-200 hover:bg-gray-300 text-slate-900 font-bold'>Done</Button>
-
-<div
-className='bg-gray-200 hover:bg-gray-300 h-10 w-10 rounded-full flex items-center justify-center'
->
-  <CircleUserRound />
-</div>
-</div>
-    
-    </div>
- 
-  )
-}

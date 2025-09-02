@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch, RootState } from '../slices/store';
+import type { AppDispatch, RootState } from '.././slices/store/store';
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Loader from './Loader';
-import { fetchCurrentUser } from '../slices/auth/AuthSlice';
+import { fetchCurrentUser } from '../slices/AuthSlice';
 
 const PublicWrapper = () => {
   const navigate = useNavigate();

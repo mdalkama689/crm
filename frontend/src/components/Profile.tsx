@@ -1,7 +1,7 @@
 import { ChevronDown, Power } from 'lucide-react';
 import { axiosInstance } from '../api/axios';
 import { useSelector } from 'react-redux';
-import type { RootState } from '../slices/store';
+import type { RootState } from '../slices/store/store';
 
 const Profile = () => {
   const { user, avatarUrl } = useSelector((state: RootState) => state.auth);
