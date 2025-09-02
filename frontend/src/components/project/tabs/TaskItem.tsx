@@ -20,8 +20,14 @@ import { toast } from 'sonner';
 import type { ApiResponse } from '../../../types/ApiResponse';
 import type { AxiosError } from 'axios';
 
+interface TaskItemComponentProps {
+  task: Task,
+  setShowTaskItemForm: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-const TaskItem = ({ task }: { task: Task }) => {
+
+const TaskItem = ({ task,  setShowTaskItemForm}: TaskItemComponentProps) => {
+  
   const { project } = useSelector((state: RootState) => state.project);
 
   const [parsedDate, setParsedDate] = useState<DateProps>();
@@ -129,7 +135,7 @@ toast.error(errorMessage)
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
             <MoreHorizontal className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+          <Button onClick={() => setShowTaskItemForm(false)} variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
             <X className="h-4 w-4" />
           </Button>
         </div>

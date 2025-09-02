@@ -266,7 +266,7 @@ toast.error(errorMessage)
 
       {showTaskItemForm && (
         <div className="absolute top-0 inset-0 flex items-center justify-center p-4 h-fit z-50 overflow-auto">
-          {taskValue && <TaskItem task={taskValue} />}
+          {taskValue && <TaskItem task={taskValue} setShowTaskItemForm={setShowTaskItemForm} />}
         </div>
       )}
 
