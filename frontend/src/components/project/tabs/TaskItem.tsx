@@ -66,6 +66,7 @@ const TaskItem = ({ task,  setShowTaskItemForm}: TaskItemComponentProps) => {
 
         if (response.data.success) {
           setAllTaskItem(response.data.task.taskItems);
+          console.log(" response.data.task.taskItems : ", response.data.task.taskItems )
           setAssignedEmployee(response.data.task.assigedEmployees);
         }
 
@@ -119,6 +120,65 @@ toast.error(errorMessage)
     }
   };
 
+  useEffect(() => {
+
+    if(!task) return
+    console.log(" task item : ", task)
+
+
+  }, [task])
+
+  const [taskItemLoading, setTaskItemLoading] = useState<boolean>(false)
+
+const handleToggleTaskItem = async (taskitemId: string) => {
+  try {
+if(!project) return
+setTaskItemLoading(true) 
+ setAllTaskItem((prevTaskItems) => 
+      prevTaskItems.map((taskItem) => 
+      taskItem.id === taskitemId ? {...taskItem, completed: !taskItem.completed} : taskItem   
+      )
+      )
+
+    const response  = await axiosInstance.patch<ApiResponse>(`/project/${project.id}/task/${task.id}/taskItem/${taskitemId}/toggle `)     
+ 
+    if(!response.data.success){
+
+ setAllTaskItem((prevTaskItems) => 
+      prevTaskItems.map((taskItem) => 
+      taskItem.id === taskitemId ? {...taskItem, completed: !taskItem.completed} : taskItem   
+      )
+      ) 
+   toast.error("Failed to update task item. Please try again.");
+
+    } 
+
+
+      toast.success("Task item updating task item checked")
+    
+
+  } catch (error) {
+   console.error("Failed to update task item. Please try again.", error);
+
+
+const axiosError = error as AxiosError<ApiResponse>;
+
+const errorMessage = axiosError?.response?.data?.message 
+  ? axiosError.response.data.message 
+  : "Failed to update task item. Please try again.";
+
+toast.error(errorMessage);
+
+
+     setAllTaskItem((prevTaskItems) => 
+      prevTaskItems.map((taskItem) => 
+      taskItem.id === taskitemId ? {...taskItem, completed: !taskItem.completed} : taskItem   
+      )
+      ) 
+  } finally {
+    setTaskItemLoading(false)
+  }
+}
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-3xl mx-auto relative">
       <div className="flex items-center justify-between mb-4">
@@ -248,13 +308,12 @@ toast.error(errorMessage)
         ) : (
           allTaskItem.map((task) => (
             <div className="flex items-center gap-3" key={task.id}>
-              <Checkbox id={task.id} />
-              <Label
-                htmlFor={task.id}
-                className="text-xl flex-1 font-normal cursor-pointer text-gray-700"
+              <Checkbox className='cursor-pointer' disabled={taskItemLoading} checked={task.completed} onClick={() => handleToggleTaskItem(task.id)} />
+              <p
+                className="text-xl flex-1 font-normal  text-gray-700"
               >
                 {task.name}
-              </Label>
+              </p>
             </div>
           ))
         )}

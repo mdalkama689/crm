@@ -666,3 +666,131 @@ export const fetchAllTaskItem = async (
     });
   }
 };
+
+
+export const toggleTaskItemCompletion = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    
+
+const projectId = req.params.projectId 
+const taskId = req.params.taskId 
+const taskItemId = req.params.taskItemId  
+
+console.log(" project id , task id and task item id ", projectId, taskId, taskItemId)
+
+const loggedInUserId = req.user?.id;
+
+    if (!loggedInUserId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized: user not found in request',
+      });
+    }
+
+  
+
+
+    const loggedInUser = await prisma.employee.findUnique({
+      where: { id: loggedInUserId },
+    });
+    if (!loggedInUser) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized: user does not exist',
+      });
+    }
+
+    if (!loggedInUser.tenantId) {
+      return res.status(403).json({
+        success: false,
+        message: 'Forbidden: tenant id missing for logged in user',
+      });
+    }
+
+    const project = await prisma.project.findFirst({
+      where: {
+        id: projectId,
+        tenantId: loggedInUser.tenantId,
+      },
+    });
+
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: 'Project not found or you do not have access',
+      });
+    }
+    const task = await prisma.task.findUnique({
+      where: {
+        id:  taskId
+      },
+      include: {
+        taskItems: true
+      }
+    })
+
+        if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: 'Task not found',
+      });
+    }
+
+ 
+  const taskItem = await prisma.taskItem.findUnique({
+    where: {id: taskItemId}
+  })
+
+
+  if(!taskItem){
+return res.status(400).json({
+  success: false,
+  message:  "Task item not found"
+})
+  }
+
+ 
+
+
+
+    let isAuthorized = false;
+
+    if (loggedInUser.role.trim().toLowerCase() === 'admin') {
+      isAuthorized = true;
+    } else {
+      const isAssigned = await prisma.project.findFirst({
+        where: {
+          id: projectId,
+          assignToEmployee: { some: { id: loggedInUserId } },
+        },
+      });
+      isAuthorized = !!isAssigned;
+    }
+
+    if (!isAuthorized) {
+      return res.status(403).json({
+        success: false,
+        message:
+          'Forbidden: you are not authorized to access tasks of this project',
+      });
+    }
+
+   const updatedTaskItem =   await prisma.taskItem.update({
+    where: {id: taskItemId},
+    data: {
+      completed: taskItem.completed ? false: true
+    }
+  })
+
+
+
+  return res.status(200).json({
+    success: true,
+      message: `Task item marked as ${updatedTaskItem.completed ? 'complete' : 'incomplete'} successfully!`,
+  })
+  } catch (error) {
+     console.error("Error while toggling task item completion:", error);
+    const errorMessage = error instanceof Error ? error.message : "Error while toggling task item";
+    return res.status(500).json({ success: false, message: errorMessage }); 
+  }
+}

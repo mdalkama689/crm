@@ -4,6 +4,7 @@ import {
   addTaskItem,
   fetchAllProjectTasks,
   fetchAllTaskItem,
+  toggleTaskItemCompletion,
 } from '../controller/task-controller';
 import upload from '../middlewares/multer.middleware';
 import { authMiddleware } from '../middlewares/auth-middleware';
@@ -29,6 +30,14 @@ router.get(
   '/project/:projectId/task/:taskId/items',
   authMiddleware,
   fetchAllTaskItem,
+);
+
+
+ 
+router.patch(
+  '/project/:projectId/task/:taskId/taskItem/:taskItemId/toggle',
+  authMiddleware,
+  toggleTaskItemCompletion,
 );
 
 export default router;
