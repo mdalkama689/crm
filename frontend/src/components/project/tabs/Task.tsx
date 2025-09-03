@@ -214,7 +214,6 @@ const Task = () => {
 
       if (response.data.success) {
         setAllTasks(response.data.tasks);
-        console.log(' reposem : ', response.data);
       }
     } catch (error) {
       console.error('Error : ', error);
@@ -232,9 +231,11 @@ const Task = () => {
     if (!showTaskItemForm) {
       setShowTaskItemForm(!showTaskItemForm);
     }
-    console.log(' setTaskValue : ', task);
     setTaskValue(task);
   };
+
+  const [isAnyTaskSubmitting, setIsAnyTaskSubmitting] =
+    useState<boolean>(false);
 
   return (
     <>
@@ -260,6 +261,8 @@ const Task = () => {
                 task={task}
                 key={task.id}
                 onClick={() => toggleTaskItemForm(task)}
+                isAnyTaskSubmitting={isAnyTaskSubmitting}
+                setIsAnyTaskSubmitting={setIsAnyTaskSubmitting}
               />
             ))}
           </div>

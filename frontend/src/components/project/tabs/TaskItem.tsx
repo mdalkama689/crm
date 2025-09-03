@@ -43,6 +43,7 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
   >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [taskItemLoading, setTaskItemLoading] = useState<boolean>(false);
 
   const getDateComponents = (date: Date) => ({
     day: date.getDate(),
@@ -124,13 +125,6 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
     }
   };
 
-  useEffect(() => {
-    if (!task) return;
-    console.log(' task item : ', task);
-  }, [task]);
-
-  const [taskItemLoading, setTaskItemLoading] = useState<boolean>(false);
-
   const handleToggleTaskItem = async (taskitemId: string) => {
     try {
       if (!project) return;
@@ -181,6 +175,7 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
       setTaskItemLoading(false);
     }
   };
+
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-3xl mx-auto relative">
       <div className="flex items-center justify-between mb-4">

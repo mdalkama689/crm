@@ -10,7 +10,7 @@ import type { Task } from '../types';
 import { axiosInstance } from '../../../api/axios';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../slices/store/store';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { ApiResponse } from '../../../types/ApiResponse';
 import { toast } from 'sonner';
 import type { AxiosError } from 'axios';
@@ -18,24 +18,30 @@ import type { AxiosError } from 'axios';
 interface EachTaskProps {
   task: Task;
   onClick: () => void;
+  isAnyTaskSubmitting: boolean;
+  setIsAnyTaskSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const EachTask = ({ task, onClick }: EachTaskProps) => {
+const EachTask = ({
+  task,
+  onClick,
+  isAnyTaskSubmitting,
+  setIsAnyTaskSubmitting,
+}: EachTaskProps) => {
   const { project } = useSelector((state: RootState) => state.project);
 
   const [isChecked, setIsChecked] = useState<boolean>(
     task.status === 'DONE' ? true : false,
   );
   const [isOnHold, setIsOnHold] = useState(task.status === 'ON_HOLDING');
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [btnValue, setBtnValue] = useState<string>('');
 
-  const handleToggleTask = async (e: any) => {
+  const handleToggleTask = async (e: React.MouseEvent<HTMLButtonElement>) => {
     try {
       e.stopPropagation();
 
       if (!project) return;
-      setIsSubmitting(true);
+      setIsAnyTaskSubmitting(true);
       setIsChecked(!isChecked);
       setIsOnHold(!isOnHold);
 
@@ -62,7 +68,7 @@ const EachTask = ({ task, onClick }: EachTaskProps) => {
 
       toast.error(errorMessage);
     } finally {
-      setIsSubmitting(false);
+      setIsAnyTaskSubmitting(false);
     }
   };
 
@@ -83,7 +89,7 @@ const EachTask = ({ task, onClick }: EachTaskProps) => {
     >
       <div className="flex items-center gap-2">
         <Checkbox
-          disabled={isSubmitting}
+          disabled={isAnyTaskSubmitting}
           onClick={handleToggleTask}
           checked={isChecked ? true : false}
         />
