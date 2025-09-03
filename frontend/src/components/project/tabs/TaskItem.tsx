@@ -1,4 +1,11 @@
-import { Calendar, Upload, X, MoreHorizontal, Download, Paperclip } from 'lucide-react';
+import {
+  Calendar,
+  Upload,
+  X,
+  MoreHorizontal,
+  Download,
+  Paperclip,
+} from 'lucide-react';
 import { Label } from '../../ui/label';
 import { Progress } from '../../ui/progress';
 import { Checkbox } from '../../ui/checkbox';
@@ -21,13 +28,11 @@ import type { ApiResponse } from '../../../types/ApiResponse';
 import type { AxiosError } from 'axios';
 
 interface TaskItemComponentProps {
-  task: Task,
-  setShowTaskItemForm: React.Dispatch<React.SetStateAction<boolean>>
+  task: Task;
+  setShowTaskItemForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-
-const TaskItem = ({ task,  setShowTaskItemForm}: TaskItemComponentProps) => {
-  
+const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
   const { project } = useSelector((state: RootState) => state.project);
 
   const [parsedDate, setParsedDate] = useState<DateProps>();
@@ -39,7 +44,6 @@ const TaskItem = ({ task,  setShowTaskItemForm}: TaskItemComponentProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  
   const getDateComponents = (date: Date) => ({
     day: date.getDate(),
     month: date.getMonth(),
@@ -66,18 +70,20 @@ const TaskItem = ({ task,  setShowTaskItemForm}: TaskItemComponentProps) => {
 
         if (response.data.success) {
           setAllTaskItem(response.data.task.taskItems);
-          console.log(" response.data.task.taskItems : ", response.data.task.taskItems )
+          console.log(
+            ' response.data.task.taskItems : ',
+            response.data.task.taskItems,
+          );
           setAssignedEmployee(response.data.task.assigedEmployees);
         }
-
       } catch (error) {
         console.error(' Error : ', error);
-const axiosError= error as AxiosError<ApiResponse>
+        const axiosError = error as AxiosError<ApiResponse>;
 
-const errorMessage = axiosError ? axiosError.response?.data.message : "Something went wrong while fetching task items!"
-toast.error(errorMessage)
-
-
+        const errorMessage = axiosError
+          ? axiosError.response?.data.message
+          : 'Something went wrong while fetching task items!';
+        toast.error(errorMessage);
       } finally {
         setIsLoading(false);
       }
@@ -89,8 +95,6 @@ toast.error(errorMessage)
   interface AddTaskItemResponse extends ApiResponse {
     taskItem: TaskItemProps;
   }
-
-
 
   const handleAddTaskItem = async (
     e: React.KeyboardEvent<HTMLInputElement>,
@@ -110,10 +114,10 @@ toast.error(errorMessage)
         }
       } catch (error) {
         console.error('Error : ', error);
-        const axiosError  = error as AxiosError<ApiResponse>
-    const errorMessage = axiosError.response?.data.message || "Error while adding task item!"
-    toast.error(errorMessage)
-
+        const axiosError = error as AxiosError<ApiResponse>;
+        const errorMessage =
+          axiosError.response?.data.message || 'Error while adding task item!';
+        toast.error(errorMessage);
       } finally {
         setIsSubmitting(false);
       }
@@ -121,64 +125,62 @@ toast.error(errorMessage)
   };
 
   useEffect(() => {
+    if (!task) return;
+    console.log(' task item : ', task);
+  }, [task]);
 
-    if(!task) return
-    console.log(" task item : ", task)
+  const [taskItemLoading, setTaskItemLoading] = useState<boolean>(false);
 
+  const handleToggleTaskItem = async (taskitemId: string) => {
+    try {
+      if (!project) return;
+      setTaskItemLoading(true);
+      setAllTaskItem((prevTaskItems) =>
+        prevTaskItems.map((taskItem) =>
+          taskItem.id === taskitemId
+            ? { ...taskItem, completed: !taskItem.completed }
+            : taskItem,
+        ),
+      );
 
-  }, [task])
+      const response = await axiosInstance.patch<ApiResponse>(
+        `/project/${project.id}/task/${task.id}/taskItem/${taskitemId}/toggle `,
+      );
 
-  const [taskItemLoading, setTaskItemLoading] = useState<boolean>(false)
+      if (!response.data.success) {
+        setAllTaskItem((prevTaskItems) =>
+          prevTaskItems.map((taskItem) =>
+            taskItem.id === taskitemId
+              ? { ...taskItem, completed: !taskItem.completed }
+              : taskItem,
+          ),
+        );
+        toast.error('Failed to update task item. Please try again.');
+      }
 
-const handleToggleTaskItem = async (taskitemId: string) => {
-  try {
-if(!project) return
-setTaskItemLoading(true) 
- setAllTaskItem((prevTaskItems) => 
-      prevTaskItems.map((taskItem) => 
-      taskItem.id === taskitemId ? {...taskItem, completed: !taskItem.completed} : taskItem   
-      )
-      )
+      toast.success('Task item updating task item checked');
+    } catch (error) {
+      console.error('Failed to update task item. Please try again.', error);
 
-    const response  = await axiosInstance.patch<ApiResponse>(`/project/${project.id}/task/${task.id}/taskItem/${taskitemId}/toggle `)     
- 
-    if(!response.data.success){
+      const axiosError = error as AxiosError<ApiResponse>;
 
- setAllTaskItem((prevTaskItems) => 
-      prevTaskItems.map((taskItem) => 
-      taskItem.id === taskitemId ? {...taskItem, completed: !taskItem.completed} : taskItem   
-      )
-      ) 
-   toast.error("Failed to update task item. Please try again.");
+      const errorMessage = axiosError?.response?.data?.message
+        ? axiosError.response.data.message
+        : 'Failed to update task item. Please try again.';
 
-    } 
+      toast.error(errorMessage);
 
-
-      toast.success("Task item updating task item checked")
-    
-
-  } catch (error) {
-   console.error("Failed to update task item. Please try again.", error);
-
-
-const axiosError = error as AxiosError<ApiResponse>;
-
-const errorMessage = axiosError?.response?.data?.message 
-  ? axiosError.response.data.message 
-  : "Failed to update task item. Please try again.";
-
-toast.error(errorMessage);
-
-
-     setAllTaskItem((prevTaskItems) => 
-      prevTaskItems.map((taskItem) => 
-      taskItem.id === taskitemId ? {...taskItem, completed: !taskItem.completed} : taskItem   
-      )
-      ) 
-  } finally {
-    setTaskItemLoading(false)
-  }
-}
+      setAllTaskItem((prevTaskItems) =>
+        prevTaskItems.map((taskItem) =>
+          taskItem.id === taskitemId
+            ? { ...taskItem, completed: !taskItem.completed }
+            : taskItem,
+        ),
+      );
+    } finally {
+      setTaskItemLoading(false);
+    }
+  };
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-3xl mx-auto relative">
       <div className="flex items-center justify-between mb-4">
@@ -195,7 +197,12 @@ toast.error(errorMessage);
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
             <MoreHorizontal className="h-4 w-4" />
           </Button>
-          <Button onClick={() => setShowTaskItemForm(false)} variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
+          <Button
+            onClick={() => setShowTaskItemForm(false)}
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 cursor-pointer"
+          >
             <X className="h-4 w-4" />
           </Button>
         </div>
@@ -288,9 +295,18 @@ toast.error(errorMessage);
           <Label className="font-semibold text-base text-gray-700">
             Overall Progress
           </Label>
-          <span className="text-sm text-gray-600">3/5</span>
+          <span className="text-sm text-gray-600">
+            {allTaskItem.filter((task) => task.completed).length}/
+            {allTaskItem.length}
+          </span>
         </div>
-        <Progress value={60} className="h-2" />
+        <Progress
+          value={
+            (allTaskItem.filter((task) => task.completed).length * 100) /
+            allTaskItem.length
+          }
+          className="h-2"
+        />
       </div>
 
       <div className="mb-6">
@@ -308,10 +324,13 @@ toast.error(errorMessage);
         ) : (
           allTaskItem.map((task) => (
             <div className="flex items-center gap-3" key={task.id}>
-              <Checkbox className='cursor-pointer' disabled={taskItemLoading} checked={task.completed} onClick={() => handleToggleTaskItem(task.id)} />
-              <p
-                className="text-xl flex-1 font-normal  text-gray-700"
-              >
+              <Checkbox
+                className="cursor-pointer"
+                disabled={taskItemLoading}
+                checked={task.completed}
+                onClick={() => handleToggleTaskItem(task.id)}
+              />
+              <p className="text-xl flex-1 font-normal  text-gray-700">
                 {task.name}
               </p>
             </div>
@@ -337,11 +356,10 @@ toast.error(errorMessage);
         </div>
       </div>
 
-
       <div className="pt-4 border-t border-gray-100">
         <h3 className="text-sm font-medium text-gray-700 mb-3">Attachment</h3>
-        
-        {task.attachmentUrl ? ( 
+
+        {task.attachmentUrl ? (
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -362,25 +380,26 @@ toast.error(errorMessage);
               </Button>
             </div>
           </div>
-        ) : ( 
+        ) : (
           <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center hover:border-gray-300 transition-colors">
             <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
               <Upload className="h-5 w-5 text-gray-400" />
             </div>
-            <p className="text-sm font-medium text-gray-900 mb-1">Upload attachment</p>
-            <p className="text-xs text-gray-500 mb-3">Drag and drop or click to browse</p>
+            <p className="text-sm font-medium text-gray-900 mb-1">
+              Upload attachment
+            </p>
+            <p className="text-xs text-gray-500 mb-3">
+              Drag and drop or click to browse
+            </p>
             <button className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
               <Upload className="h-4 w-4" />
               Choose File
             </button>
           </div>
         )}
-      </div> 
       </div>
+    </div>
 
- 
- 
- 
     // </div>
   );
 };

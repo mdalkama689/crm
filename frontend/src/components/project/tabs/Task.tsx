@@ -57,14 +57,16 @@ const Task = () => {
         `/project/${projectId}/assigned-employees`,
       );
 
-      if (response.data.success) { 
+      if (response.data.success) {
         setAllEmployee(response.data.employees);
       }
     } catch (error) {
-console.error("Error : ", error)
-const axiosError = error as AxiosError<ApiResponse>
-const errorMessage = axiosError ? axiosError.response?.data.message : "Something went wrong while fetching assiged employee"
-toast.error(errorMessage)
+      console.error('Error : ', error);
+      const axiosError = error as AxiosError<ApiResponse>;
+      const errorMessage = axiosError
+        ? axiosError.response?.data.message
+        : 'Something went wrong while fetching assiged employee';
+      toast.error(errorMessage);
     }
   };
 
@@ -212,14 +214,14 @@ toast.error(errorMessage)
 
       if (response.data.success) {
         setAllTasks(response.data.tasks);
-        console.log(" reposem : ", response.data)
+        console.log(' reposem : ', response.data);
       }
     } catch (error) {
       console.error('Error : ', error);
       const axiosError = error as AxiosError<ApiResponse>;
       const errorMessage =
         axiosError.response?.data.message ||
-        'SOmething went wrong while fething the tasks';
+        'Something went wrong while fething the tasks';
       toast.error(errorMessage);
     } finally {
       setIsTaskLoading(false);
@@ -230,7 +232,7 @@ toast.error(errorMessage)
     if (!showTaskItemForm) {
       setShowTaskItemForm(!showTaskItemForm);
     }
-    console.log(" setTaskValue : ", task)
+    console.log(' setTaskValue : ', task);
     setTaskValue(task);
   };
 
@@ -266,7 +268,12 @@ toast.error(errorMessage)
 
       {showTaskItemForm && (
         <div className="absolute top-0 inset-0 flex items-center justify-center p-4 h-fit z-50 overflow-auto">
-          {taskValue && <TaskItem task={taskValue} setShowTaskItemForm={setShowTaskItemForm} />}
+          {taskValue && (
+            <TaskItem
+              task={taskValue}
+              setShowTaskItemForm={setShowTaskItemForm}
+            />
+          )}
         </div>
       )}
 

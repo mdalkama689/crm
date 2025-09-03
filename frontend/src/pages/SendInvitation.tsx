@@ -47,7 +47,7 @@ const SendInvitation = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      setIsSubmitting(true); 
+      setIsSubmitting(true);
       const payload = {
         ...data,
         tenantId: user?.tenantId,
