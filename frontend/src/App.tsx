@@ -17,6 +17,7 @@ import EachProject from './components/project/EachProject';
 import Employee from './components/admin/Employee';
 import AllNotifications from './components/notification/AllNotifications';
 import AllProjects from './components/project/AllProjects';
+import Extra from './components/Extra';
 
 function App() {
   return (
@@ -44,6 +45,8 @@ function App() {
           <Route path="/project/:id" element={<EachProject />} />
           <Route path="/notifications" element={<AllNotifications />} />
         </Route>
+
+        <Route path="ex" element={<Extra />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

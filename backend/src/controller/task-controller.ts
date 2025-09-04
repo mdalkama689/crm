@@ -10,6 +10,8 @@ import {
   generateNotificationForTask,
 } from '../utils/generateNotification';
 import { validateDueDate } from '../utils/validateDueDate';
+import { Request } from 'express';
+import axios from 'axios';
 
 export const addTask = async (req: AuthenticatedRequest, res: Response) => {
   try {
@@ -888,6 +890,36 @@ export const toggleTaskItemCompletion = async (
     console.error('Error while toggling task item completion:', error);
     const errorMessage =
       error instanceof Error ? error.message : 'Error while toggling task item';
+    return res.status(500).json({ success: false, message: errorMessage });
+  }
+};
+
+export const downloadFile = async (req: Request, res: Response) => {
+  try {
+    const fileUrl: string = req.body.fileUrl;
+
+    if (!fileUrl.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide file url!',
+      });
+    }
+
+    const params = {
+      Bucket: BUCKET_NAME!,
+      Key: fileUrl,
+      Expires: 60,
+    };
+    const signedUrl = await s3.getSignedUrl('getObject', params);
+
+    const response = await axios.get(signedUrl, {
+      responseType: 'arraybuffer',
+    });
+    res.send(response.data);
+  } catch (error) {
+    console.error('downlad :', error);
+    const errorMessage =
+      error instanceof Error ? error.message : 'Error dowllaodinf';
     return res.status(500).json({ success: false, message: errorMessage });
   }
 };

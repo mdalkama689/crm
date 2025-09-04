@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   addTask,
   addTaskItem,
+  downloadFile,
   fetchAllProjectTasks,
   fetchAllTaskItem,
   toggleTaskCompletion,
@@ -44,5 +45,7 @@ router.patch(
   authMiddleware,
   toggleTaskItemCompletion,
 );
+
+router.post('/download/file', authMiddleware, downloadFile);
 
 export default router;

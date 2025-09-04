@@ -71,10 +71,6 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
 
         if (response.data.success) {
           setAllTaskItem(response.data.task.taskItems);
-          console.log(
-            ' response.data.task.taskItems : ',
-            response.data.task.taskItems,
-          );
           setAssignedEmployee(response.data.task.assigedEmployees);
         }
       } catch (error) {
@@ -173,6 +169,28 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
       );
     } finally {
       setTaskItemLoading(false);
+    }
+  };
+
+  const downloadAttachment = async (attachmentUrl: string) => {
+    try {
+      const url = new URL(attachmentUrl);
+      const pathname = url.pathname.substring(1);
+      const fileType = pathname.split('.').pop();
+      const response = await axiosInstance.post(
+        '/download/file',
+        { fileUrl: pathname },
+        { responseType: 'blob' },
+      );
+      const goodUrl = URL.createObjectURL(response.data);
+      const a = document.createElement('a');
+      a.href = goodUrl;
+      a.download = `attachment.${fileType}`;
+      a.click();
+      URL.revokeObjectURL(goodUrl);
+    } catch (error) {
+      console.error('Download error:', error);
+      toast.error('Faidled to download attachment!');
     }
   };
 
@@ -365,7 +383,11 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors">
+              <Button
+                type="button"
+                onClick={() => downloadAttachment(task.attachmentUrl)}
+                className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors"
+              >
                 <Download className="h-3 w-3" />
                 Download
               </Button>
