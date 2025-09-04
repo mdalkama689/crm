@@ -258,11 +258,12 @@ const Task = () => {
           <div className="mt-6 overflow-y-auto h-[450px] p-3 pb-10 border border-gray-300 rounded-lg shadow-sm">
             {allTasks.map((task) => (
               <EachTask
-                task={task}
                 key={task.id}
+                task={task}
                 onClick={() => toggleTaskItemForm(task)}
                 isAnyTaskSubmitting={isAnyTaskSubmitting}
                 setIsAnyTaskSubmitting={setIsAnyTaskSubmitting}
+             
               />
             ))}
           </div>

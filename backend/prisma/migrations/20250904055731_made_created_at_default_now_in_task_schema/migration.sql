@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "public"."Task" ALTER COLUMN "createdAt" SET DEFAULT CURRENT_TIMESTAMP;

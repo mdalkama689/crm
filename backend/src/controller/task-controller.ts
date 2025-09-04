@@ -18,6 +18,8 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
     const projectId = req.params.id;
     const body: taskInput = req.body;
 
+    console.log(" project id : ", projectId) 
+    console.log(" add task : ")
     if (!body) {
       return res.status(400).json({
         success: false,
@@ -158,12 +160,15 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
     if (req.file) {
       const attachment = req.file;
 
+      
       if (!attachment) {
         return res.status(400).json({
           success: false,
           message: 'Attachment not found!',
         });
       }
+      console.log
+      (" attachemnt : ", attachment)
 
       if (attachment && !allowedAttachmentTypes.includes(attachment.mimetype)) {
         return res.status(400).json({
@@ -237,10 +242,6 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
       }
     }
 
-    //  assignToEmployee:
-    //     employeeIdsInArray && employeeIdsInArray.length > 0
-    //       ? { connect: employeeIdsInArray.map((id) => ({ id })) }
-    //       : undefined,
 
     const task = await prisma.task.create({
       data: {
@@ -896,8 +897,10 @@ export const toggleTaskItemCompletion = async (
 
 export const downloadFile = async (req: Request, res: Response) => {
   try {
+    console.log(" hey i am woing as downloaf=d ile ")
     const fileUrl: string = req.body.fileUrl;
 
+    console.log(" file ur; : ", fileUrl)
     if (!fileUrl.trim()) {
       return res.status(400).json({
         success: false,
@@ -907,7 +910,7 @@ export const downloadFile = async (req: Request, res: Response) => {
 
     const params = {
       Bucket: BUCKET_NAME!,
-      Key: fileUrl,
+      Key: decodeURIComponent(fileUrl),
       Expires: 60,
     };
     const signedUrl = await s3.getSignedUrl('getObject', params);

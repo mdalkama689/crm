@@ -54,10 +54,12 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
   });
 
   useEffect(() => {
-    if (!project) return;
-    const response = getDateComponents(new Date(project.createdAt));
+    if (!task) return;
+    const response = getDateComponents(new Date(task.createdAt));
     setParsedDate(response);
-  }, [project]);
+  }, [task]);
+
+
 
   useEffect(() => {
     if (!task.id || !project?.id) return;
@@ -174,14 +176,16 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
 
   const downloadAttachment = async (attachmentUrl: string) => {
     try {
-      const url = new URL(attachmentUrl);
-      const pathname = url.pathname.substring(1);
+     
+      const  attachmentUrlObject  = new URL(attachmentUrl);
+      const pathname =  attachmentUrlObject.pathname.substring(1);
       const fileType = pathname.split('.').pop();
       const response = await axiosInstance.post(
         '/download/file',
-        { fileUrl: pathname },
+        { fileUrl: pathname  },
         { responseType: 'blob' },
       );
+
       const goodUrl = URL.createObjectURL(response.data);
       const a = document.createElement('a');
       a.href = goodUrl;
@@ -190,11 +194,13 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
       URL.revokeObjectURL(goodUrl);
     } catch (error) {
       console.error('Download error:', error);
-      toast.error('Faidled to download attachment!');
+      toast.error('Failed to download attachment!');
     }
   };
 
-  return (
+   
+
+  return ( 
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-3xl mx-auto relative">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2">
