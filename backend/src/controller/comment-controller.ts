@@ -290,5 +290,103 @@ const userId = req.user?.id;
 }
 
 
+export const getAllFileByProjectId =  async(req: AuthenticatedRequest, res: Response) => {
+  try {
+    
+        
+const userId = req.user?.id;
+    if (!userId) {
+      return res.status(400).json({
+        sucecss: false,
+        message: 'Unauthenticated, please login to continue!',
+      });
+    }
+
+    const projectId = req.params.projectId;
+  
+    const user = await prisma.employee.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user || !user.tenantId) {
+      return res.status(400).json({
+        sucecss: false,
+        message:
+          'You are not associated with any tenant. Access denied. Please contact your administrator to gain permission.',
+      });
+    }
+
+    const project = await prisma.project.findUnique({
+      where: {
+        id: projectId,
+        tenantId: user.tenantId,
+      },
+      include: {
+        assignToEmployee: true,
+      },
+    });
+
+    if (!project) {
+      return res.status(400).json({
+        success: false,
+        message: 'Project not found!',
+      });
+    }
+
+  
+    let isAuthorized = false;
+
+    if (user.role.trim().toLowerCase() === 'admin') {
+      isAuthorized = true;
+    }
+    if (project.assignToEmployee.length > 0) {
+      const find = project.assignToEmployee.some((empl) => {
+        return empl.id === userId;
+      });
+
+      if (find) isAuthorized = true;
+    }
+
+    if (!isAuthorized) {
+      return res.status(400).json({
+        success: false,
+        message:
+          'You do not have permission to update or change the task attachment.',
+      });
+    }
+
+    const allFile = await prisma.task.findMany({
+      where: {
+        projectId 
+      },
+      select: {
+        attachmentUrl: true 
+      }
+    })
+
+    allFile.push({attachmentUrl: project.attachmentUrl })
+    return res.status(200).json({
+      success: true,
+      message: "Fetch all files succcessfully!",
+      allFile
+    })
+
+  } catch (error) {
+    
+      console.error("Error while fetching files :", error);
+
+  const errorMessage = error instanceof Error 
+    ? error.message 
+    : "Something went wrong while fetching files";
+
+  return res.status(500).json({
+    success: false,
+    message: errorMessage,
+  });
+  
+  }
+}
 
 

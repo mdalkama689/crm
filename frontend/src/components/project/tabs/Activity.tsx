@@ -3,7 +3,7 @@ import type { RootState } from "../../../slices/store/store";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../../../api/axios";
 import type { ApiResponse } from "../../../types/ApiResponse";
-import { Calendar, Download, MoreHorizontal, Paperclip, UserRound } from "lucide-react";
+import { Calendar, Download, MessageCircle, MoreHorizontal, Paperclip, UserRound } from "lucide-react";
 import { Button } from "../../ui/button";
 import { toast } from "sonner";
 import Loader from "../../Loader"; 
@@ -91,7 +91,10 @@ return (
 
   
 {allComment.length === 0 ?  (
-  <p>no comment dnd attachemanet found </p>
+ <div className="flex flex-col items-center justify-center gap-2 text-gray-500 py-6">
+    <MessageCircle size={40} className="text-gray-400" />
+    <p className="text-lg font-medium">No comments or attachments found</p>
+  </div>
 ) : (
   allComment.map((comment) => (
 

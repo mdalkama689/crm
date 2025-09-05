@@ -1,10 +1,10 @@
 import {Router} from 'express'
 import { authMiddleware } from '../middlewares/auth-middleware';
 import upload from '../middlewares/multer.middleware';
-import { addComment, getCommentsByProjectId } from '../controller/comment-controller';
+import { addComment, getAllFileByProjectId, getCommentsByProjectId } from '../controller/comment-controller';
 
 const router = Router()
-//  getCommentsByProjectId
+
 router.post(
   '/project/:projectId/task/:taskId/add-comment',
   authMiddleware,
@@ -19,7 +19,11 @@ router.get(
 getCommentsByProjectId 
 );
  
-
+router.get(
+  '/projects/:projectId/files',
+  authMiddleware,
+getAllFileByProjectId
+);
 
 
 export default router 
