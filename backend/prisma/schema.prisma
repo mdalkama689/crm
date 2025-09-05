@@ -122,4 +122,10 @@ model Notification{
 }
 
 
-
+model Comment {
+  id String @id @default(uuid())
+  text String?
+  attachmentUrl String?
+  creatorId String
+  taskId String
+}

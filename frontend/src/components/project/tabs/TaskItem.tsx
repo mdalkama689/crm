@@ -232,7 +232,7 @@ const TaskItem = ({
       setIsAttachmentSubmitting(true);
       const response =
         await axiosInstance.patch<UploadOrChangeAttachmentResponse>(
-          `/project/${project.id}/task/${task.id}/change`,
+          `/project/${project.id}/task/${task.id}/update-attachment`,
           formData,
         );
 
