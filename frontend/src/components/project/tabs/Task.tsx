@@ -476,7 +476,7 @@ const Task = () => {
                   disabled={isSubmitting}
                   className="flex-1 py-6 px-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm hover:shadow-md"
                 >
-                  Create Project
+                  Create Task
                 </Button>
               </div>
             </form>

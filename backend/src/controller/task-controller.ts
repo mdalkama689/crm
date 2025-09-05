@@ -1116,6 +1116,7 @@ export const addComment = async (req: AuthenticatedRequest, res: Response) => {
     const projectId = req.params.projectId;
     const taskId = req.params.taskId;
 
+
     if (!taskId) return;
     const user = await prisma.employee.findUnique({
       where: {
@@ -1185,7 +1186,7 @@ export const addComment = async (req: AuthenticatedRequest, res: Response) => {
 
   
     
-    if(!req.file && !req.body.task.trim()){
+    if(!req.file && !req.body.text.trim()){
       return res.status(400).json({
         success: false,
         message: "Atleast file or text is required for comment" 
@@ -1250,8 +1251,7 @@ const text = req.body.text
 
     return  res.status(200).json({
       success: true,
-      message: "Comment added successfully",
-      comment 
+      message: "Comment added successfully" 
     })
 
   } catch (error) {

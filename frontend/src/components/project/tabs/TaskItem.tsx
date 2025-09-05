@@ -5,6 +5,8 @@ import {
   MoreHorizontal,
   Download,
   Paperclip,
+  Link2,
+  Smile,
 } from 'lucide-react';
 import { Label } from '../../ui/label';
 import { Progress } from '../../ui/progress';
@@ -253,6 +255,37 @@ const TaskItem = ({
       toast.error(errorMessage);
     } finally {
       setIsAttachmentSubmitting(false);
+    }
+  };
+
+  const [comment, setComment] = useState<string>('');
+  const [isCommentSubmitting, setIsCommentSubmitting] =
+    useState<boolean>(false);
+
+  const handleAddComment = async () => {
+    try {
+      if (!project) return;
+      setIsCommentSubmitting(true);
+      const formData = new FormData();
+      formData.append('text', comment);
+      const response = await axiosInstance.post<ApiResponse>(
+        `/project/${project.id}/task/${task.id}/add-comment`,
+        formData,
+      );
+
+      console.log(' response : ', response);
+
+      if (response.data.success) {
+        setComment('');
+      }
+    } catch (error) {
+      console.error(' Error : ', error);
+      const axiosError = error as AxiosError<ApiResponse>
+const errorMessage = axiosError.response?.data.message || "Something went  wrong while adding comment"
+
+toast.error(errorMessage)
+    } finally {
+      setIsCommentSubmitting(false);
     }
   };
 
@@ -518,6 +551,42 @@ const TaskItem = ({
             </Label>
           </div>
         )}
+      </div>
+
+      <div className="pt-4 border-t border-gray-100 flex items-center gap-4">
+        <div className="flex-grow">
+          <Input
+            className="w-full rounded-full p-5"
+            placeholder="Add comment here"
+            disabled={isCommentSubmitting}
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            className="bg-gray-100 hover:bg-gray-200  rounded-full border border-slate-300"
+          >
+            <Link2 color="#4B5563" />
+          </Button>
+
+          <Button
+            type="button"
+            className="bg-gray-100 hover:bg-gray-200  rounded-full border border-slate-300"
+          >
+            <Smile color="#4B5563" />
+          </Button>
+
+          <Button
+            className="bg-[#F16334] hover:bg-[#f55621] rounded-full cursor-pointer"
+            onClick={handleAddComment}
+            disabled={isCommentSubmitting}
+          >
+            Submit
+          </Button>
+        </div>
       </div>
     </div>
   );
