@@ -24,7 +24,7 @@ export interface AuthenticatedRequest extends Request {
 }
 
 export async function authMiddleware(
-  req: AuthenticatedRequest,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) {
@@ -42,13 +42,18 @@ export async function authMiddleware(
       const decodedToken = (await jwt.verify(token, JWT_TOKEN_SECRET!)) as
         | JwtPayload
         | string;
-      if (typeof decodedToken === 'string' || !decodedToken.id) {
+      if (
+        typeof decodedToken === 'string' ||
+        !decodedToken.id ||
+        !decodedToken
+      ) {
         return res.status(400).json({
           success: false,
           message: 'Unauthorized. Please log in to continue.',
         });
       }
-      req.user = decodedToken as User;
+
+      (req as AuthenticatedRequest).user = decodedToken as User;
       next();
     }
   } catch {

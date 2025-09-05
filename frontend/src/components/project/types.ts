@@ -33,7 +33,7 @@ export interface Task {
   projectId: string;
   status: 'PENDING' | 'ON_HOLDING' | 'DONE';
   tenantId: string;
-  createdAt: Date 
+  createdAt: Date;
 }
 
 export interface TaskResponse extends ApiResponse {

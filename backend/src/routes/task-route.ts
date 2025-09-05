@@ -7,6 +7,7 @@ import {
   fetchAllTaskItem,
   toggleTaskCompletion,
   toggleTaskItemCompletion,
+  updateTaskAttachment,
 } from '../controller/task-controller';
 import upload from '../middlewares/multer.middleware';
 import { authMiddleware } from '../middlewares/auth-middleware';
@@ -47,5 +48,11 @@ router.patch(
 );
 
 router.post('/download/file', authMiddleware, downloadFile);
+router.patch(
+  '/project/:projectId/task/:taskId/change',
+  authMiddleware,
+  upload.single('attachment'),
+  updateTaskAttachment,
+);
 
 export default router;

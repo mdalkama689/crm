@@ -9,7 +9,7 @@ import employeeRouter from './routes/employee-route';
 import projectRouter from './routes/project-route';
 import notificationRouter from './routes/notification-route';
 import taskRouter from './routes/task-route';
-import AWS  from 'aws-sdk';
+import AWS from 'aws-sdk';
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
@@ -34,20 +34,15 @@ export const BUCKET_NAME = process.env.BUCKET_NAME;
 export const spacesEndpoint = new AWS.Endpoint(ENDPOINT_URL!);
 
 export const s3 = new AWS.S3({
-  endpoint: spacesEndpoint, 
+  endpoint: spacesEndpoint,
   accessKeyId: ACCESS_KEY_ID,
   secretAccessKey: SECRET_ACCESS_KEY,
 });
-
-
-
-
 
 app.use('/api/v1/tenant', tenantRouter);
 app.use('/api/v1', employeeRouter);
 app.use('/api/v1', projectRouter);
 app.use('/api/v1/notification', notificationRouter);
 app.use('/api/v1', taskRouter);
-
 
 export default app;

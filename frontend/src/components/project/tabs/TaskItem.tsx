@@ -29,10 +29,15 @@ import type { AxiosError } from 'axios';
 
 interface TaskItemComponentProps {
   task: Task;
+  setTaskValue: React.Dispatch<React.SetStateAction<Task | undefined>>;
   setShowTaskItemForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
+const TaskItem = ({
+  task,
+  setTaskValue,
+  setShowTaskItemForm,
+}: TaskItemComponentProps) => {
   const { project } = useSelector((state: RootState) => state.project);
 
   const [parsedDate, setParsedDate] = useState<DateProps>();
@@ -44,6 +49,9 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [taskItemLoading, setTaskItemLoading] = useState<boolean>(false);
+  const [attachment, setAttachment] = useState<File | string>('');
+  const [isAttachmentSubmitting, setIsAttachmentSubmitting] =
+    useState<boolean>(false);
 
   const getDateComponents = (date: Date) => ({
     day: date.getDate(),
@@ -58,8 +66,6 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
     const response = getDateComponents(new Date(task.createdAt));
     setParsedDate(response);
   }, [task]);
-
-
 
   useEffect(() => {
     if (!task.id || !project?.id) return;
@@ -176,13 +182,12 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
 
   const downloadAttachment = async (attachmentUrl: string) => {
     try {
-     
-      const  attachmentUrlObject  = new URL(attachmentUrl);
-      const pathname =  attachmentUrlObject.pathname.substring(1);
+      const attachmentUrlObject = new URL(attachmentUrl);
+      const pathname = attachmentUrlObject.pathname.substring(1);
       const fileType = pathname.split('.').pop();
       const response = await axiosInstance.post(
         '/download/file',
-        { fileUrl: pathname  },
+        { fileUrl: pathname },
         { responseType: 'blob' },
       );
 
@@ -198,9 +203,60 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
     }
   };
 
-   
+  const handleAttachment = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    const file = files[0];
+    const fileSize = file.size;
 
-  return ( 
+    const maxSizeOfAttachment = 25 * 1024 * 1024;
+
+    if (fileSize > maxSizeOfAttachment) {
+      return toast.error('Max size of attachment cannot be more than 25mb');
+    }
+
+    setAttachment(file);
+  };
+
+  interface UploadOrChangeAttachmentResponse extends ApiResponse {
+    url: string;
+  }
+
+  const handleUploadOrChangeAttachment = async () => {
+    try {
+      if (!project) return;
+
+      const formData = new FormData();
+      formData.append('attachment', attachment);
+
+      setIsAttachmentSubmitting(true);
+      const response =
+        await axiosInstance.patch<UploadOrChangeAttachmentResponse>(
+          `/project/${project.id}/task/${task.id}/change`,
+          formData,
+        );
+
+      if (response.data.success) {
+        toast.success('Attachment update successfully!');
+        setTaskValue({
+          ...task,
+          attachmentUrl: response.data.url,
+        });
+
+        setAttachment('');
+      }
+    } catch (error) {
+      console.error('Error : ', error);
+      const axiosError = error as AxiosError<AxiosError>;
+      const errorMessage =
+        axiosError.response?.data.message || 'Error while updating attachment';
+      toast.error(errorMessage);
+    } finally {
+      setIsAttachmentSubmitting(false);
+    }
+  };
+
+  return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-3xl mx-auto relative">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2">
@@ -376,7 +432,25 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
       </div>
 
       <div className="pt-4 border-t border-gray-100">
-        <h3 className="text-sm font-medium text-gray-700 mb-3">Attachment</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-medium text-gray-700 mb-3">Attachment</h3>
+
+          <div className="flex gap-2 items-center">
+            <span className="text-sm font-medium">
+              {attachment instanceof File && `Selected : ${attachment.name}`}
+            </span>
+
+            {attachment && (
+              <Button
+                className="bg-transparent text-blue-600 cursor-pointer hover:bg-transparent"
+                disabled={isAttachmentSubmitting}
+                onClick={handleUploadOrChangeAttachment}
+              >
+                Confirm
+              </Button>
+            )}
+          </div>
+        </div>
 
         {task.attachmentUrl ? (
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
@@ -391,16 +465,29 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
             <div className="flex items-center gap-2">
               <Button
                 type="button"
+                disabled={isAttachmentSubmitting}
                 onClick={() => downloadAttachment(task.attachmentUrl)}
                 className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors"
               >
                 <Download className="h-3 w-3" />
                 Download
               </Button>
-              <Button className="inline-flex bg-transparent cursor-pointer items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors">
-                <Upload className="h-3 w-3" />
+
+              <Label
+                htmlFor="attachment"
+                className={`inline-flex bg-transparent ${isAttachmentSubmitting ? 'cursor-not-allowed' : 'cursor-pointer'} items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors`}
+              >
+                <Input
+                  className="hidden"
+                  disabled={isAttachmentSubmitting}
+                  name="attachment"
+                  id="attachment"
+                  type="file"
+                  onChange={handleAttachment}
+                />
+                <Upload className="h-3 w-3 " />
                 Change
-              </Button>
+              </Label>
             </div>
           </div>
         ) : (
@@ -414,16 +501,25 @@ const TaskItem = ({ task, setShowTaskItemForm }: TaskItemComponentProps) => {
             <p className="text-xs text-gray-500 mb-3">
               Drag and drop or click to browse
             </p>
-            <button className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+            <Label
+              htmlFor="attachment"
+              className="inline-flex cursor-pointer items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+            >
+              <Input
+                className="hidden"
+                disabled={isAttachmentSubmitting}
+                name="attachment"
+                id="attachment"
+                type="file"
+                onChange={handleAttachment}
+              />
               <Upload className="h-4 w-4" />
               Choose File
-            </button>
+            </Label>
           </div>
         )}
       </div>
     </div>
-
-    // </div>
   );
 };
 

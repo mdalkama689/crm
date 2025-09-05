@@ -231,6 +231,7 @@ const Task = () => {
     if (!showTaskItemForm) {
       setShowTaskItemForm(!showTaskItemForm);
     }
+    console.log(' task id : ', task.id);
     setTaskValue(task);
   };
 
@@ -263,7 +264,6 @@ const Task = () => {
                 onClick={() => toggleTaskItemForm(task)}
                 isAnyTaskSubmitting={isAnyTaskSubmitting}
                 setIsAnyTaskSubmitting={setIsAnyTaskSubmitting}
-             
               />
             ))}
           </div>
@@ -275,6 +275,7 @@ const Task = () => {
           {taskValue && (
             <TaskItem
               task={taskValue}
+              setTaskValue={setTaskValue}
               setShowTaskItemForm={setShowTaskItemForm}
             />
           )}

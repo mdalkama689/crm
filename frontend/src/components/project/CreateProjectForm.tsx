@@ -63,7 +63,7 @@ const CreateProjectForm = () => {
     const maxSizeOfAttachment = 25 * 1024 * 1024;
 
     if (maxSizeOfAttachment < fileSize) {
-      return toast.error('Max size of ayttachment cannot be more than 25mb');
+      return toast.error('Max size of attachment cannot be more than 25mb');
     }
     setAttachment(file);
   };

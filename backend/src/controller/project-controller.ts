@@ -32,6 +32,57 @@ export const createProject = async (
   res: Response,
 ) => {
   try {
+    const currentUserId = req.user?.id;
+
+    if (!currentUserId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized. Please log in to continue.',
+      });
+    }
+
+    const currentUser = await prisma.employee.findUnique({
+      where: { id: currentUserId },
+    });
+
+    if (!currentUser) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found.',
+      });
+    }
+
+    if (!currentUser.isVerified) {
+      return res.status(403).json({
+        success: false,
+        message: 'User is not verified. Please verify your account first.',
+      });
+    }
+
+    const tenantId = currentUser.tenantId;
+    if (!tenantId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Tenant ID does not exist for the current user.',
+      });
+    }
+
+    const tenant = await prisma.tenant.findUnique({ where: { id: tenantId } });
+    if (!tenant) {
+      return res.status(404).json({
+        success: false,
+        message: 'Tenant not found.',
+      });
+    }
+
+    if (!tenant.isVerified) {
+      return res.status(403).json({
+        success: false,
+        message:
+          'Tenant is not verified. Verified tenants are required to create projects.',
+      });
+    }
+
     const body = req.body;
 
     if (!body) {
@@ -143,57 +194,6 @@ export const createProject = async (
           message: isvalidDueDate.message,
         });
       }
-    }
-
-    const currentUserId = req.user?.id;
-
-    if (!currentUserId) {
-      return res.status(401).json({
-        success: false,
-        message: 'Unauthorized. Please log in to continue.',
-      });
-    }
-
-    const currentUser = await prisma.employee.findUnique({
-      where: { id: currentUserId },
-    });
-
-    if (!currentUser) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found.',
-      });
-    }
-
-    if (!currentUser.isVerified) {
-      return res.status(403).json({
-        success: false,
-        message: 'User is not verified. Please verify your account first.',
-      });
-    }
-
-    const tenantId = currentUser.tenantId;
-    if (!tenantId) {
-      return res.status(400).json({
-        success: false,
-        message: 'Tenant ID does not exist for the current user.',
-      });
-    }
-
-    const tenant = await prisma.tenant.findUnique({ where: { id: tenantId } });
-    if (!tenant) {
-      return res.status(404).json({
-        success: false,
-        message: 'Tenant not found.',
-      });
-    }
-
-    if (!tenant.isVerified) {
-      return res.status(403).json({
-        success: false,
-        message:
-          'Tenant is not verified. Verified tenants are required to create projects.',
-      });
     }
 
     const uniqueEmployeeIds = new Set();
