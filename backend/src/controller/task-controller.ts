@@ -18,8 +18,6 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
     const projectId = req.params.id;
     const body: taskInput = req.body;
 
-    console.log(' project id : ', projectId);
-    console.log(' add task : ');
     if (!body) {
       return res.status(400).json({
         success: false,
@@ -159,7 +157,6 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
 
     if (req.file) {
       const attachment = req.file;
-
 
       if (!attachment) {
         return res.status(400).json({
@@ -1083,29 +1080,24 @@ export const updateTaskAttachment = async (
   }
 };
 
+// add comment fisrt
 
-
-// add comment fisrt 
-
-
-// if user add attachment also 
+// if user add attachment also
 // const comment = {
 //   id: "12",
-//   text: "this is comment", // optional 
-//   attachmentUrl: "www.pdf.txt", // optional  
+//   text: "this is comment", // optional
+//   attachmentUrl: "www.pdf.txt", // optional
 //   createrId: "1", // kirat
-//   taskId: "123" // taskId 
+//   taskId: "123" // taskId
 
 // }
 
-
 // both can never be optional(text and attachemnt)
-//minimum one will also true 
+//minimum one will also true
 
 export const addComment = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    
-       const userId = req.user?.id;
+    const userId = req.user?.id;
     if (!userId) {
       return res.status(400).json({
         sucecss: false,
@@ -1115,7 +1107,6 @@ export const addComment = async (req: AuthenticatedRequest, res: Response) => {
 
     const projectId = req.params.projectId;
     const taskId = req.params.taskId;
-
 
     if (!taskId) return;
     const user = await prisma.employee.findUnique({
@@ -1164,7 +1155,6 @@ export const addComment = async (req: AuthenticatedRequest, res: Response) => {
 
     let isAuthorized = false;
 
-  
     if (user.role.trim().toLowerCase() === 'admin') {
       isAuthorized = true;
     }
@@ -1184,91 +1174,77 @@ export const addComment = async (req: AuthenticatedRequest, res: Response) => {
       });
     }
 
-  
-    
-    if(!req.file && !req.body.text.trim()){
+    const text: string = req.body.text;
+
+    if (!req.file && text.trim()) {
       return res.status(400).json({
         success: false,
-        message: "Atleast file or text is required for comment" 
-      })
+        message: 'Atleast file or text is required for comment',
+      });
     }
-
 
     let attachmentUrlRes;
 
-if(req.file){
+    if (req.file) {
+      const attachment = req.file;
 
-  const attachment = req.file 
-
-  if(!attachment){
- return res.status(400).json({
+      if (!attachment) {
+        return res.status(400).json({
           success: false,
           message: 'Attachment not found!',
         });
-  }
+      }
 
-
-  if(attachment && !allowedAttachmentTypes.includes(attachment.mimetype)){
-     return res.status(400).json({
+      if (attachment && !allowedAttachmentTypes.includes(attachment.mimetype)) {
+        return res.status(400).json({
           success: false,
-             message: 'Attachment type not allowed'
+          message: 'Attachment type not allowed',
         });
-  }
-  
+      }
 
-  const maxSizeOFAttachmeFile =  25 * 1024 * 1024 
+      const maxSizeOFAttachmeFile = 25 * 1024 * 1024;
 
-  if(attachment.size > maxSizeOFAttachmeFile){
-     return res.status(400).json({
+      if (attachment.size > maxSizeOFAttachmeFile) {
+        return res.status(400).json({
           success: false,
           message: 'Attachment size cannot be more than 25 MB',
-        }); 
-  }
+        });
+      }
 
-  const params: AWS.S3.PutObjectRequest =  {
-    Bucket: BUCKET_NAME!,
-    Key: `uploads/${Date.now()}-${attachment.originalname}`,
-    Body: req.file.buffer,
-    ACL: "private",
-    ContentType: attachment.mimetype
-  }
+      const params: AWS.S3.PutObjectRequest = {
+        Bucket: BUCKET_NAME!,
+        Key: `uploads/${Date.now()}-${attachment.originalname}`,
+        Body: req.file.buffer,
+        ACL: 'private',
+        ContentType: attachment.mimetype,
+      };
 
-  
-const attachmentResponse =  await s3.upload(params).promise()
-attachmentUrlRes =  attachmentResponse.Location
-}
-
-const text = req.body.text
+      const attachmentResponse = await s3.upload(params).promise();
+      attachmentUrlRes = attachmentResponse.Location;
+    }
 
     const comment = await prisma.comment.create({
       data: {
         taskId,
-        text: text ? text : "",  
+        text: text ? text : '',
         creatorId: userId,
-        attachmentUrl : attachmentUrlRes
-      }
-    })
+        attachmentUrl: attachmentUrlRes,
+      },
+    });
 
-    return  res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Comment added successfully" 
-    })
-
+      message: 'Comment added successfully',
+      comment,
+    });
   } catch (error) {
+    console.error('Error : ', error);
+    const errorMessage =
+      error instanceof Error ? error.message : 'Error while adding attachemnt';
 
-
-    console.error("Error : ", error)
-    const errorMessage = error instanceof Error ? error.message : "Error while adding attachemnt"
-
-
-return res.status(400).json({
-  success: false,
-  message: errorMessage 
-})
-
-    
+    return res.status(400).json({
+      success: false,
+      message: errorMessage,
+    });
   }
-}
-
-
-
+};

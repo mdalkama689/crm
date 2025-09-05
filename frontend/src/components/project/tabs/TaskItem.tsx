@@ -16,7 +16,7 @@ import { Button } from '../../ui/button';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../slices/store/store';
 import React, { useEffect, useState } from 'react';
-import { allBgGradient, months } from '../constant';
+import { allBgGradient, allowedAttachmentTypes, months } from '../constant';
 import { axiosInstance } from '../../../api/axios';
 import type {
   AssignedEmployeeProps,
@@ -53,6 +53,10 @@ const TaskItem = ({
   const [taskItemLoading, setTaskItemLoading] = useState<boolean>(false);
   const [attachment, setAttachment] = useState<File | string>('');
   const [isAttachmentSubmitting, setIsAttachmentSubmitting] =
+    useState<boolean>(false);
+  const [comment, setComment] = useState<string>('');
+  const [commentAttachment, setCommentAttachment] = useState<File | null>(null);
+  const [isCommentSubmitting, setIsCommentSubmitting] =
     useState<boolean>(false);
 
   const getDateComponents = (date: Date) => ({
@@ -211,6 +215,10 @@ const TaskItem = ({
     const file = files[0];
     const fileSize = file.size;
 
+    if (file && !allowedAttachmentTypes.includes(file.type)) {
+      return toast.error('This attachment type is not allowed!');
+    }
+
     const maxSizeOfAttachment = 25 * 1024 * 1024;
 
     if (fileSize > maxSizeOfAttachment) {
@@ -258,35 +266,60 @@ const TaskItem = ({
     }
   };
 
-  const [comment, setComment] = useState<string>('');
-  const [isCommentSubmitting, setIsCommentSubmitting] =
-    useState<boolean>(false);
-
   const handleAddComment = async () => {
     try {
       if (!project) return;
+      if (!commentAttachment && !comment.trim()) {
+        return toast.error('Please provide either text or an attachment');
+      }
       setIsCommentSubmitting(true);
       const formData = new FormData();
+      formData.append('attachment', commentAttachment ? commentAttachment : '');
       formData.append('text', comment);
       const response = await axiosInstance.post<ApiResponse>(
         `/project/${project.id}/task/${task.id}/add-comment`,
         formData,
       );
 
-      console.log(' response : ', response);
-
       if (response.data.success) {
         setComment('');
+        setCommentAttachment(null);
       }
     } catch (error) {
       console.error(' Error : ', error);
-      const axiosError = error as AxiosError<ApiResponse>
-const errorMessage = axiosError.response?.data.message || "Something went  wrong while adding comment"
+      const axiosError = error as AxiosError<ApiResponse>;
+      const errorMessage =
+        axiosError.response?.data.message ||
+        'Something went  wrong while adding comment';
 
-toast.error(errorMessage)
+      toast.error(errorMessage);
     } finally {
       setIsCommentSubmitting(false);
     }
+  };
+
+  const handleCommentAttachment = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const files = e.target.files;
+    if (!files) return;
+    const file = files[0];
+    const fileSize = file.size;
+    const maxSizeOfAttachment = 25 * 1024 * 1024;
+
+    if (file && !allowedAttachmentTypes.includes(file.type)) {
+      return toast.error('This attachment type is  not allowed!');
+    }
+    if (fileSize > maxSizeOfAttachment) {
+      return toast.error('Max size of attachment cannot be more than 25mb');
+    }
+
+    setCommentAttachment(file);
+  };
+
+  const removeCommentAttachment = () => {
+    setCommentAttachment(null);
+    toast.info(' cancer;');
   };
 
   return (
@@ -565,19 +598,30 @@ toast.error(errorMessage)
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            className="bg-gray-100 hover:bg-gray-200  rounded-full border border-slate-300"
+          <Label
+            htmlFor="comment-attachment"
+            className={`${isCommentSubmitting ? 'cursor-not-allowed' : 'cursor-pointer'}`}
           >
-            <Link2 color="#4B5563" />
-          </Button>
+            <Input
+              type="file"
+              onChange={handleCommentAttachment}
+              disabled={isCommentSubmitting}
+              className="hidden"
+              name="comment-attachment"
+              id="comment-attachment"
+            />
+            <div
+              className={`bg-gray-100 hover:bg-gray-200 rounded-full border border-slate-300 p-1.5 ${isCommentSubmitting ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+            >
+              <Link2 color="#4B5563" />
+            </div>
+          </Label>
 
-          <Button
-            type="button"
-            className="bg-gray-100 hover:bg-gray-200  rounded-full border border-slate-300"
+          <div
+            className={`bg-gray-100 hover:bg-gray-200 rounded-full border border-slate-300 p-1.5 ${isCommentSubmitting ? 'cursor-not-allowed' : 'cursor-pointer'}`}
           >
             <Smile color="#4B5563" />
-          </Button>
+          </div>
 
           <Button
             className="bg-[#F16334] hover:bg-[#f55621] rounded-full cursor-pointer"
@@ -588,6 +632,27 @@ toast.error(errorMessage)
           </Button>
         </div>
       </div>
+
+      {commentAttachment && (
+        <div className="border border-gray-300 bg-gray-100 px-3 py-3 rounded-xl mt-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+              <Paperclip className="h-4 w-4 text-blue-600" />
+            </div>
+
+            <span>{commentAttachment.name}</span>
+          </div>
+
+          <Button
+            type="button"
+            className="w-8 h-8 bg-transparent hover:bg-blue-100 rounded-lg flex items-center justify-center"
+            disabled={isCommentSubmitting}
+            onClick={removeCommentAttachment}
+          >
+            <X className="h-4 w-4 text-blue-600" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

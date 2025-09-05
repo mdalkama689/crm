@@ -13,7 +13,7 @@ import { Calendar } from '../ui/calendar';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
-import { allBgGradient } from './constant';
+import { allBgGradient, allowedAttachmentTypes } from './constant';
 import type { Employee } from './types';
 import type { EmployeesApiResponse } from '../AllEmployee';
 
@@ -59,6 +59,10 @@ const CreateProjectForm = () => {
     if (!files) return;
     const file = files[0];
     const fileSize = file.size;
+
+    if (file && !allowedAttachmentTypes.includes(file.type)) {
+      return toast.error('This attachment type not allowed!');
+    }
 
     const maxSizeOfAttachment = 25 * 1024 * 1024;
 

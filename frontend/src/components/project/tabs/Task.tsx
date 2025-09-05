@@ -6,7 +6,7 @@ import { Input } from '../../ui/input';
 import { Textarea } from '../../ui/textarea';
 import { axiosInstance } from '../../../api/axios';
 import { useParams } from 'react-router-dom';
-import { allBgGradient } from '../constant';
+import { allBgGradient, allowedAttachmentTypes } from '../constant';
 import { Calendar } from '../../ui/calendar';
 import z from 'zod';
 import { toast } from 'sonner';
@@ -76,6 +76,10 @@ const Task = () => {
 
     const file = files[0];
     const fileSize = file.size;
+
+    if (file && !allowedAttachmentTypes.includes(file.type)) {
+      return toast.error('This attachment type not allowed!');
+    }
 
     const maxSizeOfAttachment = 25 * 1024 * 1024;
 

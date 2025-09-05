@@ -16,8 +16,6 @@ interface MulterFile {
   buffer: Buffer;
 }
 
-// add auth and admin middleware
-
 export const allowedAttachmentTypes = [
   'application/pdf',
   'application/msword',
