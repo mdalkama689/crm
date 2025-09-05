@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import {
-  addComment,
   addTask,
   addTaskItem,
   downloadFile,
@@ -56,10 +55,5 @@ router.patch(
   updateTaskAttachment,
 );
 
-router.post(
-  '/project/:projectId/task/:taskId/add-comment',
-  authMiddleware,
-  upload.single('attachment'),
-  addComment,
-);
+
 export default router;
