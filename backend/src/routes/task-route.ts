@@ -55,5 +55,4 @@ router.patch(
   updateTaskAttachment,
 );
 
-
 export default router;

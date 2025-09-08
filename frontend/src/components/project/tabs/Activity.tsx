@@ -1,64 +1,64 @@
-import { useSelector } from "react-redux";
-import type { RootState } from "../../../slices/store/store";
-import { useEffect, useState } from "react";
-import { axiosInstance } from "../../../api/axios";
-import type { ApiResponse } from "../../../types/ApiResponse";
-import { Calendar, Download, MessageCircle, MoreHorizontal, Paperclip, UserRound } from "lucide-react";
-import { Button } from "../../ui/button";
-import { toast } from "sonner";
-import Loader from "../../Loader"; 
-import type { AxiosError } from "axios";
-import type { CommentProps, CommentResponse } from "../types";
-
-
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../../slices/store/store';
+import { useEffect, useState } from 'react';
+import { axiosInstance } from '../../../api/axios';
+import type { ApiResponse } from '../../../types/ApiResponse';
+import {
+  Calendar,
+  Download,
+  MessageCircle,
+  MoreHorizontal,
+  Paperclip,
+  UserRound,
+} from 'lucide-react';
+import { Button } from '../../ui/button';
+import { toast } from 'sonner';
+import Loader from '../../Loader';
+import type { AxiosError } from 'axios';
+import type { CommentProps, CommentResponse } from '../types';
 
 const Activity = () => {
+  const { project } = useSelector((state: RootState) => state.project);
 
-  const {project} = useSelector((state: RootState) => state.project)
+  if (!project) return;
 
-if(!project) return
+  const [allComment, setAllComment] = useState<CommentProps[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isAttachmentLoading, setIsAttachmentLoading] =
+    useState<boolean>(false);
 
-const [allComment, setAllComment] = useState<CommentProps[]>([])
-const [isLoading, setIsLoading] =  useState<boolean>(false)
-const [isAttachmentLoading, setIsAttachmentLoading] = useState<boolean>(false)
+  const fetchAllComments = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axiosInstance.get<CommentResponse>(
+        `/projects/${project.id}/comments`,
+      );
 
+      if (response.data.success) {
+        setAllComment(response.data.allComments);
+      }
+    } catch (error) {
+      console.error('Error while fetch all comments and attachments : ', error);
+      const axiosError = error as AxiosError<ApiResponse>;
+      const errorMessage = axiosError
+        ? axiosError.response?.data.message
+        : 'Error while fetch all comments and attachments!';
 
-const fetchAllComments = async () => {
-  try {
-    setIsLoading(true)
-      const response  = await axiosInstance.get<CommentResponse>(`/projects/${project.id}/comments`)
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-if(response.data.success){
-setAllComment(response.data.allComments)
-}
+  useEffect(() => {
+    if (!project) return;
 
-
-  } catch (error) {
-    console.error("Error while fetch all comments and attachments : ",error)
-    const axiosError = error as AxiosError<ApiResponse>
-    const errorMessage = axiosError ?  axiosError.response?.data.message : "Error while fetch all comments and attachments!"
-
-    toast.error(errorMessage)
-
-  }finally{
-    setIsLoading(false)
-  }
-}
-
-
-
-useEffect(() => {
-if(!project) return 
-
-fetchAllComments()   
-
-}, [project.id])
-
-
+    fetchAllComments();
+  }, [project.id]);
 
   const downloadAttachment = async (attachmentUrl: string) => {
     try {
-      setIsAttachmentLoading(true)
+      setIsAttachmentLoading(true);
       const attachmentUrlObject = new URL(attachmentUrl);
       const pathname = attachmentUrlObject.pathname.substring(1);
       const fileType = pathname.split('.').pop();
@@ -77,104 +77,107 @@ fetchAllComments()
     } catch (error) {
       console.error('Download error:', error);
       toast.error('Failed to download attachment!');
-    }finally{
-      setIsAttachmentLoading(false)
+    } finally {
+      setIsAttachmentLoading(false);
     }
   };
 
-  if(isLoading){
-    return <Loader /> 
+  if (isLoading) {
+    return <Loader />;
   }
 
-return (
-  <div className="mt-10">
+  return (
+    <div className="mt-10">
+      {allComment.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-2 text-gray-500 py-6">
+          <MessageCircle size={40} className="text-gray-400" />
+          <p className="text-lg font-medium">
+            No comments or attachments found
+          </p>
+        </div>
+      ) : (
+        allComment.map((comment) => (
+          <div className="p-4 mt-5 bg-white rounded-lg shadow-md border border-gray-300 space-y-4">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Calendar color="#4B5563" size={24} />
+                <p className="text-slate-600 text-base font-medium">
+                  December 21, 2024
+                </p>
+              </div>
 
-  
-{allComment.length === 0 ?  (
- <div className="flex flex-col items-center justify-center gap-2 text-gray-500 py-6">
-    <MessageCircle size={40} className="text-gray-400" />
-    <p className="text-lg font-medium">No comments or attachments found</p>
-  </div>
-) : (
-  allComment.map((comment) => (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  className="p-0 rounded-full bg-gray-200 hover:bg-gray-300"
+                >
+                  <UserRound size={28} />
+                </Button>
+                <p className="text-black text-base font-semibold">
+                  {comment.employee.fullname.charAt(0).toUpperCase() +
+                    comment.employee.fullname.slice(
+                      1,
+                      comment.employee.fullname.length,
+                    )}
+                </p>
+              </div>
+            </div>
 
-    
-  <div className="p-4 mt-5 bg-white rounded-lg shadow-md border border-gray-300 space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <p className="font-semibold text-black text-lg">Comment</p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 rounded-full border border-gray-300"
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </div>
 
+              {comment.text && (
+                <p className="text-gray-700 text-md leading-relaxed">
+                  {comment.text}
+                </p>
+              )}
+              {comment.attachmentUrl && (
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Paperclip className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <p className="text-xs text-gray-500">Attached file</p>
+                  </div>
 
-   <div className="flex justify-between items-center">
-     <div className="flex items-center gap-2">
-       <Calendar color="#4B5563" size={24} />
-       <p className="text-slate-600 text-base font-medium">December 21, 2024</p>
-     </div>
-  
-     <div className="flex items-center gap-2">
-       <Button variant="ghost" className="p-0 rounded-full bg-gray-200 hover:bg-gray-300">
-         <UserRound size={28} />
-       </Button>
-       <p className="text-black text-base font-semibold">{comment.employee.fullname.charAt(0).toUpperCase() + comment.employee.fullname.slice(1, comment.employee.fullname.length)}</p>
-     </div>
-   </div>
-
-
-   <div className="space-y-2">
-     <div className="flex items-center justify-between">
-       <p className="font-semibold text-black text-lg">Comment</p>
-       <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full border border-gray-300">
-         <MoreHorizontal className="h-4 w-4" />
-       </Button>
-     </div>
-
-    {comment.text && (
-       <p className="text-gray-700 text-md leading-relaxed">
-     {comment.text}
-     </p> 
-    )}
-{comment.attachmentUrl  && (
-  
-     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
-       <div className="flex items-center gap-3">
-         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-           <Paperclip className="h-4 w-4 text-blue-600" />
-         </div>
-         <p className="text-xs text-gray-500">Attached file</p>
-       </div>
-      
-       <Button  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md"
-       onClick={() => downloadAttachment(comment.attachmentUrl!)}
-       disabled={isAttachmentLoading}
-       >
-         <Download className="h-3 w-3" /> Download
-       </Button>
-      
-     </div> 
-)}
-   </div>
- </div>
-
-
-  ))
-)}
-
-
-  </div>
-)
+                  <Button
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md"
+                    onClick={() => downloadAttachment(comment.attachmentUrl!)}
+                    disabled={isAttachmentLoading}
+                  >
+                    <Download className="h-3 w-3" /> Download
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  );
 };
 
 export default Activity;
 
-
 // const Comment = () => {
 // return(
 //   <div className="p-4 bg-white rounded-lg shadow-md border border-gray-300 space-y-4">
-
 
 //   <div className="flex justify-between items-center">
 //     <div className="flex items-center gap-2">
 //       <Calendar color="#4B5563" size={24} />
 //       <p className="text-slate-600 text-base font-medium">December 21, 2024</p>
 //     </div>
-  
+
 //     <div className="flex items-center gap-2">
 //       <Button variant="ghost" className="p-0 rounded-full bg-gray-200 hover:bg-gray-300">
 //         <UserRound size={28} />
@@ -182,7 +185,6 @@ export default Activity;
 //       <p className="text-black text-base font-semibold">Kirat</p>
 //     </div>
 //   </div>
-
 
 //   <div className="space-y-2">
 //     <div className="flex items-center justify-between">

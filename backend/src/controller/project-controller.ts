@@ -105,7 +105,7 @@ export const createProject = async (
 
     let iconUrl = '';
     let attachmentUrl = '';
-
+    let attachmentSize;
     let { name, description, dueDate, assignToEmployee } = parseResult.data;
 
     if (req.files) {
@@ -165,6 +165,7 @@ export const createProject = async (
           ACL: 'private',
           ContentType: iconFile.mimetype,
         };
+
         const iconReponse = await s3.upload(params).promise();
         iconUrl = iconReponse.Location;
       }
@@ -177,6 +178,8 @@ export const createProject = async (
           ACL: 'private',
           ContentType: attachmentFile.mimetype,
         };
+
+        attachmentSize = attachmentFile.size;
 
         const attchmentReponse = await s3.upload(params).promise();
         attachmentUrl = attchmentReponse.Location;
@@ -248,6 +251,7 @@ export const createProject = async (
         description,
         dueDate,
         attachmentUrl,
+        attachmentSize: attachmentSize ? attachmentSize.toString() : '',
         iconUrl,
         tenantId,
         createdBy: currentUserId,

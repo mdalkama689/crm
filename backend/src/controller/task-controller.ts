@@ -154,6 +154,7 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
     }
 
     let attachmentUrl = '';
+    let attachmentSize;
 
     if (req.file) {
       const attachment = req.file;
@@ -173,8 +174,9 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
       }
 
       const maxSizeOFAttachmeFile = 25 * 1024 * 1024;
+      attachmentSize = attachment.size;
 
-      if (attachment && attachment.size > maxSizeOFAttachmeFile) {
+      if (attachment && attachmentSize > maxSizeOFAttachmeFile) {
         return res.status(400).json({
           success: false,
           message: 'Attachment size cannot be more than 25 MB',
@@ -243,6 +245,7 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
         dueDate,
         description,
         attachmentUrl,
+        attachmentSize: attachmentSize ? attachmentSize.toString() : '',
         createdBy: loggedInUserId,
         projectId,
         tenantId: project.tenantId,
@@ -891,7 +894,6 @@ export const toggleTaskItemCompletion = async (
 
 export const downloadFile = async (req: Request, res: Response) => {
   try {
-    console.log(' hey i am woing as downloaf=d ile ');
     const fileUrl: string = req.body.fileUrl;
 
     console.log(' file ur; : ', fileUrl);
@@ -914,9 +916,11 @@ export const downloadFile = async (req: Request, res: Response) => {
     });
     res.send(response.data);
   } catch (error) {
-    console.error('downlad :', error);
+    console.error('Error while donloading attachment :', error);
     const errorMessage =
-      error instanceof Error ? error.message : 'Error dowllaodinf';
+      error instanceof Error
+        ? error.message
+        : 'Error while donloading attachment';
     return res.status(500).json({ success: false, message: errorMessage });
   }
 };
@@ -1078,5 +1082,4 @@ export const updateTaskAttachment = async (
       message: errorMessage,
     });
   }
-}
-
+};

@@ -270,7 +270,7 @@ const TaskItem = ({
     try {
       if (!project) return;
       if (!commentAttachment && !comment.trim()) {
-        console.log(" co : ", commentAttachment , comment)
+        console.log(' co : ', commentAttachment, comment);
         return toast.error('Please provide either text or an attachment');
       }
       setIsCommentSubmitting(true);

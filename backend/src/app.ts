@@ -9,7 +9,7 @@ import employeeRouter from './routes/employee-route';
 import projectRouter from './routes/project-route';
 import notificationRouter from './routes/notification-route';
 import taskRouter from './routes/task-route';
-import commentRouter from './routes/comment-route'
+import commentRouter from './routes/comment-route';
 import AWS from 'aws-sdk';
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });

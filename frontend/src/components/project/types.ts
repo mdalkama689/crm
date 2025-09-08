@@ -85,19 +85,17 @@ export interface DateProps {
   minute: number;
 }
 
-
-
 export interface CommentProps {
-    id: string,
-  createdAt: Date,
-employee: {fullname: string }, 
-projectId: string, 
-taskId: string, 
-creatorId: string, 
- text?: string, 
-  attachmentUrl?: string,
+  id: string;
+  createdAt: Date;
+  employee: { fullname: string };
+  projectId: string;
+  taskId: string;
+  creatorId: string;
+  text?: string;
+  attachmentUrl?: string;
 }
 
 export interface CommentResponse extends ApiResponse {
-allComments: CommentProps[]
+  allComments: CommentProps[];
 }

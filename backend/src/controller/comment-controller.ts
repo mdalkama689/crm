@@ -1,10 +1,9 @@
-import {Response} from 'express'
+import { Response } from 'express';
 import { AuthenticatedRequest } from '../middlewares/auth-middleware';
 import prisma from 'backend/db';
 import { allowedAttachmentTypes } from './project-controller';
 import { BUCKET_NAME, s3 } from '../app';
-import AWS from 'aws-sdk'
-
+import AWS from 'aws-sdk';
 
 export const addComment = async (req: AuthenticatedRequest, res: Response) => {
   try {
@@ -22,17 +21,16 @@ export const addComment = async (req: AuthenticatedRequest, res: Response) => {
     if (!taskId) {
       return res.status(400).json({
         success: false,
-        message: "Task id is required!"
-      })
+        message: 'Task id is required!',
+      });
     }
 
-    if(!projectId){
+    if (!projectId) {
       return res.status(400).json({
         success: false,
-        message: "Project id is required!"
-      })
+        message: 'Project id is required!',
+      });
     }
-
 
     const user = await prisma.employee.findUnique({
       where: {
@@ -109,6 +107,7 @@ export const addComment = async (req: AuthenticatedRequest, res: Response) => {
     }
 
     let attachmentUrlRes;
+    let attachmentSize;
 
     if (req.file) {
       const attachment = req.file;
@@ -128,6 +127,7 @@ export const addComment = async (req: AuthenticatedRequest, res: Response) => {
       }
 
       const maxSizeOFAttachmeFile = 25 * 1024 * 1024;
+      attachmentSize = attachment.size;
 
       if (attachment.size > maxSizeOFAttachmeFile) {
         return res.status(400).json({
@@ -144,26 +144,17 @@ export const addComment = async (req: AuthenticatedRequest, res: Response) => {
         ContentType: attachment.mimetype,
       };
 
-      const attachmentResponse = await s3.upload(params).promise();
-      attachmentUrlRes = attachmentResponse.Location;
+      attachmentUrlRes = await s3.upload(params).promise();
     }
 
-    // Invalid `prisma.comment.create()`
-    //  invocation in C:\Users\mdalk\crm\backend\src\controller\
-    // comment-controller.ts:151:42 148 
-    // attachmentUrlRes = attachmentResponse.Location; 149 } 
-    // 150 → 151 const comment = await prisma.comment.
-    // create( The column `projectId` does not exist in the current database.
-
-
-    console.log(" task and project id ", taskId, projectId)
     const comment = await prisma.comment.create({
       data: {
-        text: text ? text : "",
-        attachmentUrl: attachmentUrlRes,
+        text: text ? text : '',
+        attachmentUrl: attachmentUrlRes?.Location || '',
+        attachmentSize: attachmentSize ? attachmentSize.toString() : '',
         creatorId: userId,
         projectId: projectId,
-        taskId: taskId
+        taskId: taskId,
       },
     });
 
@@ -183,12 +174,13 @@ export const addComment = async (req: AuthenticatedRequest, res: Response) => {
     });
   }
 };
- 
 
-export const getCommentsByProjectId =  async (req: AuthenticatedRequest, res: Response) => {
+export const getCommentsByProjectId = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
-    
-const userId = req.user?.id;
+    const userId = req.user?.id;
     if (!userId) {
       return res.status(400).json({
         sucecss: false,
@@ -197,7 +189,7 @@ const userId = req.user?.id;
     }
 
     const projectId = req.params.projectId;
-  
+
     const user = await prisma.employee.findUnique({
       where: {
         id: userId,
@@ -229,7 +221,6 @@ const userId = req.user?.id;
       });
     }
 
-  
     let isAuthorized = false;
 
     if (user.role.trim().toLowerCase() === 'admin') {
@@ -253,48 +244,46 @@ const userId = req.user?.id;
 
     const allComments = await prisma.comment.findMany({
       where: {
-        projectId 
-      }, 
+        projectId,
+      },
       orderBy: {
-        createdAt: "asc"
-      } , 
+        createdAt: 'asc',
+      },
       include: {
         employee: {
-          select : {
-            fullname: true 
-          }
-        }
-      }
-    })
+          select: {
+            fullname: true,
+          },
+        },
+      },
+    });
 
     return res.status(200).json({
       success: true,
-      message: "Fetched all comments for the specified project",
-      allComments
-    })
-
+      message: 'Fetched all comments for the specified project',
+      allComments,
+    });
   } catch (error) {
-    
-    console.error("Error while fetching comments:", error);
+    console.error('Error while fetching comments:', error);
 
-  const errorMessage = error instanceof Error 
-    ? error.message 
-    : "Something went wrong while fetching comments";
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : 'Something went wrong while fetching comments';
 
-  return res.status(500).json({
-    success: false,
-    message: errorMessage,
-  });
+    return res.status(500).json({
+      success: false,
+      message: errorMessage,
+    });
   }
+};
 
-}
-
-
-export const getAllFileByProjectId =  async(req: AuthenticatedRequest, res: Response) => {
+export const getAllFileByProjectId = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
-    
-        
-const userId = req.user?.id;
+    const userId = req.user?.id;
     if (!userId) {
       return res.status(400).json({
         sucecss: false,
@@ -303,7 +292,7 @@ const userId = req.user?.id;
     }
 
     const projectId = req.params.projectId;
-  
+
     const user = await prisma.employee.findUnique({
       where: {
         id: userId,
@@ -325,6 +314,11 @@ const userId = req.user?.id;
       },
       include: {
         assignToEmployee: true,
+        employee: {
+          select: {
+            fullname: true,
+          },
+        },
       },
     });
 
@@ -335,7 +329,6 @@ const userId = req.user?.id;
       });
     }
 
-  
     let isAuthorized = false;
 
     if (user.role.trim().toLowerCase() === 'admin') {
@@ -357,36 +350,73 @@ const userId = req.user?.id;
       });
     }
 
-    const allFile = await prisma.task.findMany({
+    const allFileFromTask = await prisma.task.findMany({
       where: {
-        projectId 
+        projectId,
       },
       select: {
-        attachmentUrl: true 
-      }
-    })
+        id: true,
+        attachmentUrl: true,
+        attachmentSize: true,
+        employee: {
+          select: {
+            fullname: true,
+          },
+        },
+        assigedEmployees: {
+          select: {
+            fullname: true,
+          },
+        },
+      },
+    });
 
-    allFile.push({attachmentUrl: project.attachmentUrl })
+    const allFileFromComment = await prisma.comment.findMany({
+      where: {
+        projectId,
+      },
+      select: {
+        id: true,
+        attachmentSize: true,
+        attachmentUrl: true,
+        employee: {
+          select: {
+            fullname: true,
+          },
+        },
+      },
+    });
+
+    const normalizedCommentFiles = allFileFromComment.map((comment) => ({
+      ...comment,
+      assigedEmployees: [] as { fullname: string }[],
+    }));
+
+    const allFile = allFileFromTask.concat(normalizedCommentFiles);
+    allFile.push({
+      id: project.id,
+      attachmentSize: project.attachmentSize,
+      attachmentUrl: project.attachmentUrl,
+      employee: { fullname: project.employee.fullname },
+      assigedEmployees: project.assignToEmployee,
+    });
+
     return res.status(200).json({
       success: true,
-      message: "Fetch all files succcessfully!",
-      allFile
-    })
-
+      message: 'Fetch all files succcessfully!',
+      allFile,
+    });
   } catch (error) {
-    
-      console.error("Error while fetching files :", error);
+    console.error('Error while fetching files :', error);
 
-  const errorMessage = error instanceof Error 
-    ? error.message 
-    : "Something went wrong while fetching files";
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : 'Something went wrong while fetching files';
 
-  return res.status(500).json({
-    success: false,
-    message: errorMessage,
-  });
-  
+    return res.status(500).json({
+      success: false,
+      message: errorMessage,
+    });
   }
-}
-
-
+};
