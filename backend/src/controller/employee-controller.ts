@@ -1,4 +1,4 @@
-import { Request,  Response } from 'express';
+import { Request, Response } from 'express';
 import {
   SignInInputUser,
   signInSchema,
@@ -224,7 +224,7 @@ export const sendInvitation = async (
 
     const responseSendEmail = await sendEmailForInvitation(email, url);
 
-    console.log(" reponse send emeial : ", responseSendEmail)
+    console.log(' reponse send emeial : ', responseSendEmail);
 
     if (!responseSendEmail) {
       return res.status(500).json({

@@ -231,18 +231,15 @@ const Task = () => {
     setOpenTaskForm(!openTaskForm);
   };
 
-
   const fetchProjectTasks = async () => {
     try {
-      console.log(" current page : ", currentPage,)
- 
       setIsTaskLoading(true);
       const response = await axiosInstance.get<TaskResponse>(
         `project/${projectId}/tasks?limit=${limit}&page=${currentPage}`,
       );
 
       if (response.data.success) {
-        setAllTasks(response.data.tasks);  
+        setAllTasks(response.data.tasks);
       }
     } catch (error) {
       console.error('Error : ', error);
@@ -262,8 +259,6 @@ const Task = () => {
     }
     setTaskValue(task);
   };
-
-
 
   useEffect(() => {
     if (isFirstFetchProjectTasks) {
@@ -289,21 +284,21 @@ const Task = () => {
           </Button>
         </div>
 
-{isTaksLoading ? (
-  <div className="h-[300px] w-[100%] flex items-center justify-center">
-      <div className="w-10 h-10 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
-    </div>
-) :   allTasks.length === 0 ?   (
-   <div className="mt-6 flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50">
+        {isTaksLoading ? (
+          <div className="h-[300px] w-[100%] flex items-center justify-center">
+            <div className="w-10 h-10 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+          </div>
+        ) : allTasks.length === 0 ? (
+          <div className="mt-6 flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50">
             <p className="text-lg font-semibold text-gray-600">
               No tasks available
             </p>
             <p className="text-sm text-gray-400 mt-1">
               Add a task to get started 🚀
             </p>
-          </div> 
-): (
-   <div className="mt-6 overflow-y-auto h-[380px] p-3 pb-10 border border-gray-300 rounded-lg shadow-sm">
+          </div>
+        ) : (
+          <div className="mt-6 overflow-y-auto h-[380px] p-3 pb-10 border border-gray-300 rounded-lg shadow-sm">
             {allTasks.map((task) => (
               <EachTask
                 key={task.id}
@@ -313,9 +308,8 @@ const Task = () => {
                 setIsAnyTaskSubmitting={setIsAnyTaskSubmitting}
               />
             ))}
-          </div> 
-)}
-
+          </div>
+        )}
       </div>
 
       {showTaskItemForm && (

@@ -1,4 +1,4 @@
-import   { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { toast } from 'sonner';
 import { axiosInstance } from '../api/axios';
@@ -7,18 +7,18 @@ import type { RootState } from '../slices/store/store';
 import { limit } from './project/constant';
 import type { ApiResponse } from '../types/ApiResponse';
 import type { AxiosError } from 'axios';
-import type { PagignationProps, ProjectTaskPagesResponse } from './project/types';
-
+import type {
+  PagignationProps,
+  ProjectTaskPagesResponse,
+} from './project/types';
 
 const Pagignation = ({ onPageChange }: PagignationProps) => {
- 
   const [totalPages, setTotalPages] = useState<number>(0);
 
   const { project } = useSelector((state: RootState) => state.project);
 
   useEffect(() => {
     if (!project?.id) return;
- 
 
     const fetchProjectTaskPages = async () => {
       try {
@@ -40,7 +40,6 @@ const Pagignation = ({ onPageChange }: PagignationProps) => {
     };
 
     fetchProjectTaskPages();
-  
   }, [project?.id]);
 
   const initial = 1;
@@ -77,7 +76,7 @@ const Pagignation = ({ onPageChange }: PagignationProps) => {
 
   const handleCurrentPage = (page: number) => {
     setCurrentPage(page);
-    onPageChange(page); 
+    onPageChange(page);
   };
 
   return (

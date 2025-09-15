@@ -350,20 +350,19 @@ export const getAllFileByProjectId = async (
       });
     }
 
+    const page = 1;
+    const limit = 2;
+    let allFileFromComment;
 
-       const page  = 1 
-       const limit  = 2 
-let  allFileFromComment; 
-
-    let  allFileFromTask = await prisma.task.findMany({
+    let allFileFromTask = await prisma.task.findMany({
       where: {
         projectId,
       },
-      skip: (page  - 1) * limit,
-      take: limit,   
+      skip: (page - 1) * limit,
+      take: limit,
       orderBy: {
-      createdAt: "desc"
-      }, 
+        createdAt: 'desc',
+      },
       select: {
         id: true,
         attachmentUrl: true,
@@ -381,44 +380,42 @@ let  allFileFromComment;
       },
     });
 
- if(allFileFromTask.length === limit){
-console.log(" good ")
- } else {
-    allFileFromComment = await prisma.comment.findMany({
-      where: {
-        projectId,
-      },
-      orderBy: {
-        createdAt: 'desc'
-      },
-      skip: (page - 1) * limit,
-      take: limit - allFileFromTask.length,  
-      select: {
-        id: true,
-        attachmentSize: true,
-        attachmentUrl: true,
-        employee: {
-          select: {
-            fullname: true,
+    if (allFileFromTask.length === limit) {
+      console.log(' good ');
+    } else {
+      allFileFromComment = await prisma.comment.findMany({
+        where: {
+          projectId,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        skip: (page - 1) * limit,
+        take: limit - allFileFromTask.length,
+        select: {
+          id: true,
+          attachmentSize: true,
+          attachmentUrl: true,
+          employee: {
+            select: {
+              fullname: true,
+            },
           },
         },
-      },
-    });
+      });
+    }
 
- }
+    const normalizedCommentFiles =
+      allFileFromComment &&
+      allFileFromComment.map((comment) => ({
+        ...comment,
+        assigedEmployees: [] as { fullname: string }[],
+      }));
 
-    
-
-    const normalizedCommentFiles = allFileFromComment &&  allFileFromComment.map((comment) => ({
-      ...comment,
-      assigedEmployees: [] as { fullname: string }[],
-    }));
-
-    let  allFile = allFileFromTask 
-    if(normalizedCommentFiles && normalizedCommentFiles.length > 0 ){
-    allFile = allFileFromTask.concat(normalizedCommentFiles);
- 
-    }   
+    let allFile = allFileFromTask;
+    if (normalizedCommentFiles && normalizedCommentFiles.length > 0) {
+      allFile = allFileFromTask.concat(normalizedCommentFiles);
+    }
 
     allFile.push({
       id: project.id,
@@ -428,19 +425,18 @@ console.log(" good ")
       assigedEmployees: project.assignToEmployee,
     });
 
+    const countOfFileFromTask = await prisma.task.count();
+    const countOfFileFromComment = await prisma.comment.count();
+    const countOfFileFromProject = project.attachmentUrl ? 1 : 0;
 
-const countOfFileFromTask = await prisma.task.count();
-const countOfFileFromComment = await prisma.comment.count();
-const countOfFileFromProject = project.attachmentUrl ? 1 : 0;
+    const totalAttachmentCount =
+      countOfFileFromTask + countOfFileFromComment + countOfFileFromProject;
 
-const totalAttachmentCount = countOfFileFromTask + countOfFileFromComment + countOfFileFromProject;
-
- 
     return res.status(200).json({
       success: true,
       message: 'Fetch all files succcessfully!',
       allFile,
-      count: totalAttachmentCount 
+      count: totalAttachmentCount,
     });
   } catch (error) {
     console.error('Error while fetching files :', error);

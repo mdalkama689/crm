@@ -106,7 +106,6 @@ export interface CommentResponse extends ApiResponse {
   allComments: CommentProps[];
 }
 
-
 export interface ProjectTaskPagesResponse extends ApiResponse {
   taskPagesLength: string;
 }
@@ -114,4 +113,3 @@ export interface ProjectTaskPagesResponse extends ApiResponse {
 export interface PagignationProps {
   onPageChange: React.Dispatch<React.SetStateAction<number>>;
 }
- 

@@ -315,7 +315,7 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
     return res.status(201).json({
       success: true,
       message: 'Task created successfully.',
-      task
+      task,
     });
   } catch (error) {
     const errorMessage =
@@ -332,27 +332,27 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
   }
 };
 
-
-
-export const getProjectTaskPages = async (req: AuthenticatedRequest, res: Response) => {
+export const getProjectTaskPages = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
-     const projectId = req.params.id; 
-     const loggedInUserId = req.user?.id;
-     const {limit} =  req.query 
-  if (!projectId) {
+    const projectId = req.params.id;
+    const loggedInUserId = req.user?.id;
+    const { limit } = req.query;
+    if (!projectId) {
       return res.status(400).json({
         success: false,
         message: 'Project id is required!',
       });
     }
 
-    if(!limit){
- return res.status(400).json({
+    if (!limit) {
+      return res.status(400).json({
         success: false,
         message: 'Limit  is required!',
       });
     }
-    
 
     if (!loggedInUserId) {
       return res.status(401).json({
@@ -361,8 +361,7 @@ export const getProjectTaskPages = async (req: AuthenticatedRequest, res: Respon
       });
     }
 
-   
- const loggedInUser = await prisma.employee.findUnique({
+    const loggedInUser = await prisma.employee.findUnique({
       where: { id: loggedInUserId },
     });
     if (!loggedInUser) {
@@ -414,24 +413,22 @@ export const getProjectTaskPages = async (req: AuthenticatedRequest, res: Respon
           'Forbidden: you are not authorized to access tasks of this project',
       });
     }
- 
-const taskLength = await prisma.task.count({
-  where: {
-    projectId, 
-  }
-})
 
-const length = Math.ceil(taskLength/ Number(limit))
+    const taskLength = await prisma.task.count({
+      where: {
+        projectId,
+      },
+    });
 
-return res.status(200).json({
-  success: true,
-  message: "Fetch the length of project of the a project", // 🔹 this
-  taskPagesLength: length  
-})
+    const length = Math.ceil(taskLength / Number(limit));
 
-
+    return res.status(200).json({
+      success: true,
+      message: 'Fetch the length of project of the a project', // 🔹 this
+      taskPagesLength: length,
+    });
   } catch (error) {
-     console.error('Error : ', error);
+    console.error('Error : ', error);
     const errorMessage =
       error instanceof Error ? error.message : 'Unexpected error occurred';
     return res.status(500).json({
@@ -439,9 +436,7 @@ return res.status(200).json({
       message: errorMessage,
     });
   }
-
-  
-}
+};
 
 export const fetchAllProjectTasks = async (
   req: AuthenticatedRequest,
@@ -457,9 +452,9 @@ export const fetchAllProjectTasks = async (
     }
 
     const projectId = req.params.id;
-const {limit, page} =  req.query 
+    const { limit, page } = req.query;
 
-console.log( " limit and page : ", limit, page)
+    console.log(' limit and page : ', limit, page);
 
     if (!projectId) {
       return res.status(400).json({
@@ -468,7 +463,7 @@ console.log( " limit and page : ", limit, page)
       });
     }
 
-       if (!page) {
+    if (!page) {
       return res.status(400).json({
         success: false,
         message: 'Page number is required!',
@@ -527,82 +522,70 @@ console.log( " limit and page : ", limit, page)
           'Forbidden: you are not authorized to access tasks of this project',
       });
     }
- 
 
-
-
-const tasks = await prisma.task.findMany({
-  where: {
-    projectId: projectId 
- }, 
- orderBy: {
-  createdAt: "desc"
- }, 
-
-  skip: (Number(page) - 1) * Number(limit),
-  take: Number(limit), 
-  include: {
-    employee: {
-      select: {
-        fullname: true
+    const tasks = await prisma.task.findMany({
+      where: {
+        projectId: projectId,
       },
-      
-    },
-    _count: {
-      select: {
-        taskItems: true,
-        comments: true 
-      }
-    }
-  }
-})
+      orderBy: {
+        createdAt: 'desc',
+      },
 
+      skip: (Number(page) - 1) * Number(limit),
+      take: Number(limit),
+      include: {
+        employee: {
+          select: {
+            fullname: true,
+          },
+        },
+        _count: {
+          select: {
+            taskItems: true,
+            comments: true,
+          },
+        },
+      },
+    });
 
-    const filteredTasks  = await Promise.all(
-      tasks.map(async ({_count, ...task}) => {
+    const filteredTasks = await Promise.all(
+      tasks.map(async ({ _count, ...task }) => {
         const completeTaskItem = await prisma.taskItem.count({
           where: {
             taskId: task.id,
-            completed: true 
-          }
-        })
+            completed: true,
+          },
+        });
 
         const commentLength = await prisma.comment.count({
           where: {
             taskId: task.id,
-            OR: [
-              {text: {not: null}},
-              {attachmentUrl: {not: null}}
-            ]
-          }
-        })
+            OR: [{ text: { not: null } }, { attachmentUrl: { not: null } }],
+          },
+        });
 
-
-        const attachmentLength  =  await prisma.comment.count({
+        const attachmentLength = await prisma.comment.count({
           where: {
             taskId: task.id,
-          attachmentUrl: {not: null}
-          }
-        })
+            attachmentUrl: { not: null },
+          },
+        });
 
         const taskAttachmentLength = await prisma.task.count({
           where: {
-          id: task.id,
-          attachmentUrl:{not: null}
-          }
-        })
+            id: task.id,
+            attachmentUrl: { not: null },
+          },
+        });
         return {
           ...task,
           totalTaskItem: _count.taskItems,
           completeTaskItem: completeTaskItem,
           totalComment: commentLength,
           totalAttachment: attachmentLength + taskAttachmentLength,
-
-        }
-      })
-  )
- 
-
+        };
+      }),
+    );
 
     return res.status(200).json({
       success: true,
@@ -610,8 +593,8 @@ const tasks = await prisma.task.findMany({
         tasks.length > 0
           ? 'Successfully fetched all assigned tasks'
           : 'No tasks found for this project',
-     
-    tasks: filteredTasks 
+
+      tasks: filteredTasks,
     });
   } catch (error) {
     console.error('Error : ', error);

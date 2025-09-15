@@ -10,7 +10,7 @@ import type { Task } from '../types';
 import { axiosInstance } from '../../../api/axios';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../slices/store/store';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { ApiResponse } from '../../../types/ApiResponse';
 import { toast } from 'sonner';
 import type { AxiosError } from 'axios';
@@ -21,6 +21,7 @@ interface EachTaskProps {
   isAnyTaskSubmitting: boolean;
   setIsAnyTaskSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
 }
+type TaskStatusProps = 'PENDING' | 'HOLD' | 'DONE';
 
 const EachTask = ({
   task,
@@ -30,39 +31,39 @@ const EachTask = ({
 }: EachTaskProps) => {
   const { project } = useSelector((state: RootState) => state.project);
 
-  const [isChecked, setIsChecked] = useState<boolean>(
+  const [isTaskChecked, setTaskIsChecked] = useState<boolean>(
     task.status === 'DONE' ? true : false,
   );
-
-  const [taskStatus, setTaskStatus] = useState<string>(task.status);
-  const [isOnHold, setIsOnHold] = useState(task.status === 'HOLD');
-
-  const [allStatusData, setAllStatusData] = useState([]);
+  const [currentTask, setCurrentTask] = useState(task);
 
   const handleToggleTask = async (e: React.MouseEvent<HTMLButtonElement>) => {
     try {
       e.stopPropagation();
 
+      let statusValue: TaskStatusProps;
+
+      if (task.status === 'PENDING' || task.status === 'HOLD') {
+        statusValue = 'DONE';
+        setTaskIsChecked(true);
+      } else {
+        statusValue = 'PENDING';
+        setTaskIsChecked(false);
+      }
+
       if (!project) return;
       setIsAnyTaskSubmitting(true);
-      setIsChecked(!isChecked);
-      setIsOnHold(!isOnHold);
-      // setTaskStatus("DONE")
 
       const response = await axiosInstance.patch<ApiResponse>(
         `/project/${project.id}/task/${task.id}/toggle`,
       );
 
-      if (!response.data.success) {
-        setIsChecked(!isChecked);
-        setIsOnHold(!isOnHold);
+      if (response.data.success) {
+        toast.success('Task updating task item checked');
+        setCurrentTask({ ...currentTask, status: statusValue });
+      } else {
         toast.error('Failed to update task. Please try again.');
       }
-      toast.success('Task updating task item checked');
     } catch (error) {
-      setIsChecked(!isChecked);
-      setIsOnHold(!isOnHold);
-
       console.error('Failed to update task. Please try again.', error);
       const axiosError = error as AxiosError<ApiResponse>;
 
@@ -76,56 +77,43 @@ const EachTask = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (isChecked && !isOnHold) {
-  //     console.log(" isChecked && !isOnHold : ", " done")
-  //     setBtnValue('DONE');
-  //   } else if (isOnHold) {
-  //     setBtnValue('ON HOLD');
-  //      console.log(" isOnHold : ", " onhold")
-  //   } else {
-  //     setBtnValue('PENDING');
-  //     console.log(" else :  pending")
-  //   }
-  // }, [isChecked, isOnHold]);
-
   return (
     <div
       onClick={onClick}
       className="flex items-center mt-3 cursor-pointer justify-between border border-gray-400 rounded-xl px-2 py-2"
     >
       <div
-        className={`flex items-center gap-2 ${isChecked && 'line-through text-gray-700'}`}
+        className={`flex items-center gap-2 ${isTaskChecked && 'line-through text-gray-700'}`}
       >
         <Checkbox
           disabled={isAnyTaskSubmitting}
           onClick={handleToggleTask}
-          checked={isChecked ? true : false}
+          checked={isTaskChecked}
         />
 
-        <span className="text-base font-medium">{task.name}</span>
+        <span className="text-base font-medium">{currentTask.name}</span>
       </div>
 
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1">
           <ListChecks />
           <span>
-            {task.completeTaskItem}/{task.totalTaskItem}
+            {currentTask.completeTaskItem}/{currentTask.totalTaskItem}
           </span>
         </div>
 
         <div className="flex items-center gap-1">
           <Link2 />
-          <span>{task.totalAttachment}</span>
+          <span>{currentTask.totalAttachment}</span>
         </div>
 
         <div className="flex items-center gap-1">
           <MessageCircle />
-          <span>{task.totalComment}</span>
+          <span>{currentTask.totalComment}</span>
         </div>
 
         <Button className="bg-gray-200 hover:bg-gray-300 text-slate-900 font-bold">
-          {taskStatus}
+          {currentTask.status}
         </Button>
         <div className="relative">
           <div className="bg-gray-200 h-10 w-10 rounded-full flex items-center justify-center hover:bg-gray-300 cursor-pointer peer">
@@ -137,8 +125,11 @@ const EachTask = ({
                whitespace-nowrap px-3 py-1 rounded-lg bg-gray-800 
                text-white text-xs shadow-md hidden peer-hover:flex"
           >
-            {task.employee.fullname.charAt(0).toUpperCase() +
-              task.employee.fullname.slice(1, task.employee.fullname.length)}
+            {currentTask.employee.fullname.charAt(0).toUpperCase() +
+              currentTask.employee.fullname.slice(
+                1,
+                currentTask.employee.fullname.length,
+              )}
           </div>
         </div>
       </div>

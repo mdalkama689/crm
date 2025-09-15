@@ -15,7 +15,7 @@ import { Input } from '../../ui/input';
 import { Button } from '../../ui/button';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../slices/store/store';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { allBgGradient, allowedAttachmentTypes, months } from '../constant';
 import { axiosInstance } from '../../../api/axios';
 import type {
@@ -28,6 +28,8 @@ import type {
 import { toast } from 'sonner';
 import type { ApiResponse } from '../../../types/ApiResponse';
 import type { AxiosError } from 'axios';
+import Picker from '@emoji-mart/react';
+import data from '@emoji-mart/data';
 
 interface TaskItemComponentProps {
   task: Task;
@@ -58,6 +60,26 @@ const TaskItem = ({
   const [commentAttachment, setCommentAttachment] = useState<File | null>(null);
   const [isCommentSubmitting, setIsCommentSubmitting] =
     useState<boolean>(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+
+  const emojiRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleOutside = (e: MouseEvent) => {
+      if (emojiRef.current && !emojiRef.current.contains(e.target as Node)) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleOutside);
+    };
+  }, [emojiRef]);
+
+  const toggleEmojiPicker = () => {
+    setShowEmojiPicker(!showEmojiPicker);
+  };
 
   const getDateComponents = (date: Date) => ({
     day: date.getDate(),
@@ -320,7 +342,11 @@ const TaskItem = ({
 
   const removeCommentAttachment = () => {
     setCommentAttachment(null);
-    toast.info(' cancer;');
+  };
+
+  const handleRandomGradient = () => {
+    const randomNumber = Math.floor(Math.random() * allBgGradient.length);
+    return allBgGradient[randomNumber];
   };
 
   return (
@@ -408,17 +434,21 @@ const TaskItem = ({
         ) : (
           <div className="flex -space-x-2 items-center">
             {assignedEmployee &&
-              assignedEmployee.slice(0, 5).map((empl, ind) => (
-                <div className="group" key={empl.id}>
-                  <p className="invisible group-hover:visible">
-                    {empl.fullname.charAt(0).toUpperCase() +
-                      empl.fullname.slice(1, empl.fullname.length)}
-                  </p>
+              assignedEmployee.slice(0, 5).map((empl) => (
+                <div key={empl.id} className="relative group">
                   <div
-                    className={`w-9 h-9  text-white ${allBgGradient[ind]} group flex items-center justify-center rounded-full border-2 border-white shadow-sm`}
+                    className={`w-9 h-9 text-white ${handleRandomGradient()} flex items-center justify-center rounded-full border-2 border-white shadow-sm`}
                   >
                     {empl.fullname.charAt(0).toUpperCase()}
                   </div>
+
+                  <p
+                    className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 
+    invisible group-hover:visible bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg"
+                  >
+                    {empl.fullname.charAt(0).toUpperCase() +
+                      empl.fullname.slice(1)}
+                  </p>
                 </div>
               ))}
 
@@ -620,6 +650,7 @@ const TaskItem = ({
 
           <div
             className={`bg-gray-100 hover:bg-gray-200 rounded-full border border-slate-300 p-1.5 ${isCommentSubmitting ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+            onClick={toggleEmojiPicker}
           >
             <Smile color="#4B5563" />
           </div>
@@ -633,6 +664,18 @@ const TaskItem = ({
           </Button>
         </div>
       </div>
+      {showEmojiPicker && (
+        <div className="absolute bottom-[120px] right-0" ref={emojiRef}>
+          <Picker
+            data={data}
+            theme="dark"
+            previewPosition="none"
+            onEmojiSelect={(emoji: { native: string }) =>
+              setComment((pre) => pre + emoji.native)
+            }
+          />
+        </div>
+      )}
 
       {commentAttachment && (
         <div className="border border-gray-300 bg-gray-100 px-3 py-3 rounded-xl mt-5 flex items-center justify-between">
