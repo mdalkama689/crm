@@ -14,14 +14,12 @@ const Overview = ({
   dueDate,
   assignEmployee,
 }: ProjectOverview) => {
-  const [bgGradient, setBgGradient] = useState<string[]>([]);
+  const [readableDueDate, setReadableDueDate] = useState<string>('');
 
   const handleRandomGradient = () => {
     const randomNumber = Math.floor(Math.random() * allBgGradient.length);
-    setBgGradient([...bgGradient, allBgGradient[randomNumber]]);
+    return allBgGradient[randomNumber];
   };
-
-  const [readableDueDate, setReadableDueDate] = useState<string>('');
 
   useEffect(() => {
     if (!dueDate) return;
@@ -34,7 +32,6 @@ const Overview = ({
 
   useEffect(() => {
     if (!assignEmployee) return;
-    handleRandomGradient();
   }, [assignEmployee]);
 
   return (
@@ -58,28 +55,25 @@ const Overview = ({
           <p className="font-semibold text-lg">Assigned To </p>
 
           <div className="flex -space-x-2 items-center">
-            {assignEmployee &&
-              assignEmployee.slice(0, 5).map((empl, ind) => (
-                <div className="group" key={empl.id}>
-                  <p className="invisible group-hover:visible">
-                    {empl.fullname.charAt(0).toUpperCase() +
-                      empl.fullname.slice(1, empl.fullname.length)}
-                  </p>
-                  <div
-                    className={`w-9 h-9  text-white ${allBgGradient[ind]} group flex items-center justify-center rounded-full border-2 border-white shadow-sm`}
-                  >
-                    {empl.fullname.charAt(0).toUpperCase()}
-                  </div>
+            {assignEmployee.slice(0, 5).map((empl) => (
+              <div key={empl.id} className="relative group">
+                <div
+                  className={`w-9 h-9 text-white ${handleRandomGradient()} flex items-center justify-center rounded-full border-2 border-white shadow-sm`}
+                >
+                  {empl.fullname.charAt(0).toUpperCase()}
                 </div>
-              ))}
 
-            {assignEmployee.length > 5 && (
-              <p className="ml-4 font-semibold text-base">
-                {' '}
-                +{assignEmployee.length - 5}
-              </p>
-            )}
+                <p
+                  className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 
+   invisible group-hover:visible bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg"
+                >
+                  {empl.fullname.charAt(0).toUpperCase() +
+                    empl.fullname.slice(1)}
+                </p>
+              </div>
+            ))}
           </div>
+
           {!assignEmployee && <p>You don't have any assigned employee</p>}
         </div>
       </div>
@@ -96,3 +90,5 @@ const Overview = ({
 };
 
 export default Overview;
+
+// store value

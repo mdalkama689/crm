@@ -27,17 +27,23 @@ export interface Task {
   id: string;
   attachmentUrl: string;
   createdBy: string;
+  totalTaskItem: number;
+  completeTaskItem: true;
+  totalComment: true;
+  totalAttachment: true;
+  employee: { fullname: string };
   description: string | null;
   dueDate: string | null;
   name: string;
   projectId: string;
-  status: 'PENDING' | 'ON_HOLDING' | 'DONE';
+  status: 'PENDING' | 'HOLD' | 'DONE';
   tenantId: string;
   createdAt: Date;
 }
 
 export interface TaskResponse extends ApiResponse {
   tasks: Task[];
+  totalPages: number;
 }
 
 export interface AddTaskResponse extends ApiResponse {
@@ -99,3 +105,13 @@ export interface CommentProps {
 export interface CommentResponse extends ApiResponse {
   allComments: CommentProps[];
 }
+
+
+export interface ProjectTaskPagesResponse extends ApiResponse {
+  taskPagesLength: string;
+}
+
+export interface PagignationProps {
+  onPageChange: React.Dispatch<React.SetStateAction<number>>;
+}
+ 

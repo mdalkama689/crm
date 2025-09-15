@@ -6,7 +6,7 @@ import { Input } from '../../ui/input';
 import { Textarea } from '../../ui/textarea';
 import { axiosInstance } from '../../../api/axios';
 import { useParams } from 'react-router-dom';
-import { allBgGradient, allowedAttachmentTypes } from '../constant';
+import { allBgGradient, allowedAttachmentTypes, limit } from '../constant';
 import { Calendar } from '../../ui/calendar';
 import z from 'zod';
 import { toast } from 'sonner';
@@ -21,9 +21,11 @@ import type {
 } from '../types';
 import type { ApiResponse } from '../../../types/ApiResponse';
 import type { AxiosError } from 'axios';
-import Loader from '../../Loader';
 import EachTask from './EachTask';
 import TaskItem from './TaskItem';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../../slices/store/store';
+import Pagignation from '../../Pagignation';
 
 const Task = () => {
   const params = useParams();
@@ -44,11 +46,25 @@ const Task = () => {
   const [allTasks, setAllTasks] = useState<TaskProps[]>([]);
   const [showTaskItemForm, setShowTaskItemForm] = useState<boolean>(false);
   const [taskValue, setTaskValue] = useState<TaskProps>();
+  const [isAnyTaskSubmitting, setIsAnyTaskSubmitting] =
+    useState<boolean>(false);
+  const [empColors, setEmpColors] = useState<Record<string, string>>({});
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isFirstFetchProjectTasks, setIsFirstFetchProjectTasks] =
+    useState<boolean>(true);
 
-  const getRandomBgColor = () => {
-    const randomNumber = Math.floor(Math.random() * allBgGradient.length);
-    const color = allBgGradient[randomNumber];
-    return color;
+  const { user } = useSelector((state: RootState) => state.auth);
+
+  if (!user) return;
+
+  const assignColor = (empId: string) => {
+    if (!empColors[empId]) {
+      const randomNumber = Math.floor(Math.random() * allBgGradient.length);
+      const color = allBgGradient[randomNumber];
+      setEmpColors((prev) => ({ ...prev, [empId]: color }));
+    }
+
+    return empColors[empId];
   };
 
   const fetchAllAssignedUserForProject = async () => {
@@ -130,6 +146,7 @@ const Task = () => {
       const day = parsedDate.getDate();
       const formatDueDate = `${day.toString().padStart(2, '0')}/${(month + 1).toString().padStart(2, '0')}/${year.toString()}`;
       setDueDate(formatDueDate);
+      setOpenCalender(false);
     } else {
       setIsFirstRender(false);
     }
@@ -176,12 +193,17 @@ const Task = () => {
 
       if (response.data.success) {
         setDueDate('');
+        setDate(undefined);
         setAttachment('');
+        fetchAllAssignedUserForProject();
         setAssignedEmployee([]);
         reset();
         toast.success('Task added successfully!');
         setOpenTaskForm(false);
-        setAllTasks([...allTasks, response.data.task]);
+        setAllTasks([
+          { ...response.data.task, employee: { fullname: user.fullname } },
+          ...allTasks,
+        ]);
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -209,15 +231,18 @@ const Task = () => {
     setOpenTaskForm(!openTaskForm);
   };
 
+
   const fetchProjectTasks = async () => {
     try {
+      console.log(" current page : ", currentPage,)
+ 
       setIsTaskLoading(true);
       const response = await axiosInstance.get<TaskResponse>(
-        `project/${projectId}/tasks`,
+        `project/${projectId}/tasks?limit=${limit}&page=${currentPage}`,
       );
 
       if (response.data.success) {
-        setAllTasks(response.data.tasks);
+        setAllTasks(response.data.tasks);  
       }
     } catch (error) {
       console.error('Error : ', error);
@@ -235,16 +260,23 @@ const Task = () => {
     if (!showTaskItemForm) {
       setShowTaskItemForm(!showTaskItemForm);
     }
-    console.log(' task id : ', task.id);
     setTaskValue(task);
   };
 
-  const [isAnyTaskSubmitting, setIsAnyTaskSubmitting] =
-    useState<boolean>(false);
+
+
+  useEffect(() => {
+    if (isFirstFetchProjectTasks) {
+      setIsFirstFetchProjectTasks(false);
+      return;
+    }
+
+    fetchProjectTasks();
+  }, [currentPage]);
 
   return (
     <>
-      <div className="mt-3 relative">
+      <div className="mt-5 relative">
         <div className="flex items-center justify-between">
           <p className="font-semibold text-lg">Tasks</p>
           <Button
@@ -257,10 +289,21 @@ const Task = () => {
           </Button>
         </div>
 
-        {isTaksLoading ? (
-          <Loader />
-        ) : (
-          <div className="mt-6 overflow-y-auto h-[450px] p-3 pb-10 border border-gray-300 rounded-lg shadow-sm">
+{isTaksLoading ? (
+  <div className="h-[300px] w-[100%] flex items-center justify-center">
+      <div className="w-10 h-10 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+    </div>
+) :   allTasks.length === 0 ?   (
+   <div className="mt-6 flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50">
+            <p className="text-lg font-semibold text-gray-600">
+              No tasks available
+            </p>
+            <p className="text-sm text-gray-400 mt-1">
+              Add a task to get started 🚀
+            </p>
+          </div> 
+): (
+   <div className="mt-6 overflow-y-auto h-[380px] p-3 pb-10 border border-gray-300 rounded-lg shadow-sm">
             {allTasks.map((task) => (
               <EachTask
                 key={task.id}
@@ -270,8 +313,9 @@ const Task = () => {
                 setIsAnyTaskSubmitting={setIsAnyTaskSubmitting}
               />
             ))}
-          </div>
-        )}
+          </div> 
+)}
+
       </div>
 
       {showTaskItemForm && (
@@ -365,7 +409,7 @@ const Task = () => {
                         assignedEmpoloyee.map((emp) => (
                           <div className="relative" key={emp.id}>
                             <div
-                              className={`w-9 h-9 ${getRandomBgColor()} group flex items-center justify-center rounded-full border-2 border-white shadow-sm`}
+                              className={`w-9 h-9 ${assignColor(emp.id)} group flex items-center justify-center rounded-full border-2 border-white shadow-sm`}
                             >
                               {emp.fullname.charAt(0).toUpperCase()}
 
@@ -409,12 +453,16 @@ const Task = () => {
                               className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-200 cursor-pointer transition"
                             >
                               <div
-                                className={`h-9 w-9 rounded-full text-white font-medium ${getRandomBgColor()} flex items-center justify-center`}
+                                className={`h-9 w-9 rounded-full text-white font-medium ${assignColor(employee.id)} flex items-center justify-center`}
                               >
                                 {employee.fullname.charAt(0).toUpperCase()}
                               </div>
                               <p className="text-gray-800 font-medium">
-                                {employee.fullname}
+                                {employee.fullname.charAt(0).toUpperCase() +
+                                  employee.fullname.slice(
+                                    1,
+                                    employee.fullname.length,
+                                  )}
                               </p>
                             </div>
                           ))
@@ -487,6 +535,9 @@ const Task = () => {
           </div>
         </div>
       )}
+
+      <div className="mt-5 mb-5"></div>
+      <Pagignation onPageChange={setCurrentPage} />
     </>
   );
 };

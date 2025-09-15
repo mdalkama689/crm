@@ -33,8 +33,11 @@ const EachTask = ({
   const [isChecked, setIsChecked] = useState<boolean>(
     task.status === 'DONE' ? true : false,
   );
-  const [isOnHold, setIsOnHold] = useState(task.status === 'ON_HOLDING');
-  const [btnValue, setBtnValue] = useState<string>('');
+
+  const [taskStatus, setTaskStatus] = useState<string>(task.status);
+  const [isOnHold, setIsOnHold] = useState(task.status === 'HOLD');
+
+  const [allStatusData, setAllStatusData] = useState([]);
 
   const handleToggleTask = async (e: React.MouseEvent<HTMLButtonElement>) => {
     try {
@@ -44,6 +47,7 @@ const EachTask = ({
       setIsAnyTaskSubmitting(true);
       setIsChecked(!isChecked);
       setIsOnHold(!isOnHold);
+      // setTaskStatus("DONE")
 
       const response = await axiosInstance.patch<ApiResponse>(
         `/project/${project.id}/task/${task.id}/toggle`,
@@ -72,22 +76,27 @@ const EachTask = ({
     }
   };
 
-  useEffect(() => {
-    if (isChecked && !isOnHold) {
-      setBtnValue('DONE');
-    } else if (!isChecked && isOnHold) {
-      setBtnValue('ON HOLD');
-    } else {
-      setBtnValue('PENDING');
-    }
-  }, [isChecked, isOnHold]);
+  // useEffect(() => {
+  //   if (isChecked && !isOnHold) {
+  //     console.log(" isChecked && !isOnHold : ", " done")
+  //     setBtnValue('DONE');
+  //   } else if (isOnHold) {
+  //     setBtnValue('ON HOLD');
+  //      console.log(" isOnHold : ", " onhold")
+  //   } else {
+  //     setBtnValue('PENDING');
+  //     console.log(" else :  pending")
+  //   }
+  // }, [isChecked, isOnHold]);
 
   return (
     <div
       onClick={onClick}
       className="flex items-center mt-3 cursor-pointer justify-between border border-gray-400 rounded-xl px-2 py-2"
     >
-      <div className="flex items-center gap-2">
+      <div
+        className={`flex items-center gap-2 ${isChecked && 'line-through text-gray-700'}`}
+      >
         <Checkbox
           disabled={isAnyTaskSubmitting}
           onClick={handleToggleTask}
@@ -100,25 +109,37 @@ const EachTask = ({
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1">
           <ListChecks />
-          <span>1/2</span>
+          <span>
+            {task.completeTaskItem}/{task.totalTaskItem}
+          </span>
         </div>
 
         <div className="flex items-center gap-1">
           <Link2 />
-          <span>7</span>
+          <span>{task.totalAttachment}</span>
         </div>
 
         <div className="flex items-center gap-1">
           <MessageCircle />
-          <span>9</span>
+          <span>{task.totalComment}</span>
         </div>
 
         <Button className="bg-gray-200 hover:bg-gray-300 text-slate-900 font-bold">
-          {btnValue}
+          {taskStatus}
         </Button>
+        <div className="relative">
+          <div className="bg-gray-200 h-10 w-10 rounded-full flex items-center justify-center hover:bg-gray-300 cursor-pointer peer">
+            <CircleUserRound className="text-gray-600" />
+          </div>
 
-        <div className="bg-gray-200 hover:bg-gray-300 h-10 w-10 rounded-full flex items-center justify-center">
-          <CircleUserRound />
+          <div
+            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 
+               whitespace-nowrap px-3 py-1 rounded-lg bg-gray-800 
+               text-white text-xs shadow-md hidden peer-hover:flex"
+          >
+            {task.employee.fullname.charAt(0).toUpperCase() +
+              task.employee.fullname.slice(1, task.employee.fullname.length)}
+          </div>
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import {
   downloadFile,
   fetchAllProjectTasks,
   fetchAllTaskItem,
+  getProjectTaskPages,
   toggleTaskCompletion,
   toggleTaskItemCompletion,
   updateTaskAttachment,
@@ -22,6 +23,7 @@ router.post(
 );
 
 router.get('/project/:id/tasks', authMiddleware, fetchAllProjectTasks);
+router.get('/project/:id/task-pages', authMiddleware, getProjectTaskPages)
 
 router.post(
   '/project/:projectId/task/:taskId/items',

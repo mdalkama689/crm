@@ -16,7 +16,7 @@ enum EmployeeRange {
 
 enum TaskStatus {
    PENDING
-   ON_HOLDING
+   HOLD
    DONE 
 }
 
@@ -124,7 +124,7 @@ model Notification{
   employeeId String
   employee Employee @relation(fields: [employeeId], references: [id])
   createdAt DateTime @default(now())
-}
+} 
 
 
 model Comment {

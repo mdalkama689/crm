@@ -15,7 +15,8 @@ import { useSelector } from 'react-redux';
 import { type RootState } from '.././slices/store/store';
 
 const SendInvitation = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const { user, isLoggedIn } = useSelector((state: RootState) => state.auth);
+
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,17 +34,7 @@ const SendInvitation = () => {
     resolver: zodResolver(emailSchema),
   });
 
-  useEffect(() => {
-    const getLoggedValueFromLocalStorage = localStorage.getItem('login');
-
-    if (getLoggedValueFromLocalStorage) {
-      setIsLoggedIn(true);
-    }
-  }, []);
-
   type FormData = z.infer<typeof emailSchema>;
-
-  const { user } = useSelector((state: RootState) => state.auth);
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -63,6 +54,7 @@ const SendInvitation = () => {
         return toast.error(response.data.message);
       }
     } catch (error) {
+      console.error(' Error : ', error);
       const axiosError = error as AxiosError<ApiResponse>;
       const errorMessage =
         axiosError?.response?.data?.message ||
@@ -80,6 +72,12 @@ const SendInvitation = () => {
     }
   };
 
+  useEffect(() => {
+    if (!user) return;
+
+    console.log(' user : ', user);
+  }, [user]);
+
   if (!isLoggedIn) {
     return <p>Please login to continue</p>;
   }
@@ -91,13 +89,11 @@ const SendInvitation = () => {
           <div className="max-w-[506px] w-full  bg-[#FFFFFF] rounded-[12px]">
             <div className="flex items-center justify-center flex-col ">
               <p className="font-semibold text-2xl leading-8 tracking-normal mt-[32px]">
-                Welcome to our CRM
+                Send Invitation
               </p>
-              <p className="font-semibold text-2xl leading-8 tracking-normal">
-                Sign Up to getting started
-              </p>
+
               <p className="text-gray-700 pt-2 font-normal text-[16px] leading-[24px]">
-                Enter your detail to proceed further
+                Enter the user’s email to invite them to the CRM.
               </p>
             </div>
 

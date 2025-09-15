@@ -2,7 +2,7 @@ import { ChevronRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useEffect, useState } from 'react';
 import DashboardLayout from '../../layout/DashboardLayout';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance } from '../../api/axios';
 import type { ApiResponse } from '../../types/ApiResponse';
 import type { AxiosError } from 'axios';
@@ -79,7 +79,12 @@ const EachProject = () => {
         ) : (
           <div className="mt-12 ml-12 w-[calc(100%-300px)]">
             <div className="flex items-center justify-start">
-              <span className="font-normal text-gray-600">Project </span>
+              <Link
+                to="/projects"
+                className="font-semibold text-gray-800 hover:text-gray-700"
+              >
+                Project{' '}
+              </Link>
               <ChevronRight size={18} />{' '}
               {project && <span className="font-semibold">{project.name}</span>}
             </div>

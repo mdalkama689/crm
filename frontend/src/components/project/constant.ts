@@ -96,3 +96,5 @@ export const allowedAttachmentTypes = [
   'image/jpeg',
   'image/jpg',
 ];
+
+export const limit = 10;

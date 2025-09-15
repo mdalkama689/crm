@@ -350,10 +350,20 @@ export const getAllFileByProjectId = async (
       });
     }
 
-    const allFileFromTask = await prisma.task.findMany({
+
+       const page  = 1 
+       const limit  = 2 
+let  allFileFromComment; 
+
+    let  allFileFromTask = await prisma.task.findMany({
       where: {
         projectId,
       },
+      skip: (page  - 1) * limit,
+      take: limit,   
+      orderBy: {
+      createdAt: "desc"
+      }, 
       select: {
         id: true,
         attachmentUrl: true,
@@ -371,10 +381,18 @@ export const getAllFileByProjectId = async (
       },
     });
 
-    const allFileFromComment = await prisma.comment.findMany({
+ if(allFileFromTask.length === limit){
+console.log(" good ")
+ } else {
+    allFileFromComment = await prisma.comment.findMany({
       where: {
         projectId,
       },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      skip: (page - 1) * limit,
+      take: limit - allFileFromTask.length,  
       select: {
         id: true,
         attachmentSize: true,
@@ -387,12 +405,21 @@ export const getAllFileByProjectId = async (
       },
     });
 
-    const normalizedCommentFiles = allFileFromComment.map((comment) => ({
+ }
+
+    
+
+    const normalizedCommentFiles = allFileFromComment &&  allFileFromComment.map((comment) => ({
       ...comment,
       assigedEmployees: [] as { fullname: string }[],
     }));
 
-    const allFile = allFileFromTask.concat(normalizedCommentFiles);
+    let  allFile = allFileFromTask 
+    if(normalizedCommentFiles && normalizedCommentFiles.length > 0 ){
+    allFile = allFileFromTask.concat(normalizedCommentFiles);
+ 
+    }   
+
     allFile.push({
       id: project.id,
       attachmentSize: project.attachmentSize,
@@ -401,10 +428,19 @@ export const getAllFileByProjectId = async (
       assigedEmployees: project.assignToEmployee,
     });
 
+
+const countOfFileFromTask = await prisma.task.count();
+const countOfFileFromComment = await prisma.comment.count();
+const countOfFileFromProject = project.attachmentUrl ? 1 : 0;
+
+const totalAttachmentCount = countOfFileFromTask + countOfFileFromComment + countOfFileFromProject;
+
+ 
     return res.status(200).json({
       success: true,
       message: 'Fetch all files succcessfully!',
       allFile,
+      count: totalAttachmentCount 
     });
   } catch (error) {
     console.error('Error while fetching files :', error);

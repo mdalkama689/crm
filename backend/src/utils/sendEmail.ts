@@ -47,7 +47,9 @@ export const sendEmailForInvitation = async (to: string, url: string) => {
     await transporter.sendMail(mailOptions);
 
     return true;
-  } catch {
-    return false;
+  } catch(error) {
+    
+    console.error(error)
+    return false; 
   }
 };
