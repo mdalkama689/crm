@@ -18,6 +18,7 @@ import Employee from './components/admin/Employee';
 import AllNotifications from './components/notification/AllNotifications';
 import AllProjects from './components/project/AllProjects';
 import Extra from './components/Extra';
+import ViewFile from './components/ViewFIle';
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/invite" element={<Invite />} />
         </Route>
-
+        <Route path="/view-file" element={<ViewFile />} />
         <Route element={<RoleProtectRoute allowedRole={['admin']} />}>
           <Route path="/send-invitation" element={<SendInvitation />} />
           <Route path="/add-project" element={<CreateProject />} />

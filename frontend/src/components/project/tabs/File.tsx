@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../slices/store/store';
 import { axiosInstance } from '../../../api/axios';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -10,23 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '../.././ui/table';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '../.././ui/pagination';
-
-import {
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  MoreHorizontal,
-  UserRound,
-} from 'lucide-react';
+import { Download, MoreHorizontal, UserRound } from 'lucide-react';
 import type { ApiResponse } from '../../../types/ApiResponse';
 import { Button } from '../../ui/button';
 import { allBgGradient } from '../constant';
@@ -64,32 +48,6 @@ const File = () => {
         </TableHeader>
         <TableContent />
       </Table>
-      <div className="mt-5 mb-5">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
     </div>
   );
 };
@@ -113,7 +71,7 @@ const TableContent = () => {
       console.log(response);
       if (response.data.success) {
         setAllAttachment(response.data.allFile);
-        console.log(' response.data.allFile : ', typeof response.data.count);
+        console.log(' response.data.allFile : ', response.data.allFile);
       }
     } catch (error) {
       console.log(error);
@@ -130,7 +88,11 @@ const TableContent = () => {
 
   const [attachmentId, setAttachmentId] = useState('');
 
-  const toggleDownloadButton = (id: string) => {
+  const toggleDownloadButton = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    id: string,
+  ) => {
+    e.stopPropagation();
     console.log(id);
 
     if (id === attachmentId) {
@@ -161,9 +123,12 @@ const TableContent = () => {
     return allBgGradient[randomNumber];
   };
 
-  const downloadAttachment = async (attachmentUrl: string) => {
+  const downloadAttachment = async (
+    e: React.MouseEvent<HTMLDivElement>,
+    attachmentUrl: string,
+  ) => {
     try {
-      console.log(' attachment url : ', attachmentUrl);
+      e.stopPropagation();
       const attachmentUrlObject = new URL(attachmentUrl);
       const pathname = attachmentUrlObject.pathname.substring(1);
       const fileType = pathname.split('.').pop();
@@ -190,12 +155,6 @@ const TableContent = () => {
     const fileType = new URL(attachmentUrl).pathname.split('.').pop();
     if (fileType === 'pdf') {
       return 'bg-red-600';
-    } else if (
-      fileType === 'msword' ||
-      fileType === 'doc' ||
-      fileType === 'docx'
-    ) {
-      return 'bg-blue-600';
     } else if (fileType === 'jpg' || fileType === 'jpeg') {
       return 'bg-green-600';
     } else if (fileType === 'png') {
@@ -203,6 +162,11 @@ const TableContent = () => {
     } else {
       return 'bg-gray-500';
     }
+  };
+
+  const viewFile = (attachmentUrl: string) => {
+    const pathname = new URL(attachmentUrl).pathname;
+    window.open(`/view-file?pathname=${pathname}`, '_blank');
   };
 
   if (isFileLoading) {
@@ -220,7 +184,10 @@ const TableContent = () => {
           <>
             <div className="mt-5"></div>
             <TableBody className="border border-gray-300 rounded-xl mt-5">
-              <TableRow className="border-none hover:bg-gray-50">
+              <TableRow
+                className="border-none hover:bg-gray-50 cursor-pointer"
+                onClick={() => viewFile(attachment.attachmentUrl)}
+              >
                 <TableCell className="font-medium flex items-center gap-3 py-4">
                   <div
                     className={`${getFileColor(attachment.attachmentUrl)} h-10 w-10 rounded-lg bg-red-500 flex items-center justify-center text-white text-sm font-medium`}
@@ -266,8 +233,8 @@ const TableContent = () => {
                       {attachmentId === attachment.id && (
                         <div
                           className="absolute -top-10 right-0 flex items-center gap-2 cursor-pointer bg-white border rounded-md px-3 py-2 shadow-md z-10"
-                          onClick={() =>
-                            downloadAttachment(attachment.attachmentUrl)
+                          onClick={(e) =>
+                            downloadAttachment(e, attachment.attachmentUrl)
                           }
                         >
                           <Download className="h-4 w-4" />
@@ -278,7 +245,7 @@ const TableContent = () => {
                         variant="ghost"
                         size="sm"
                         className="h-8 w-8 p-0 cursor-pointer hover:bg-gray-100"
-                        onClick={() => toggleDownloadButton(attachment.id)}
+                        onClick={(e) => toggleDownloadButton(e, attachment.id)}
                       >
                         <MoreHorizontal className="h-4 w-4 text-gray-600" />
                       </Button>

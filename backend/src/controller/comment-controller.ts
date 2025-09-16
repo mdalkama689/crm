@@ -322,6 +322,7 @@ export const getAllFileByProjectId = async (
       },
     });
 
+    console.log(' i am calling');
     if (!project) {
       return res.status(400).json({
         success: false,
@@ -351,12 +352,13 @@ export const getAllFileByProjectId = async (
     }
 
     const page = 1;
-    const limit = 2;
+    const limit = 10;
     let allFileFromComment;
 
     let allFileFromTask = await prisma.task.findMany({
       where: {
         projectId,
+        attachmentUrl: { not: '' },
       },
       skip: (page - 1) * limit,
       take: limit,
@@ -380,12 +382,14 @@ export const getAllFileByProjectId = async (
       },
     });
 
+    console.log(' allFileFromTask : ', allFileFromTask);
     if (allFileFromTask.length === limit) {
       console.log(' good ');
     } else {
       allFileFromComment = await prisma.comment.findMany({
         where: {
           projectId,
+          attachmentUrl: { not: '' },
         },
         orderBy: {
           createdAt: 'desc',
@@ -417,13 +421,15 @@ export const getAllFileByProjectId = async (
       allFile = allFileFromTask.concat(normalizedCommentFiles);
     }
 
-    allFile.push({
-      id: project.id,
-      attachmentSize: project.attachmentSize,
-      attachmentUrl: project.attachmentUrl,
-      employee: { fullname: project.employee.fullname },
-      assigedEmployees: project.assignToEmployee,
-    });
+    if (project.attachmentUrl?.trim()) {
+      allFile.push({
+        id: project.id,
+        attachmentSize: project.attachmentSize,
+        attachmentUrl: project.attachmentUrl,
+        employee: { fullname: project.employee.fullname },
+        assigedEmployees: project.assignToEmployee,
+      });
+    }
 
     const countOfFileFromTask = await prisma.task.count();
     const countOfFileFromComment = await prisma.comment.count();

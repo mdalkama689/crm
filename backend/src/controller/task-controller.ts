@@ -1072,7 +1072,6 @@ export const downloadFile = async (req: Request, res: Response) => {
   try {
     const fileUrl: string = req.body.fileUrl;
 
-    console.log(' file ur; : ', fileUrl);
     if (!fileUrl.trim()) {
       return res.status(400).json({
         success: false,
