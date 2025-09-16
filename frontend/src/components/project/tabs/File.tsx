@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../slices/store/store';
 import { axiosInstance } from '../../../api/axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -59,6 +59,8 @@ const TableContent = () => {
 
   if (!project) return;
 
+  const fileRef = useRef<HTMLInputElement>(null);
+
   const [allAttachment, setAllAttachment] = useState<FileItem[]>([]);
   const [isFileLoading, setIsFileLoading] = useState<boolean>(false);
 
@@ -68,13 +70,12 @@ const TableContent = () => {
       const response = await axiosInstance.get<FileResponse>(
         `/projects/${project.id}/files`,
       );
-      console.log(response);
       if (response.data.success) {
         setAllAttachment(response.data.allFile);
-        console.log(' response.data.allFile : ', response.data.allFile);
       }
     } catch (error) {
       console.log(error);
+      toast.error('Failed to fetch all attachment');
     } finally {
       setIsFileLoading(false);
     }
@@ -82,7 +83,6 @@ const TableContent = () => {
 
   useEffect(() => {
     if (!project) return;
-
     fetchAllFiles();
   }, [project.id]);
 
@@ -145,6 +145,7 @@ const TableContent = () => {
       a.download = `attachment.${fileType}`;
       a.click();
       URL.revokeObjectURL(goodUrl);
+      setAttachmentId('');
     } catch (error) {
       console.error('Download error:', error);
       toast.error('Failed to download attachment!');
@@ -166,8 +167,23 @@ const TableContent = () => {
 
   const viewFile = (attachmentUrl: string) => {
     const pathname = new URL(attachmentUrl).pathname;
+    setAttachmentId('');
     window.open(`/view-file?pathname=${pathname}`, '_blank');
   };
+
+  useEffect(() => {
+    const handleOutSide = (e: MouseEvent) => {
+      if (fileRef.current && !fileRef.current.contains(e.target as Node)) {
+        setAttachmentId('');
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutSide);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutSide);
+    };
+  }, [fileRef]);
 
   if (isFileLoading) {
     return <Loader />;
@@ -233,6 +249,7 @@ const TableContent = () => {
                       {attachmentId === attachment.id && (
                         <div
                           className="absolute -top-10 right-0 flex items-center gap-2 cursor-pointer bg-white border rounded-md px-3 py-2 shadow-md z-10"
+                          ref={fileRef}
                           onClick={(e) =>
                             downloadAttachment(e, attachment.attachmentUrl)
                           }
