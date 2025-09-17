@@ -283,6 +283,8 @@ export const getAllFileByProjectId = async (
   res: Response,
 ) => {
   try {
+    let { limit, page } = req.query;
+
     const userId = req.user?.id;
     if (!userId) {
       return res.status(400).json({
@@ -322,7 +324,6 @@ export const getAllFileByProjectId = async (
       },
     });
 
-    console.log(' i am calling');
     if (!project) {
       return res.status(400).json({
         success: false,
@@ -351,98 +352,47 @@ export const getAllFileByProjectId = async (
       });
     }
 
-    const page = 1;
-    const limit = 10;
-    let allFileFromComment;
+    const limitNum = Number(limit);
+    const offsetNum = (Number(page) - 1) * limitNum;
 
-    let allFileFromTask = await prisma.task.findMany({
-      where: {
-        projectId,
-        attachmentUrl: { not: '' },
-      },
-      skip: (page - 1) * limit,
-      take: limit,
-      orderBy: {
-        createdAt: 'desc',
-      },
-      select: {
-        id: true,
-        attachmentUrl: true,
-        attachmentSize: true,
-        employee: {
-          select: {
-            fullname: true,
-          },
-        },
-        assigedEmployees: {
-          select: {
-            fullname: true,
-          },
-        },
-      },
-    });
+    const combinedFiles = await prisma.$queryRaw`
+SELECT
+  t.id,
+  t."attachmentUrl",
+  t."attachmentSize",
+  t."createdAt",
+  'task' AS type,
+  e."fullname" AS employeeFullname,
+  COALESCE(string_agg(ae."fullname", ', '), '') AS assignedEmployeeFullnames
+FROM "Task" t
+LEFT JOIN "Employee" e ON t."createdBy" = e.id
+LEFT JOIN "_TaskAssignment" ta ON t.id = ta."B"
+LEFT JOIN "Employee" ae ON ta."A" = ae.id
+WHERE t."projectId" = ${projectId} AND t."attachmentUrl" != ''
+GROUP BY t.id, t."attachmentUrl", t."attachmentSize", t."createdAt", e."fullname"
 
-    console.log(' allFileFromTask : ', allFileFromTask);
-    if (allFileFromTask.length === limit) {
-      console.log(' good ');
-    } else {
-      allFileFromComment = await prisma.comment.findMany({
-        where: {
-          projectId,
-          attachmentUrl: { not: '' },
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-        skip: (page - 1) * limit,
-        take: limit - allFileFromTask.length,
-        select: {
-          id: true,
-          attachmentSize: true,
-          attachmentUrl: true,
-          employee: {
-            select: {
-              fullname: true,
-            },
-          },
-        },
-      });
-    }
+UNION ALL
 
-    const normalizedCommentFiles =
-      allFileFromComment &&
-      allFileFromComment.map((comment) => ({
-        ...comment,
-        assigedEmployees: [] as { fullname: string }[],
-      }));
+SELECT
+  c.id,
+  c."attachmentUrl",
+  c."attachmentSize",
+  c."createdAt",
+  'comment' AS type,
+  e."fullname" AS employeeFullname,
+  NULL AS assignedEmployeeFullnames
+FROM "Comment" c
+LEFT JOIN "Employee" e ON c."creatorId" = e.id
+WHERE c."projectId" = ${projectId} AND c."attachmentUrl" != ''
 
-    let allFile = allFileFromTask;
-    if (normalizedCommentFiles && normalizedCommentFiles.length > 0) {
-      allFile = allFileFromTask.concat(normalizedCommentFiles);
-    }
-
-    if (project.attachmentUrl?.trim()) {
-      allFile.push({
-        id: project.id,
-        attachmentSize: project.attachmentSize,
-        attachmentUrl: project.attachmentUrl,
-        employee: { fullname: project.employee.fullname },
-        assigedEmployees: project.assignToEmployee,
-      });
-    }
-
-    const countOfFileFromTask = await prisma.task.count();
-    const countOfFileFromComment = await prisma.comment.count();
-    const countOfFileFromProject = project.attachmentUrl ? 1 : 0;
-
-    const totalAttachmentCount =
-      countOfFileFromTask + countOfFileFromComment + countOfFileFromProject;
+ORDER BY "createdAt" DESC
+LIMIT ${limitNum} OFFSET ${offsetNum};
+`;
 
     return res.status(200).json({
       success: true,
       message: 'Fetch all files succcessfully!',
-      allFile,
-      count: totalAttachmentCount,
+      allFile: combinedFiles,
     });
   } catch (error) {
     console.error('Error while fetching files :', error);

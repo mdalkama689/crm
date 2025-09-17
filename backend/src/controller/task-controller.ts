@@ -424,7 +424,7 @@ export const getProjectTaskPages = async (
 
     return res.status(200).json({
       success: true,
-      message: 'Fetch the length of project of the a project', // 🔹 this
+      message: 'Fetch the length of project of the a project',
       taskPagesLength: length,
     });
   } catch (error) {
@@ -438,7 +438,7 @@ export const getProjectTaskPages = async (
   }
 };
 
-export const fetchAllProjectTasks = async (
+export const fetchProjectTasks = async (
   req: AuthenticatedRequest,
   res: Response,
 ) => {
@@ -453,8 +453,6 @@ export const fetchAllProjectTasks = async (
 
     const projectId = req.params.id;
     const { limit, page } = req.query;
-
-    console.log(' limit and page : ', limit, page);
 
     if (!projectId) {
       return res.status(400).json({
@@ -851,8 +849,6 @@ export const toggleTaskCompletion = async (
     const projectId = req.params.projectId;
     const taskId = req.params.taskId;
 
-    console.log(' project id , task id ', projectId, taskId);
-
     const loggedInUserId = req.user?.id;
 
     if (!loggedInUserId) {
@@ -954,13 +950,6 @@ export const toggleTaskItemCompletion = async (
     const projectId = req.params.projectId;
     const taskId = req.params.taskId;
     const taskItemId = req.params.taskItemId;
-
-    console.log(
-      ' project id , task id and task item id ',
-      projectId,
-      taskId,
-      taskItemId,
-    );
 
     const loggedInUserId = req.user?.id;
 
@@ -1252,6 +1241,133 @@ export const updateTaskAttachment = async (
         ? error.message
         : 'An error occurred while updating the task attachment. Please try again.';
 
+    return res.status(400).json({
+      success: false,
+      message: errorMessage,
+    });
+  }
+};
+
+export const getFileLength = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  try {
+    const projectId = req.params.id;
+    const loggedInUserId = req.user?.id;
+    const { limit } = req.query;
+    if (!projectId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Project id is required!',
+      });
+    }
+
+    if (!limit) {
+      return res.status(400).json({
+        success: false,
+        message: 'Limit  is required!',
+      });
+    }
+
+    if (!loggedInUserId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized: user not found in request',
+      });
+    }
+
+    const loggedInUser = await prisma.employee.findUnique({
+      where: { id: loggedInUserId },
+    });
+    if (!loggedInUser) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized: user does not exist',
+      });
+    }
+
+    if (!loggedInUser.tenantId) {
+      return res.status(403).json({
+        success: false,
+        message: 'Forbidden: tenant id missing for logged in user',
+      });
+    }
+
+    const project = await prisma.project.findFirst({
+      where: {
+        id: projectId,
+        tenantId: loggedInUser.tenantId,
+      },
+    });
+
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: 'Project not found or you do not have access',
+      });
+    }
+
+    let isAuthorized = false;
+
+    if (loggedInUser.role.trim().toLowerCase() === 'admin') {
+      isAuthorized = true;
+    } else {
+      const isAssigned = await prisma.project.findFirst({
+        where: {
+          id: projectId,
+          assignToEmployee: { some: { id: loggedInUserId } },
+        },
+      });
+      isAuthorized = !!isAssigned;
+    }
+
+    if (!isAuthorized) {
+      return res.status(403).json({
+        success: false,
+        message:
+          'Forbidden: you are not authorized to access tasks of this project',
+      });
+    }
+
+    const taskFilesCount = await prisma.task.count({
+      where: {
+        projectId,
+        attachmentUrl: { not: '' },
+      },
+    });
+
+    const commentFilesCount = await prisma.comment.count({
+      where: {
+        projectId,
+        attachmentUrl: { not: '' },
+      },
+    });
+
+    const projectFilesCount = await prisma.project.count({
+      where: {
+        id: projectId,
+        attachmentUrl: { not: '' },
+      },
+    });
+
+    const totalFilesCount =
+      taskFilesCount + commentFilesCount + projectFilesCount;
+
+    const totalPages = Math.ceil(totalFilesCount / Number(limit));
+
+    return res.status(200).json({
+      success: true,
+      message: 'Files count fetched successfully',
+      totalPages,
+    });
+  } catch (error) {
+    console.error('Error while fetching file length : ', error);
+
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : 'Error while fetching file length';
     return res.status(400).json({
       success: false,
       message: errorMessage,

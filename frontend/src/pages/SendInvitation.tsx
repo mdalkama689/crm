@@ -74,8 +74,6 @@ const SendInvitation = () => {
 
   useEffect(() => {
     if (!user) return;
-
-    console.log(' user : ', user);
   }, [user]);
 
   if (!isLoggedIn) {

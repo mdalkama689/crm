@@ -49,6 +49,7 @@ const EachProject = () => {
       const response = await axiosInstance.get<ProjectResponse>(
         `/project/${projectId}`,
       );
+
       if (response.data.success) {
         dispatch(setProject(response.data.project));
       } else {
@@ -105,6 +106,9 @@ const EachProject = () => {
                 description={project.description}
                 dueDate={project.dueDate}
                 assignEmployee={project.assignToEmployee}
+                attachmentUrl={
+                  project.attachmentUrl ? project.attachmentUrl : null
+                }
               />
             )}
 

@@ -3,8 +3,9 @@ import {
   addTask,
   addTaskItem,
   downloadFile,
-  fetchAllProjectTasks,
   fetchAllTaskItem,
+  fetchProjectTasks,
+  getFileLength,
   getProjectTaskPages,
   toggleTaskCompletion,
   toggleTaskItemCompletion,
@@ -22,8 +23,9 @@ router.post(
   addTask,
 );
 
-router.get('/project/:id/tasks', authMiddleware, fetchAllProjectTasks);
+router.get('/project/:id/tasks', authMiddleware, fetchProjectTasks);
 router.get('/project/:id/task-pages', authMiddleware, getProjectTaskPages);
+router.get('/project/:id/file-pages', authMiddleware, getFileLength);
 
 router.post(
   '/project/:projectId/task/:taskId/items',

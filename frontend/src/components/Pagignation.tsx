@@ -9,25 +9,37 @@ import type { ApiResponse } from '../types/ApiResponse';
 import type { AxiosError } from 'axios';
 import type {
   PagignationProps,
+  ProjectFilePagesResponse,
   ProjectTaskPagesResponse,
 } from './project/types';
 
-const Pagignation = ({ onPageChange }: PagignationProps) => {
+const Pagignation = ({ type, onPageChange }: PagignationProps) => {
   const [totalPages, setTotalPages] = useState<number>(0);
-
   const { project } = useSelector((state: RootState) => state.project);
 
   useEffect(() => {
     if (!project?.id) return;
 
-    const fetchProjectTaskPages = async () => {
+    const fetchPageLength = async () => {
       try {
-        const response = await axiosInstance.get<ProjectTaskPagesResponse>(
-          `/project/${project.id}/task-pages?limit=${limit}`,
-        );
+        if (type.toLowerCase() === 'task') {
+          const response = await axiosInstance.get<ProjectTaskPagesResponse>(
+            `/project/${project.id}/task-pages?limit=${limit}`,
+          );
 
-        if (response.data.success) {
-          setTotalPages(Number(response.data.taskPagesLength));
+          if (response.data.success) {
+            setTotalPages(Number(response.data.taskPagesLength));
+          }
+        }
+
+        if (type.toLowerCase() === 'file') {
+          const response = await axiosInstance.get<ProjectFilePagesResponse>(
+            `/project/${project.id}/file-pages?limit=${limit}`,
+          );
+
+          if (response.data.success) {
+            setTotalPages(Number(response.data.totalPages));
+          }
         }
       } catch (error) {
         console.error('Error : ', error);
@@ -39,7 +51,7 @@ const Pagignation = ({ onPageChange }: PagignationProps) => {
       }
     };
 
-    fetchProjectTaskPages();
+    fetchPageLength();
   }, [project?.id]);
 
   const initial = 1;
@@ -80,7 +92,7 @@ const Pagignation = ({ onPageChange }: PagignationProps) => {
   };
 
   return (
-    <div className="flex items-center justify-center space-x-4 mt-6">
+    <div className="flex items-center justify-center space-x-4 mt-6 ">
       <Button
         onClick={handlePrev}
         disabled={currentPage === 1}

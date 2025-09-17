@@ -1,18 +1,23 @@
 import { useEffect, useState } from 'react';
 import { allBgGradient, months } from '../constant';
-import { Calendar } from 'lucide-react';
+import { Calendar, Download } from 'lucide-react';
 import { Progress } from '../../ui/progress';
+import { Button } from '../../ui/button';
+import { axiosInstance } from '../../../api/axios';
+import { toast } from 'sonner';
 
 interface ProjectOverview {
   description: string | null;
   dueDate: string | null;
   assignEmployee: { id: string; fullname: string }[];
+  attachmentUrl: string | null;
 }
 
 const Overview = ({
   description,
   dueDate,
   assignEmployee,
+  attachmentUrl,
 }: ProjectOverview) => {
   const [readableDueDate, setReadableDueDate] = useState<string>('');
 
@@ -34,6 +39,29 @@ const Overview = ({
     if (!assignEmployee) return;
   }, [assignEmployee]);
 
+  const downloadAttachment = async (attachmentUrl: string) => {
+    try {
+      const attachmentUrlObject = new URL(attachmentUrl);
+      const pathname = attachmentUrlObject.pathname.substring(1);
+      const fileType = pathname.split('.').pop();
+      const response = await axiosInstance.post(
+        '/download/file',
+        { fileUrl: pathname },
+        { responseType: 'blob' },
+      );
+
+      const goodUrl = URL.createObjectURL(response.data);
+      const a = document.createElement('a');
+      a.href = goodUrl;
+      a.download = `attachment.${fileType}`;
+      a.click();
+      URL.revokeObjectURL(goodUrl);
+    } catch (error) {
+      console.error('Download error:', error);
+      toast.error('Failed to download attachment!');
+    }
+  };
+
   return (
     <div className="mt-10">
       <p className="font-semibold text-lg"> Description </p>
@@ -50,6 +78,15 @@ const Overview = ({
             {readableDueDate ? readableDueDate : 'No due date set'}{' '}
           </span>
         </div>
+
+        {attachmentUrl && (
+          <Button
+            className="mt-7 mb-2 cursor-pointer bg-blue-600 text-white hover:bg-blue-700"
+            onClick={() => downloadAttachment(attachmentUrl)}
+          >
+            <Download /> <span>Download Attachment</span>
+          </Button>
+        )}
 
         <div className="mt-4">
           <p className="font-semibold text-lg">Assigned To </p>
@@ -90,5 +127,3 @@ const Overview = ({
 };
 
 export default Overview;
-
-// store value

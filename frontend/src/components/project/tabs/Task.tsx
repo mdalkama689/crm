@@ -531,7 +531,7 @@ const Task = () => {
       )}
 
       <div className="mt-5 mb-5"></div>
-      <Pagignation onPageChange={setCurrentPage} />
+      <Pagignation type="task" onPageChange={setCurrentPage} />
     </>
   );
 };

@@ -1,0 +1,20 @@
+/* Chrome, Edge, Safari */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px; /* very thin vertical scrollbar */
+  height: 4px; /* very thin horizontal scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #3b82f6; /* blue thumb */
+  border-radius: 9999px; /* rounded ends */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #f3f4f6; /* light gray track */
+}
+
+/* Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #3b82f6 #f3f4f6; /* thumb track */
+}

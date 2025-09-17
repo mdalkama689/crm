@@ -110,6 +110,14 @@ export interface ProjectTaskPagesResponse extends ApiResponse {
   taskPagesLength: string;
 }
 
+export interface ProjectTaskPagesResponse extends ApiResponse {
+  taskPagesLength: string;
+}
+export interface ProjectFilePagesResponse extends ApiResponse {
+  totalPages: string;
+}
+
 export interface PagignationProps {
+  type: string;
   onPageChange: React.Dispatch<React.SetStateAction<number>>;
 }

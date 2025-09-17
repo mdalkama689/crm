@@ -224,8 +224,6 @@ export const sendInvitation = async (
 
     const responseSendEmail = await sendEmailForInvitation(email, url);
 
-    console.log(' reponse send emeial : ', responseSendEmail);
-
     if (!responseSendEmail) {
       return res.status(500).json({
         success: false,
