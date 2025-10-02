@@ -898,126 +898,148 @@ export const getEmployeeAvatar = async (
   }
 };
 
-export const updateProfileDetails = async (req: AuthenticatedRequest, res: Response) => {
+export const updateProfileDetails = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
-    
-const userId = req.user?.id
+    const userId = req.user?.id;
 
-if(!userId){
-  return res.status(400).json({
-    success: false,
-    message: "Unautheticated, please loggedin to continue!"   
-  })
-}
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Unautheticated, please loggedin to continue!',
+      });
+    }
 
+    const user = await prisma.employee.findUnique({
+      where: { id: userId },
+    });
 
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'User not found!',
+      });
+    }
 
-const user  =  await prisma.employee.findUnique({
-  where: {id: userId}
-})
+    if (req.body.fullname) {
+      await prisma.employee.update({
+        where: { id: userId },
+        data: {
+          fullname: req.body.fullname,
+        },
+      });
+    }
 
-if(!user){
-  return res.status(400).json({
-    success: false,
-    message: "User not found!"   
-  })
-}
-
-
-  if(req.body.fullname){ 
-    await prisma.employee.update({
-      where: {id: userId},
-      data: {
-        fullname: req.body.fullname
-      }
-    })
-  }
-
-
-return res.status(200).json({
-  success: true,
-  message: "User deatils updated successfully!"
-})
+    return res.status(200).json({
+      success: true,
+      message: 'User deatils updated successfully!',
+    });
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : "Error during update the user details"
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : 'Error during update the user details';
     return res.status(400).json({
       success: false,
-      message: errorMessage    })
-
+      message: errorMessage,
+    });
   }
-}
+};
 
-export const changePassword = async (req: AuthenticatedRequest, res: Response) => {
+export const changePassword = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
-    
-const userId = req.user?.id
+    interface ChangePasswordProps {
+      oldPassword: string;
+      newPassword: string;
+      confirmNewPassword: string;
+    }
 
-const user  =  await prisma.employee.findUnique({
-  where: {id: userId}
-})
+    const userId = req.user?.id;
 
-if(!user){
-  return  res.status(400).json({
-    success: false,
-    message: "Unauthorized , please logged in to continue!"
-  })
-}
+    const user = await prisma.employee.findUnique({
+      where: { id: userId },
+    });
 
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'Unauthorized , please logged in to continue!',
+      });
+    }
 
-// give me old passowrd
-// new and confirm new password shoul match
-// old passowrd should match
-// then update the ppassowrd
+    const {
+      oldPassword,
+      newPassword,
+      confirmNewPassword,
+    }: ChangePasswordProps = req.body;
 
-const {oldPassword, newPassword, confirmNewPassword} = req.body
+    if (
+      !oldPassword?.trim() ||
+      !newPassword.trim() ||
+      !confirmNewPassword.trim()
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'All fields are required!',
+      });
+    }
 
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/;
 
-if(!passwordRegex.test(newPassword)){
-  return res.status(400).json({
-    success: false,
-    message: 'Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, one digit, and one special character.',
-  })
-}
+    if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({
+        success: false,
+        message:
+          'Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, one digit, and one special character.',
+      });
+    }
 
-if(newPassword !== confirmNewPassword){
-return res.status(400).json({
-  success: false,
-  message: "New password and confirm password must be same."
-})
-}
+    if (newPassword !== confirmNewPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'New password and confirm password must be same.',
+      });
+    }
 
-const isValidPassword = await argon2.verify(user.password, oldPassword)
+    const isValidPassword = await argon2.verify(user.password, oldPassword);
 
-if(!isValidPassword){
-  return res.status(400).json({
-    success: false,
-    message:"Old passoword is incorrect!"
-  })
-}
+    if (!isValidPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Old passoword is incorrect!',
+      });
+    }
 
-const hashedPassword  = await argon2.hash(newPassword)
+    const hashedPassword = await argon2.hash(newPassword);
 
-await prisma.employee.update({
-  where: {id: userId},
-  data: {password:  hashedPassword}
-})
+    await prisma.employee.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
 
-return res.status(200).json({
-  success: true,
-  message: "Password change successsfully!"
-})
-
+    return res.status(200).json({
+      success: true,
+      message: 'Password change successsfully!',
+    });
   } catch (error) {
-  console.error(" Error : ", error)
-  const errorMessage = error instanceof Error ? error.message : "Error during changing the password!" 
-  return res.status(400).json({
-    success: false,
-    message: errorMessage
-  })
+    console.error(' Error : ', error);
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : 'Error during changing the password!';
+    return res.status(400).json({
+      success: false,
+      message: errorMessage,
+    });
   }
-}
+};
+
 
 // add auth and role will be admin
 export const fetchAllEmployeesForTenant = async (

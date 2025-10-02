@@ -48,6 +48,6 @@ router.post(
   changeEmployeeRole,
 );
 
-router.patch('/update-user-details', authMiddleware, updateProfileDetails)
-router.patch('/change-password', authMiddleware, changePassword)
+router.patch('/update-user-details', authMiddleware, updateProfileDetails);
+router.patch('/change-password', authMiddleware, changePassword);
 export default router;

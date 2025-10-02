@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL") 
 }
 
 model Tenant {
@@ -116,11 +116,6 @@ model Comment {
   task           Task     @relation(fields: [taskId], references: [id])
 }
 
-model playing_with_neon {
-  id    Int    @id @default(autoincrement())
-  name  String
-  value Float? @db.Real
-}
 
 enum EmployeeRange {
   RANGE_1_10

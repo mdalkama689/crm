@@ -283,9 +283,7 @@ export const getAllFileByProjectId = async (
   res: Response,
 ) => {
   try {
-  const  { limit, page } = req.query;
-
-  
+    const { limit, page } = req.query;
 
     const userId = req.user?.id;
     if (!userId) {
@@ -411,10 +409,7 @@ LIMIT ${limitNum} OFFSET ${offsetNum};
   }
 };
 
-
-// export const addActivi 
-
-
+// export const addActivi
 
 // async function isUserVerifiedForProject(userId: string, projectId: string){
 //    if (!userId) {
@@ -423,7 +418,6 @@ LIMIT ${limitNum} OFFSET ${offsetNum};
 //         message: 'Unauthenticated, please login to continue!',
 //       };
 //     }
-
 
 //     const user = await prisma.employee.findUnique({
 //       where: {
@@ -436,7 +430,7 @@ LIMIT ${limitNum} OFFSET ${offsetNum};
 //         sucecss: false,
 //         message:
 //           'You are not associated with any tenant. Access denied. Please contact your administrator to gain permission.',
-//       } 
+//       }
 //     }
 
 //     const project = await prisma.project.findUnique({
@@ -481,6 +475,5 @@ LIMIT ${limitNum} OFFSET ${offsetNum};
 //           'You do not have permission to update or change the task attachment.',
 //       }
 //     }
-
 
 // }

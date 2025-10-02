@@ -45,7 +45,7 @@ function App() {
         <Route element={<AuthWrapper />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/project/:id" element={<EachProject />} />
-          <Route path='/profile' element={<Profile /> } />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/notifications" element={<AllNotifications />} />
         </Route>
 

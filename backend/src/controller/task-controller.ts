@@ -258,13 +258,9 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
       },
     });
 
+    // await prisma.ac
 
-    
-    // await prisma.ac 
-
-   
-
-// notification need to be fixed
+    // notification need to be fixed
     const notificationForTaskAssinged = generateNotificationForTask({
       taskCreatorName: loggedInUser.fullname,
       taskName: task.name,
@@ -930,16 +926,12 @@ export const toggleTaskCompletion = async (
       });
     }
 
-
-
     const updatedTask = await prisma.task.update({
       where: { id: taskId },
       data: {
         status: task.status === 'PENDING' ? 'DONE' : 'PENDING',
       },
     });
-
-
 
     return res.status(200).json({
       success: true,
@@ -1049,16 +1041,12 @@ export const toggleTaskItemCompletion = async (
       });
     }
 
-
     const updatedTaskItem = await prisma.taskItem.update({
       where: { id: taskItemId },
       data: {
         completed: taskItem.completed ? false : true,
       },
     });
-
-
- 
 
     return res.status(200).json({
       success: true,
@@ -1390,40 +1378,30 @@ export const getFileLength = async (
   }
 };
 
-
-
-
 export const preSignedUrl = async (req: Request, res: Response) => {
   try {
+    console.log(' please call to me ');
+    console.log('  i am out side : ', req.file);
+    if (req.file) {
+      console.log(' i am working ');
+      console.log(req.file);
+      const params = {
+        Bucket: process.env.BUCKET_NAME!,
+        Key: req.file.originalname,
+        Body: req.file.buffer,
+        ACL: 'public-read', // optional
+      };
 
-    console.log(' please call to me ')
-    console.log("  i am out side : ", req.file)
-if(req.file){
-
-  console.log(" i am working ")
-  console.log(req.file)
-    const params = {
-    Bucket: process.env.BUCKET_NAME!,
-    Key: req.file.originalname,
-    Body: req.file.buffer,
-    ACL: "public-read", // optional
-  };
-
- const uploadResult = await s3.upload(params).promise();
- console.log(uploadResult.Location)
-   return  res.json({ url: uploadResult.Location });
-
-}
-
-
+      const uploadResult = await s3.upload(params).promise();
+      console.log(uploadResult.Location);
+      return res.json({ url: uploadResult.Location });
+    }
   } catch (error) {
-    
-    console.error(" Error : ", error)
+    console.error(' Error : ', error);
 
     return res.status(400).json({
       success: false,
-      message: error 
-    })
-
+      message: error,
+    });
   }
-}
+};
