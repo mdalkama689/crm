@@ -88,7 +88,7 @@ const Topbar = () => {
 
   return (
     <div
-      className={`fixed top-0  flex items-center  ${isSideBarOpen ? 'left-[300px] w-[calc(100%-300px)]' : 'left-[80px] w-[calc(100%-80px)]'} bg-[#e6e0e0] py-2`}
+      className={`fixed top-0 z-50 flex items-center  ${isSideBarOpen ? 'left-[300px] w-[calc(100%-300px)]' : 'left-[80px] w-[calc(100%-80px)]'} bg-[#e6e0e0] py-2`}
     >
       <div className="flex items-center justify-between w-full px-5">
         <div className="flex gap-1 items-center justify-start p-2 cursor-pointer">

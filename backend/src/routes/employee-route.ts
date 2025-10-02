@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   changeEmployeeRole,
+  changePassword,
   fetchAllEmployeesForTenant,
   fetchAuthenticatedUser,
   forgotPassword,
@@ -10,6 +11,7 @@ import {
   sendInvitation,
   signIn,
   subscribeNewsletter,
+  updateProfileDetails,
   validateTokenAndSignUp,
   verifyOtp,
 } from '../controller/employee-controller';
@@ -46,4 +48,6 @@ router.post(
   changeEmployeeRole,
 );
 
+router.patch('/update-user-details', authMiddleware, updateProfileDetails)
+router.patch('/change-password', authMiddleware, changePassword)
 export default router;

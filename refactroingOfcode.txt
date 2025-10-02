@@ -123,3 +123,12 @@ https://www.barse.in/pages/shipping-exchange-returns
 
 
 
+
+
+
+
+
+// rule to write good code
+a. Always complete  first feature before moving to other with good practice 
+b. then move to another 
+c. 

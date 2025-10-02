@@ -18,6 +18,20 @@ export const fetchCurrentUser = createAsyncThunk(
   },
 );
 
+export const logout = createAsyncThunk(
+  "auth/logout", 
+  async() => {
+   try {
+    
+    await axiosInstance.post("/log-out")
+
+   } catch  (error){
+    console.error("Error : ", error)
+   }
+  }
+)
+
+
 export const fetchGravatarUrl = createAsyncThunk(
   'auth/gravatarurl',
   async (_, thunkAPI) => {
@@ -44,12 +58,14 @@ export const fetchGravatarUrl = createAsyncThunk(
   },
 );
 
-interface UserProps {
+export interface UserProps {
   fullname: string;
   email: string;
   role: string;
   tenantId: string;
 }
+
+
 
 interface AuthProps {
   user: UserProps | null;
@@ -79,6 +95,7 @@ const authSlice = createSlice({
         ((state.isLoading = false), (state.user = action.payload || null));
         state.isLoggedIn = true;
       })
+      
       .addCase(fetchCurrentUser.rejected, (state) => {
         ((state.isLoading = false), (state.user = null));
         state.isLoggedIn = false;
@@ -86,8 +103,14 @@ const authSlice = createSlice({
 
       .addCase(fetchGravatarUrl.fulfilled, (state, action) => {
         state.avatarUrl = action.payload || '';
-      });
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.user  = null 
+        state.isLoggedIn =  false 
+      })
+      
   },
+  
 });
 
 export default authSlice.reducer;

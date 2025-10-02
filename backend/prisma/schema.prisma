@@ -7,6 +7,121 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Tenant {
+  id             String         @id @default(uuid())
+  name           String         @unique
+  employeeRange  EmployeeRange?
+  businessType   String?
+  address        String?
+  normalizedName String         @unique
+  isVerified     Boolean
+  employees      Employee[]
+  projects       Project[]
+  tasks          Task[]
+}
+
+model Employee {
+  id                       String         @id @default(uuid())
+  fullname                 String
+  email                    String         @unique
+  password                 String
+  role                     String         @default("employee")
+  tenantId                 String?
+  invitationLink           String?
+  invitationLinkExpireTime DateTime?
+  isVerified               Boolean        @default(false)
+  isNewLetterSubscribed    Boolean        @default(false)
+  forgotPasswordExpiry     DateTime?
+  forgotPasswordOtp        String?
+  passwordResetToken       String?
+  passwordResetTokenExpiry DateTime?
+  isOtpVerified            Boolean        @default(false)
+  comments                 Comment[]
+  tenant                   Tenant?        @relation(fields: [tenantId], references: [id])
+  notifications            Notification[]
+  projects                 Project[]
+  tasks                    Task[]
+  projectAssigned          Project[]      @relation("ProjectAssignment")
+  taskAssigned             Task[]         @relation("TaskAssignment")
+}
+
+model Project {
+  id               String     @id @default(uuid())
+  name             String
+  dueDate          String?
+  description      String?
+  tenantId         String
+  createdBy        String
+  createdAt        DateTime   @default(now())
+  attachmentUrl    String?
+  iconUrl          String?
+  attachmentSize   String?
+  comments         Comment[]
+  employee         Employee   @relation(fields: [createdBy], references: [id])
+  tenant           Tenant     @relation(fields: [tenantId], references: [id])
+  tasks            Task[]
+  assignToEmployee Employee[] @relation("ProjectAssignment")
+}
+
+model Task {
+  id               String     @id @default(uuid())
+  status           TaskStatus @default(PENDING)
+  createdBy        String
+  projectId        String
+  tenantId         String
+  attachmentUrl    String?
+  description      String?
+  dueDate          String?
+  name             String
+  createdAt        DateTime   @default(now())
+  attachmentSize   String?
+  comments         Comment[]
+  employee         Employee   @relation(fields: [createdBy], references: [id])
+  project          Project    @relation(fields: [projectId], references: [id])
+  tenant           Tenant     @relation(fields: [tenantId], references: [id])
+  taskItems        TaskItem[]
+  assigedEmployees Employee[] @relation("TaskAssignment")
+}
+
+model TaskItem {
+  id        String  @id @default(uuid())
+  name      String
+  completed Boolean @default(false)
+  taskId    String
+  task      Task    @relation(fields: [taskId], references: [id])
+}
+
+model Notification {
+  id         String                 @id @default(uuid())
+  text       String
+  seen       Boolean                @default(false)
+  employeeId String
+  enitityId  String
+  entityType NotificationEntityType
+  createdAt  DateTime               @default(now())
+  employee   Employee               @relation(fields: [employeeId], references: [id])
+}
+
+model Comment {
+  id             String   @id @default(uuid())
+  text           String?
+  attachmentUrl  String?
+  creatorId      String
+  taskId         String
+  createdAt      DateTime @default(now())
+  projectId      String
+  attachmentSize String?
+  employee       Employee @relation(fields: [creatorId], references: [id])
+  project        Project  @relation(fields: [projectId], references: [id])
+  task           Task     @relation(fields: [taskId], references: [id])
+}
+
+model playing_with_neon {
+  id    Int    @id @default(autoincrement())
+  name  String
+  value Float? @db.Real
+}
+
 enum EmployeeRange {
   RANGE_1_10
   RANGE_10_50
@@ -15,128 +130,13 @@ enum EmployeeRange {
 }
 
 enum TaskStatus {
-   PENDING
-   HOLD
-   DONE 
+  PENDING
+  HOLD
+  DONE
 }
 
 enum NotificationEntityType {
-  TASK 
+  TASK
   PROJECT
-  COMMENT 
-}
-
-
-
-model Tenant {
-  id   String         @id @default(uuid())
-  name String @unique
-  normalizedName String @unique
-  isVerified Boolean
-  employeeRange EmployeeRange?
-  businessType            String?
-  address                 String?
-  employees Employee[]
-  projects Project[]
-  tasks Task[]
-}
-
-model Employee {
-   id                      String    @id @default(uuid())
-   fullname                String
-   email                   String    @unique
-   password                String
-   role                    String    @default("employee")
-   invitationLink   String?
-   invitationLinkExpireTime DateTime?
-   isVerified Boolean @default(false)
-   forgotPasswordOtp String?
-   forgotPasswordExpiry DateTime?
-   isOtpVerified Boolean @default(false)
-   passwordResetToken String?
-   passwordResetTokenExpiry DateTime?
-   isNewLetterSubscribed Boolean @default(false)
-   tenantId String?
-   tenant Tenant? @relation(fields: [tenantId], references: [id])
-   projects Project[]
-   projectAssigned Project[] @relation("ProjectAssignment")
-   taskAssigned Task[] @relation("TaskAssignment")
-   tasks Task[]
-   notifications Notification[]
-   comments Comment[]
-}
- 
-model Project {
-    id               String     @id @default(uuid())
-    name             String
-    iconUrl             String?
-    createdAt DateTime @default(now())
-    dueDate          String? 
-    description      String?
-    attachmentUrl       String?
-    attachmentSize String?
-    createdBy       String
-    employee         Employee   @relation(fields: [createdBy], references: [id])
-    tenantId String
-    tenant Tenant? @relation(fields: [tenantId], references: [id])
-    assignToEmployee Employee[] @relation("ProjectAssignment")
-    tasks Task[]
-    comments Comment[]
-}
-
- 
-model Task {
-      id               String     @id @default(uuid())
-      name String
-      dueDate String?
-      description String?
-      attachmentUrl String?
-      attachmentSize String?   
-      status  TaskStatus @default(PENDING)
-      assigedEmployees Employee[] @relation("TaskAssignment")
-      createdBy String 
-      createdAt DateTime @default(now())
-      employee Employee @relation(fields: [createdBy], references: [id])
-      projectId String
-      project Project @relation(fields: [projectId],references: [id])
-      tenantId String
-      tenant Tenant @relation(fields: [tenantId], references: [id])
-      taskItems  TaskItem[]    
-      comments Comment[]
-}
-
-
-model TaskItem{
-  id String @id @default(uuid())
-name String
-completed Boolean @default(false)
-taskId String
-task Task @relation(fields: [taskId], references: [id])
-}
-
-
-model Notification{
-  id String @id @default(uuid())
-  text String
-  seen Boolean @default(false)
-  entityType NotificationEntityType
-  enitityId  String 
-  employeeId String
-  employee Employee @relation(fields: [employeeId], references: [id])
-  createdAt DateTime @default(now())
-} 
-
-
-model Comment {
-  id String @id @default(uuid())
-  text String?
-  attachmentUrl String?
-  attachmentSize String?
-  creatorId String
-  employee Employee @relation(fields: [creatorId], references: [id])
-  taskId String
-  task Task @relation(fields: [taskId], references: [id])
-  projectId String
-  project Project @relation(fields: [projectId], references: [id])
-  createdAt DateTime @default(now())
+  COMMENT
 }

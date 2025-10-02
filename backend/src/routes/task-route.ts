@@ -7,6 +7,7 @@ import {
   fetchProjectTasks,
   getFileLength,
   getProjectTaskPages,
+  preSignedUrl,
   toggleTaskCompletion,
   toggleTaskItemCompletion,
   updateTaskAttachment,
@@ -52,6 +53,7 @@ router.patch(
 );
 
 router.post('/download/file', authMiddleware, downloadFile);
+router.post("/upload", authMiddleware, upload.single("file"),  preSignedUrl)
 router.patch(
   '/project/:projectId/task/:taskId/update-attachment',
   authMiddleware,

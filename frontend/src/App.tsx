@@ -18,7 +18,8 @@ import Employee from './components/admin/Employee';
 import AllNotifications from './components/notification/AllNotifications';
 import AllProjects from './components/project/AllProjects';
 import Extra from './components/Extra';
-import ViewFile from './components/ViewFIle';
+import ViewFile from './components/ViewFile';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
         <Route element={<AuthWrapper />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/project/:id" element={<EachProject />} />
+          <Route path='/profile' element={<Profile /> } />
           <Route path="/notifications" element={<AllNotifications />} />
         </Route>
 

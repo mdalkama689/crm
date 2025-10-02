@@ -1,38 +1,71 @@
-import { ChevronDown, Power } from 'lucide-react';
-import { axiosInstance } from '../api/axios';
-import { useSelector } from 'react-redux';
-import type { RootState } from '../slices/store/store';
+import { ChevronDown, LogOut } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../slices/store/store';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
+import { logout } from '../slices/AuthSlice';
+import { Link } from 'react-router-dom';
+
 
 const Profile = () => {
   const { user, avatarUrl } = useSelector((state: RootState) => state.auth);
 
   if (!user) return;
 
-  const handleLogout = async () => {
-    await axiosInstance.post('/log-out');
+  const dispatch = useDispatch<AppDispatch>()
+
+  const handleLogout = async () => { 
+    dispatch(logout()) 
   };
 
   return (
-    <div className="flex gap-2 items-center justify-center">
-      <div className="h-[50px] w-[50px] bg-[#D0D5DD] rounded-full flex items-center justify-center text-black font-bold">
-        {avatarUrl ? (
-          <img src={avatarUrl} alt="" className="h-7" />
-        ) : (
-          <p className="text-[#F16334] text-[24px] font-medium">
-            {user.fullname.charAt(0).toUpperCase()}
-          </p>
-        )}
-      </div>
-      <div>
-        <p className="font-semibold text-[15px]">
-          {user.fullname.charAt(0).toUpperCase() +
-            user.fullname.slice(1, user.fullname.length)}
-        </p>
-        <p className="font-normal text-[15px]">{user.email}</p>
-      </div>
-      <ChevronDown />
-      <Power className="cursor-pointer" onClick={handleLogout} />
-    </div>
+
+
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <div className="flex items-center gap-2 cursor-pointer">
+          <div className="h-[40px] w-[40px] bg-[#D0D5DD] rounded-full flex items-center justify-center overflow-hidden">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="avatar" className="h-full w-full object-cover" />
+            ) : (
+              <span className="text-[#F16334] text-lg font-medium">
+                {user.fullname.charAt(0).toUpperCase()}
+              </span>
+            )}
+          </div>
+          <ChevronDown className="h-4 w-4 text-gray-600" />
+        </div>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuLabel>
+          <p className="font-semibold">{user.fullname}</p>
+          <p className="text-sm text-gray-500">{user.email}</p>
+        </DropdownMenuLabel>
+
+        <DropdownMenuSeparator />
+
+     <Link to={"/profile"}>
+        <DropdownMenuItem >
+          Profile
+        </DropdownMenuItem>
+      </Link>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem onClick={handleLogout} className="text-red-500">
+          <LogOut className="mr-2 h-4 w-4" />
+          Logout
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+
   );
 };
 

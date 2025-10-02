@@ -283,7 +283,9 @@ export const getAllFileByProjectId = async (
   res: Response,
 ) => {
   try {
-    let { limit, page } = req.query;
+  const  { limit, page } = req.query;
+
+  
 
     const userId = req.user?.id;
     if (!userId) {
@@ -408,3 +410,77 @@ LIMIT ${limitNum} OFFSET ${offsetNum};
     });
   }
 };
+
+
+// export const addActivi 
+
+
+
+// async function isUserVerifiedForProject(userId: string, projectId: string){
+//    if (!userId) {
+//       return {
+//         sucecss: false,
+//         message: 'Unauthenticated, please login to continue!',
+//       };
+//     }
+
+
+//     const user = await prisma.employee.findUnique({
+//       where: {
+//         id: userId,
+//       },
+//     });
+
+//     if (!user || !user.tenantId) {
+//       return{
+//         sucecss: false,
+//         message:
+//           'You are not associated with any tenant. Access denied. Please contact your administrator to gain permission.',
+//       } 
+//     }
+
+//     const project = await prisma.project.findUnique({
+//       where: {
+//         id: projectId,
+//         tenantId: user.tenantId,
+//       },
+//       include: {
+//         assignToEmployee: true,
+//         employee: {
+//           select: {
+//             fullname: true,
+//           },
+//         },
+//       },
+//     });
+
+//     if (!project) {
+//       return  {
+//         success: false,
+//         message: 'Project not found!',
+//       }
+//     }
+
+//     let isAuthorized = false;
+
+//     if (user.role.trim().toLowerCase() === 'admin') {
+//       isAuthorized = true;
+//     }
+//     if (project.assignToEmployee.length > 0) {
+//       const find = project.assignToEmployee.some((empl) => {
+//         return empl.id === userId;
+//       });
+
+//       if (find) isAuthorized = true;
+//     }
+
+//     if (!isAuthorized) {
+//       return  {
+//         success: false,
+//         message:
+//           'You do not have permission to update or change the task attachment.',
+//       }
+//     }
+
+
+// }

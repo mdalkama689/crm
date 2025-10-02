@@ -17,13 +17,20 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const app = express();
 
-app.use(morgan('tiny'));
+app.use(morgan('dev'));
 app.use(cookieParser());
 const corsOption = {
   origin: FRONTEND_URL,
   credentials: true,
 };
-
+// app.use(
+//   cors({
+//   origin: FRONTEND_URL,
+//     methods: ["GET", "POST", "OPTIONS"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//     credentials: true,
+//   })
+// );
 app.use(express.json());
 app.use(cors(corsOption));
 const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
@@ -46,5 +53,13 @@ app.use('/api/v1', projectRouter);
 app.use('/api/v1/notification', notificationRouter);
 app.use('/api/v1', taskRouter);
 app.use('/api/v1', commentRouter);
+
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+//   res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   next();
+// });
+
 
 export default app;
