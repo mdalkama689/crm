@@ -49,7 +49,7 @@ model Project {
   id               String     @id @default(uuid())
   name             String
   dueDate          String?
-  description      String?
+  description      Json?  @default("{}")
   tenantId         String
   createdBy        String
   createdAt        DateTime   @default(now())

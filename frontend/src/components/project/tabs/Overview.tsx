@@ -5,6 +5,7 @@ import { Progress } from '../../ui/progress';
 import { Button } from '../../ui/button';
 import { axiosInstance } from '../../../api/axios';
 import { toast } from 'sonner';
+import ReactQuill from 'react-quill-new';
 
 interface ProjectOverview {
   description: string | null;
@@ -63,11 +64,19 @@ const Overview = ({
   };
 
   return (
-    <div className="mt-10">
+    <div className="mt-10">s
       <p className="font-semibold text-lg"> Description </p>
       <p className="mt-3">
-        {' '}
-        {description ? description : 'Nothing aadeed in description'}
+        {description ? (
+          <ReactQuill
+            value={description}
+            readOnly
+            modules={{ toolbar: false }}
+            className="no-border-quill"
+          />
+        ) : (
+          <p>Nothing added in description</p>
+        )}
       </p>
 
       <div className="mt-4 ">
@@ -111,7 +120,10 @@ const Overview = ({
             ))}
           </div>
 
-          {!assignEmployee && <p>You don't have any assigned employee</p>}
+          {!assignEmployee ||
+            (assignEmployee.length === 0 && (
+              <p>You don't have any assigned employee.</p>
+            ))}
         </div>
       </div>
 

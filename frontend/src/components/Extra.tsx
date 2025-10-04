@@ -6,6 +6,7 @@ import XHRUpload from '@uppy/xhr-upload';
 import WebCam from '@uppy/webcam';
 import ScreenCapture from '@uppy/screen-capture';
 
+
 const Extra = () => {
   const [uppy] = useState(() => {
     const uppyInstance = new Uppy({
@@ -122,3 +123,4 @@ export default Extra;
 
 //   />;
 // };
+

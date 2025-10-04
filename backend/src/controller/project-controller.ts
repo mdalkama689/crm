@@ -6,6 +6,10 @@ import { AuthenticatedRequest } from '../middlewares/auth-middleware';
 import { generateNotificationForProject } from '../utils/generateNotification';
 import { BUCKET_NAME, s3 } from '../app';
 import { validateDueDate } from '../utils/validateDueDate';
+import {QuillDeltaToHtmlConverter} from 'quill-delta-to-html' 
+import { toDelta } from '../utils/convertValueToDelta';
+
+
 
 interface MulterFile {
   fieldname: string;
@@ -246,7 +250,7 @@ export const createProject = async (
     const newProject = await prisma.project.create({
       data: {
         name,
-        description,
+        description: description? description :  {},
         dueDate,
         attachmentUrl,
         attachmentSize: attachmentSize ? attachmentSize.toString() : '',
@@ -521,12 +525,24 @@ export const getProjectForAdminAndAssignee = async (
         });
       }
     }
+    
+   let html = ""; 
+
+if(project?.description){ 
+
+  const desc = toDelta(project.description);
+    const converter = new QuillDeltaToHtmlConverter(desc.ops, {});
+      html = converter.convert(); 
+}
+
+project.description  = html  
 
     return res.status(200).json({
       success: true,
       message: 'Project fetched successfully.',
       project,
       assignedEmployee,
+      description: html 
     });
   } catch (error) {
     const errorMessage =

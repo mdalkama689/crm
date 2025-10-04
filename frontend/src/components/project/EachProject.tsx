@@ -23,6 +23,7 @@ import Task from './tabs/Task';
 
 export interface ProjectResponse extends ApiResponse {
   project: IProject;
+  description: string;
 }
 
 const EachProject = () => {
@@ -36,7 +37,6 @@ const EachProject = () => {
 
   const [currentTab, setCurrentTab] = useState('overview');
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
   const handleCurrentTab = (tabName: string) => {
     setCurrentTab(tabName.toLowerCase());
   };
@@ -49,7 +49,6 @@ const EachProject = () => {
       const response = await axiosInstance.get<ProjectResponse>(
         `/project/${projectId}`,
       );
-
       if (response.data.success) {
         dispatch(setProject(response.data.project));
       } else {
@@ -74,7 +73,7 @@ const EachProject = () => {
 
   return (
     <DashboardLayout>
-      <div className="flex gap-1 mt-8 ml-[300px]">
+      <div className="flex gap-1 pt-8 ml-[300px]">
         {isLoading ? (
           <Loader />
         ) : (

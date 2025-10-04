@@ -325,7 +325,7 @@ const Task = () => {
       )}
 
       {openTaskForm && (
-        <div className="absolute top-0 inset-0 flex items-center justify-center p-4 h-fit z-50 overflow-auto">
+        <div className="absolute top-0 inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 h-fit z-50 overflow-auto">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 relative">
             <Button
               className="text-slate-900 bg-transparent  hover:text-gray-600 hover:bg-gray-100 rounded-full p-1 transition-colors absolute right-0 top-0"
@@ -531,7 +531,9 @@ const Task = () => {
       )}
 
       <div className="mt-5 mb-5"></div>
-      <Pagignation type="task" onPageChange={setCurrentPage} />
+      {allTasks.length > 0 && (
+        <Pagignation type="task" onPageChange={setCurrentPage} />
+      )}
     </>
   );
 };

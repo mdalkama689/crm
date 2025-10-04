@@ -12,10 +12,10 @@ import { Button } from '../ui/button';
 import { Calendar } from '../ui/calendar';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
 import { allBgGradient, allowedAttachmentTypes } from './constant';
 import type { Employee } from './types';
 import type { EmployeesApiResponse } from '../AllEmployee';
+import Editor from '../Editor';
 
 interface CreateProjectResponse extends ApiResponse {
   projectId: string;
@@ -118,7 +118,7 @@ const CreateProjectForm = () => {
       formData.append('dueDate', formatInYYYYMMDDDueDate);
       formData.append('attachment', attachment);
       formData.append('assignToEmployee', JSON.stringify(allAssignedId));
-      formData.append('description', data.description ? data.description : '');
+      formData.append('description', delta ? JSON.stringify(delta) : '');
 
       setIsSubmitting(true);
 
@@ -184,6 +184,7 @@ const CreateProjectForm = () => {
       const day = parsedDate.getDate();
       const formatDueDate = `${day.toString().padStart(2, '0')}/${(month + 1).toString().padStart(2, '0')}/${year.toString()}`;
       setDueDate(formatDueDate);
+      setOpenCalender(false);
     } else {
       setIsFirstRender(false);
     }
@@ -192,8 +193,12 @@ const CreateProjectForm = () => {
   const navigateToHome = () => {
     navigate('/');
   };
+
+  const [content, setContent] = useState<string>('');
+  const [delta, setDelta] = useState();
+
   return (
-    <div className="absolute top-0 inset-0 bg-black/50 flex items-center justify-center p-4 h-fit z-50 overflow-auto">
+    <div className="absolute top-0 inset-0 bg-black/40 backdrop-blur-sm  flex items-center justify-center p-4 h-fit z-50 overflow-auto">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 relative">
         <Button
           onClick={navigateToHome}
@@ -337,12 +342,11 @@ const CreateProjectForm = () => {
             >
               Project's Description
             </Label>
-            <Textarea
-              placeholder="Enter the description"
-              rows={4}
-              {...register('description')}
-              disabled={isSubmitting}
-              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none placeholder-gray-400 text-gray-900 transition-all"
+
+            <Editor
+              content={content}
+              setContent={setContent}
+              setDelta={setDelta}
             />
           </div>
 
@@ -396,7 +400,7 @@ export default CreateProjectForm;
 
 const createProjectSchema = z.object({
   name: z.string().min(1, 'Project name is required!'),
-  description: z.string().optional(),
+  description: z.json().optional(),
 });
 
 type createProjectInput = z.infer<typeof createProjectSchema>;

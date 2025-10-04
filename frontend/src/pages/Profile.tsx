@@ -3,7 +3,6 @@ import {
   User,
   Mail,
   Briefcase,
-  Camera,
   Edit2,
   Save,
   X,
@@ -132,7 +131,7 @@ const Profile = () => {
     setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
   };
 
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, avatarUrl } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (!user) return;
@@ -154,12 +153,19 @@ const Profile = () => {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
               <div className="flex flex-col items-center mb-8">
                 <div className="relative">
-                  <div className="w-32 h-32 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center text-white text-4xl font-bold">
-                    R
+                  <div className="w-16 h-16 bg-[#D0D5DD] rounded-full flex items-center justify-center text-white text-4xl font-bold">
+                    {avatarUrl ? (
+                      <img
+                        src={avatarUrl}
+                        alt="avatar"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-black text-lg font-medium">
+                        {user?.fullname.charAt(0).toUpperCase()}
+                      </span>
+                    )}
                   </div>
-                  <Button className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-                    <Camera className="w-4 h-4 text-gray-700" />
-                  </Button>
                 </div>
 
                 <h2 className="mt-4 text-2xl font-semibold text-gray-900">
@@ -282,7 +288,7 @@ const Profile = () => {
           </div>
 
           {showPasswordModal && (
-            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm  flex items-center justify-center z-50 p-4">
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
               <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-semibold text-gray-900">

@@ -381,7 +381,7 @@ SELECT
   'comment' AS type,
   e."fullname" AS employeeFullname,
   NULL AS assignedEmployeeFullnames
-FROM "Comment" c
+FROM "Comment" c 
 LEFT JOIN "Employee" e ON c."creatorId" = e.id
 WHERE c."projectId" = ${projectId} AND c."attachmentUrl" != ''
 
