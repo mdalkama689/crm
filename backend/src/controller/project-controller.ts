@@ -1,30 +1,25 @@
 import AWS from 'aws-sdk';
 import prisma from 'backend/db';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 import { createProjectSchema } from 'shared/src/schema/create-project-schema';
 import { AuthenticatedRequest } from '../middlewares/auth-middleware';
-import { generateNotificationForProject } from '../utils/generateNotification';
 import { BUCKET_NAME, s3 } from '../app';
 import { validateDueDate } from '../utils/validateDueDate';
-import {QuillDeltaToHtmlConverter} from 'quill-delta-to-html' 
+import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 import { toDelta } from '../utils/convertValueToDelta';
-
-
-
-interface MulterFile {
-  fieldname: string;
-  originalname: string;
-  encoding: string;
-  mimetype: string;
-  size: number;
-  buffer: Buffer;
-}
 
 export const allowedAttachmentTypes = [
   'application/pdf',
   'image/png',
   'image/jpeg',
   'image/jpg',
+];
+
+export const allowedIconTypes = [
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'image/svg+xml',
 ];
 
 export const createProject = async (
@@ -92,6 +87,8 @@ export const createProject = async (
       });
     }
 
+    console.log(' req body : ', req.body);
+
     const parseResult = createProjectSchema.safeParse(body);
     if (!parseResult.success) {
       const validationErrors = parseResult.error.issues.map((issue) => ({
@@ -106,86 +103,44 @@ export const createProject = async (
     }
 
     let iconUrl = '';
-    let attachmentUrl = '';
-    let attachmentSize;
-    let { name, description, dueDate, assignToEmployee } = parseResult.data;
+    let {
+      name,
+      description,
+      dueDate,
+      assignToEmployee,
+      attachmentSize,
+      attachmentUrl,
+    } = parseResult.data;
 
-    if (req.files) {
-      const files = req.files as
-        | { [fieldname: string]: MulterFile[] }
-        | undefined;
+    if (req.file) {
+      console.log(' icon file : ', req.file);
 
-      const iconFile = files?.['icon']?.[0];
-      const attachmentFile = files?.['attachment']?.[0];
-
-      const allowedIconTypes = [
-        'image/png',
-        'image/jpeg',
-        'image/jpg',
-        'image/svg+xml',
-      ];
-
-      if (iconFile && !allowedIconTypes.includes(iconFile.mimetype)) {
+      if (!allowedAttachmentTypes.includes(req.file.mimetype)) {
         return res.status(400).json({
           success: false,
-          message: 'Icon must be a valid image (png, jpeg, jpg, svg)',
+          message: 'Icon type not allowed',
         });
       }
 
-      if (
-        attachmentFile &&
-        !allowedAttachmentTypes.includes(attachmentFile.mimetype)
-      ) {
-        return res.status(400).json({
-          success: false,
-          message: 'Attachment type not allowed',
-        });
-      }
+      const maxSizeOfIcon = 5 * 1024 * 1024;
 
-      const maxSizeOFIconFile = 5 * 1024 * 1024;
-      const maxSizeOFAttachmeFile = 25 * 1024 * 1024;
-
-      if (iconFile && iconFile.size > maxSizeOFIconFile) {
+      if (req.file.size > maxSizeOfIcon) {
         return res.status(400).json({
           success: false,
           message: 'Icon size cannot be more than 5 MB',
         });
       }
 
-      if (attachmentFile && attachmentFile.size > maxSizeOFAttachmeFile) {
-        return res.status(400).json({
-          success: false,
-          message: 'Attachment size cannot be more than 25 MB',
-        });
-      }
+      const params: AWS.S3.PutObjectRequest = {
+        Bucket: BUCKET_NAME!,
+        Key: `uploads/${Date.now()}-${req.file.originalname}`,
+        Body: req.file.buffer,
+        ACL: 'private',
+        ContentType: req.file.mimetype,
+      };
 
-      if (iconFile) {
-        const params: AWS.S3.PutObjectRequest = {
-          Bucket: BUCKET_NAME!,
-          Key: `uploads/${Date.now()}-${iconFile.originalname}`,
-          Body: iconFile.buffer,
-          ACL: 'private',
-          ContentType: iconFile.mimetype,
-        };
-
-        const iconReponse = await s3.upload(params).promise();
-        iconUrl = iconReponse.Location;
-      }
-
-      if (attachmentFile) {
-        const params: AWS.S3.PutObjectRequest = {
-          Bucket: BUCKET_NAME!,
-          Key: `uploads/${Date.now()}-${attachmentFile.originalname}`,
-          Body: attachmentFile.buffer,
-          ACL: 'private',
-          ContentType: attachmentFile.mimetype,
-        };
-
-        attachmentSize = attachmentFile.size;
-
-        const attchmentReponse = await s3.upload(params).promise();
-        attachmentUrl = attchmentReponse.Location;
-      }
+      const reponse = await s3.upload(params).promise();
+      iconUrl = reponse.Location;
     }
 
     if (dueDate?.trim()) {
@@ -250,7 +205,7 @@ export const createProject = async (
     const newProject = await prisma.project.create({
       data: {
         name,
-        description: description? description :  {},
+        description: description ? description : {},
         dueDate,
         attachmentUrl,
         attachmentSize: attachmentSize ? attachmentSize.toString() : '',
@@ -266,22 +221,6 @@ export const createProject = async (
         assignToEmployee: true,
       },
     });
-
-    const notification = generateNotificationForProject({
-      adminName: currentUser.fullname,
-      projectName: name,
-    });
-
-    for (let i = 0; i < employeeIdsInArray.length; i++) {
-      await prisma.notification.create({
-        data: {
-          text: notification,
-          enitityId: newProject.id,
-          entityType: 'PROJECT',
-          employeeId: employeeIdsInArray[i],
-        },
-      });
-    }
 
     return res.status(201).json({
       success: true,
@@ -525,24 +464,23 @@ export const getProjectForAdminAndAssignee = async (
         });
       }
     }
-    
-   let html = ""; 
 
-if(project?.description){ 
+    let html = '';
 
-  const desc = toDelta(project.description);
-    const converter = new QuillDeltaToHtmlConverter(desc.ops, {});
-      html = converter.convert(); 
-}
+    if (project?.description) {
+      const desc = toDelta(project.description);
+      const converter = new QuillDeltaToHtmlConverter(desc.ops, {});
+      html = converter.convert();
+    }
 
-project.description  = html  
+    project.description = html;
 
     return res.status(200).json({
       success: true,
       message: 'Project fetched successfully.',
       project,
       assignedEmployee,
-      description: html 
+      description: html,
     });
   } catch (error) {
     const errorMessage =
@@ -804,6 +742,53 @@ export const getAssignedEmployeesForProject = async (
         : 'An unexpected error occurred while fetching assigned employees.';
 
     return res.status(400).json({
+      success: false,
+      message: errorMessage,
+    });
+  }
+};
+
+export const uploadFile = async (req: Request, res: Response) => {
+  try {
+    if (req.file) {
+      const maxSizeofFile = 25 * 1024 * 1024;
+
+      if (maxSizeofFile < req.file.size) {
+        return res.status(400).json({
+          success: false,
+          message: 'File size must be less than 25 Mb',
+        });
+      }
+
+      const params = {
+        Bucket: process.env.BUCKET_NAME!,
+        Key: req.file.originalname,
+        Body: req.file.buffer,
+        ACL: 'private',
+      };
+
+      const uploadResult = await s3.upload(params).promise();
+      console.log(uploadResult.Location);
+
+      return res.status(200).json({
+        success: true,
+        message: 'File  upload successfully!',
+        url: uploadResult.Location,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'You have not uplaod any file',
+    });
+  } catch (error) {
+    console.error(' Error  during uplaoding a file : ', error);
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unexpected error occurred.';
+
+    console.error('Error while uplaoding a file :', errorMessage);
+
+    return res.status(500).json({
       success: false,
       message: errorMessage,
     });

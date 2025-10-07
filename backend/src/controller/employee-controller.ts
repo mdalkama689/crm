@@ -1040,7 +1040,6 @@ export const changePassword = async (
   }
 };
 
-
 // add auth and role will be admin
 export const fetchAllEmployeesForTenant = async (
   req: AuthenticatedRequest,
@@ -1248,4 +1247,3 @@ export const changeEmployeeRole = async (
     });
   }
 };
-

@@ -64,7 +64,7 @@ const Overview = ({
   };
 
   return (
-    <div className="mt-10">s
+    <div className="mt-10">
       <p className="font-semibold text-lg"> Description </p>
       <p className="mt-3">
         {description ? (

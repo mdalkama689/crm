@@ -1377,31 +1377,3 @@ export const getFileLength = async (
     });
   }
 };
-
-export const preSignedUrl = async (req: Request, res: Response) => {
-  try {
-    console.log(' please call to me ');
-    console.log('  i am out side : ', req.file);
-    if (req.file) {
-      console.log(' i am working ');
-      console.log(req.file);
-      const params = {
-        Bucket: process.env.BUCKET_NAME!,
-        Key: req.file.originalname,
-        Body: req.file.buffer,
-        ACL: 'public-read', // optional
-      };
-
-      const uploadResult = await s3.upload(params).promise();
-      console.log(uploadResult.Location);
-      return res.json({ url: uploadResult.Location });
-    }
-  } catch (error) {
-    console.error(' Error : ', error);
-
-    return res.status(400).json({
-      success: false,
-      message: error,
-    });
-  }
-};

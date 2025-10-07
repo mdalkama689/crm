@@ -6,14 +6,12 @@ import XHRUpload from '@uppy/xhr-upload';
 import WebCam from '@uppy/webcam';
 import ScreenCapture from '@uppy/screen-capture';
 
-
 const Extra = () => {
   const [uppy] = useState(() => {
     const uppyInstance = new Uppy({
       id: 'file-uploader',
       restrictions: {
         maxNumberOfFiles: 5,
-        // allowedFileTypes: [".jpg", ".jpeg", ".png", ".zip", ".pdf"]
       },
       autoProceed: false,
     });
@@ -50,17 +48,17 @@ const Extra = () => {
   });
 
   useEffect(() => {
-    const successHandler = (file, response) => {
+    const successHandler = (file: any, response: any) => {
       console.log('File upload successfully : ', file.name);
       console.log(' response : ', response);
     };
 
-    const errorHandler = (file, error) => {
+    const errorHandler = (file: any, error: any) => {
       console.log('Error uploading files : ', file);
       console.log('Error details : ', error);
     };
 
-    const completeHandler = (result) => {
+    const completeHandler = (result: any) => {
       console.log('Upload complete : ', result);
     };
 
@@ -123,4 +121,3 @@ export default Extra;
 
 //   />;
 // };
-

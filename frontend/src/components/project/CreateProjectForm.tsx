@@ -1,4 +1,4 @@
-import { X, Plus, Upload, CalendarDays } from 'lucide-react';
+import { X, Plus, CalendarDays, Upload } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,10 +12,11 @@ import { Button } from '../ui/button';
 import { Calendar } from '../ui/calendar';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
-import { allBgGradient, allowedAttachmentTypes } from './constant';
+import { allBgGradient } from './constant';
 import type { Employee } from './types';
 import type { EmployeesApiResponse } from '../AllEmployee';
 import Editor from '../Editor';
+import FileUploader from '../FileUploader';
 
 interface CreateProjectResponse extends ApiResponse {
   projectId: string;
@@ -28,7 +29,6 @@ const CreateProjectForm = () => {
   const [bgGradient, setBgGradient] = useState<string[]>([]);
   const [projectIcon, setProjectIcon] = useState<File | string>('');
   const [projectIconPreview, setProjectIconPreview] = useState<string>('');
-  const [attachment, setAttachment] = useState<File | string>('');
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
   const [dueDate, setDueDate] = useState<string>('');
   const [assignedEmpoloyee, setAssignedEmployee] = useState<Employee[]>([]);
@@ -52,24 +52,6 @@ const CreateProjectForm = () => {
 
     setProjectIcon(file);
     setProjectIconPreview(URL.createObjectURL(file));
-  };
-
-  const handleAttachment = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-    const file = files[0];
-    const fileSize = file.size;
-
-    if (file && !allowedAttachmentTypes.includes(file.type)) {
-      return toast.error('This attachment type not allowed!');
-    }
-
-    const maxSizeOfAttachment = 25 * 1024 * 1024;
-
-    if (maxSizeOfAttachment < fileSize) {
-      return toast.error('Max size of attachment cannot be more than 25mb');
-    }
-    setAttachment(file);
   };
 
   useEffect(() => {
@@ -116,7 +98,8 @@ const CreateProjectForm = () => {
       formData.append('icon', projectIcon);
       formData.append('name', data.name);
       formData.append('dueDate', formatInYYYYMMDDDueDate);
-      formData.append('attachment', attachment);
+      formData.append('attachmentUrl', fileUrl);
+      formData.append('attachmentSize', fileSize);
       formData.append('assignToEmployee', JSON.stringify(allAssignedId));
       formData.append('description', delta ? JSON.stringify(delta) : '');
 
@@ -196,6 +179,10 @@ const CreateProjectForm = () => {
 
   const [content, setContent] = useState<string>('');
   const [delta, setDelta] = useState();
+  const [showFileUploader, setShowFileUploader] = useState<boolean>(false);
+  const [fileUrl, setFileUrl] = useState<string>('');
+  const [fileName, setFileName] = useState<string>('');
+  const [fileSize, setFileSize] = useState<string>('');
 
   return (
     <div className="absolute top-0 inset-0 bg-black/40 backdrop-blur-sm  flex items-center justify-center p-4 h-fit z-50 overflow-auto">
@@ -352,27 +339,27 @@ const CreateProjectForm = () => {
 
           <div className="mb-10">
             <span className="text-sm font-medium">
-              {attachment instanceof File && `Selected: ${attachment.name} `}
+              {fileName && `Selected: ${fileName} `}
             </span>
 
-            <Label htmlFor="attachment" className="mt-3">
-              <div className="flex items-center bg-transparent space-x-2 text-purple-500 hover:text-purple-600 hover:bg-transparent transition-colors cursor-pointer group">
-                <Input
-                  type="file"
-                  name="attachment"
-                  className="hidden"
-                  id="attachment"
-                  disabled={isSubmitting}
-                  onChange={handleAttachment}
-                />
+            <div className="flex mt-4 items-center bg-transparent space-x-2 text-purple-500 hover:text-purple-600 hover:bg-transparent transition-colors cursor-pointer group">
+              <Upload className="h-4 w-4 group-hover:scale-110 transition-transform" />
 
-                <Upload className="h-4 w-4 group-hover:scale-110 transition-transform" />
+              <p
+                className="text-sm font-medium cursor-pointer text-purple-500 hover:text-purple-600"
+                onClick={() => setShowFileUploader(true)}
+              >
+                {fileUrl ? 'Change' : 'Upload'} your attachment
+              </p>
+            </div>
 
-                <p className="text-sm font-medium">
-                  {attachment ? 'Change' : 'Upload'} your attachment
-                </p>
-              </div>
-            </Label>
+            <FileUploader
+              open={showFileUploader}
+              onClose={() => setShowFileUploader(false)}
+              setFileUrl={setFileUrl}
+              setFileName={setFileName}
+              setFileSize={setFileSize}
+            />
           </div>
 
           <div className="flex space-x-4">

@@ -28,6 +28,14 @@
   padding: 0 !important;
 }
 
+.ql-container.ql-snow {
+  border: none !important;
+}
+
+.uppy-Dashboard-AddFiles {
+  border: none !important;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

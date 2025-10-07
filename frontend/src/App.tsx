@@ -20,7 +20,6 @@ import AllProjects from './components/project/AllProjects';
 import Extra from './components/Extra';
 import ViewFile from './components/ViewFile';
 import Profile from './pages/Profile';
-import TextEditor from './TextEditor';
 
 function App() {
   return (
@@ -43,7 +42,6 @@ function App() {
           <Route path="/projects" element={<AllProjects />} />
         </Route>
 
-<Route path='/editor' element={<TextEditor />} />
         <Route element={<AuthWrapper />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/project/:id" element={<EachProject />} />

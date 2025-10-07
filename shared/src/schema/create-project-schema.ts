@@ -6,6 +6,10 @@ export const createProjectSchema = z.object({
   dueDate: z.string().optional(),
   description: z.json().optional(),
   assignToEmployee: z.any(), 
+   attachmentUrl: z.string(),
+   attachmentSize: z.string() 
 });
+
+
 
 export type createProjectInput = z.infer<typeof createProjectSchema>;

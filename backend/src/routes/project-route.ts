@@ -8,6 +8,7 @@ import {
   getAllProjectsOfCompany,
   getAssignedEmployeesForProject,
   getProjectForAdminAndAssignee,
+  uploadFile,
 } from '../controller/project-controller';
 import upload from '../middlewares/multer.middleware';
 
@@ -17,10 +18,7 @@ router.post(
   '/create-project',
   authMiddleware,
   adminMiddleware,
-  upload.fields([
-    { name: 'attachment', maxCount: 1 },
-    { name: 'icon', maxCount: 1 },
-  ]),
+  upload.single('icon'),
   createProject,
 );
 
@@ -49,5 +47,7 @@ router.get(
   authMiddleware,
   getAssignedEmployeesForProject,
 );
+
+router.post('/upload-file', authMiddleware, upload.single('file'), uploadFile);
 
 export default router;
